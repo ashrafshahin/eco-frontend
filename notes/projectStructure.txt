@@ -1,0 +1,103 @@
+src/
+├── api/
+│   ├── axiosInstance.js
+│   ├── authApi.js
+│   ├── productApi.js
+│   ├── cartApi.js
+│   ├── orderApi.js
+│   └── userApi.js
+│
+├── assets/
+│
+├── components/
+│   ├── common/
+│   │   ├── Navbar.jsx
+│   │   ├── Footer.jsx
+│   │   ├── Button.jsx
+│   │   ├── InputField.jsx
+│   │   ├── Loader.jsx
+│   │   ├── Modal.jsx
+│   │   ├── Pagination.jsx
+│   │   └── ProtectedRoute.jsx
+│   │
+│   ├── product/
+│   │   ├── ProductCard.jsx
+│   │   ├── ProductGrid.jsx
+│   │   ├── ProductImageGallery.jsx
+│   │   ├── ProductForm.jsx        // shared by Add/Edit
+│   │   └── ImageUploader.jsx
+│   │
+│   ├── cart/
+│   │   ├── CartItem.jsx
+│   │   ├── CartSummary.jsx
+│   │   └── QuantitySelector.jsx
+│   │
+│   ├── checkout/
+│   │   ├── AddressForm.jsx
+│   │   └── OrderSummary.jsx
+│   │
+│   ├── auth/
+│   │   ├── LoginForm.jsx
+│   │   ├── RegisterForm.jsx
+│   │   ├── ForgotPasswordForm.jsx
+│   │   └── ResetPasswordForm.jsx
+│   │
+│   └── admin/
+│       ├── AdminSidebar.jsx
+│       ├── AdminNavbar.jsx
+│       ├── ProductTable.jsx
+│       ├── UserTable.jsx
+│       └── OrderTable.jsx
+│
+├── layouts/
+│   ├── MainLayout.jsx       // Navbar + Footer wrapper
+│   └── AdminLayout.jsx      // Sidebar wrapper
+│
+├── pages/
+│   ├── customer/
+│   │   ├── Home.jsx
+│   │   ├── ProductListing.jsx
+│   │   ├── ProductDetails.jsx
+│   │   ├── Cart.jsx
+│   │   ├── Checkout.jsx
+│   │   ├── OrderSuccess.jsx
+│   │   ├── OrderFailed.jsx
+│   │   ├── MyOrders.jsx
+│   │   └── Profile.jsx
+│   │
+│   ├── auth/
+│   │   ├── Login.jsx
+│   │   ├── Register.jsx
+│   │   ├── ForgotPassword.jsx
+│   │   ├── ResetPassword.jsx
+│   │   ├── VerifyEmail.jsx
+│   │   └── ResendVerification.jsx
+│   │
+│   ├── admin/
+│   │   ├── Dashboard.jsx
+│   │   ├── ManageProducts.jsx
+│   │   ├── AddProduct.jsx
+│   │   ├── EditProduct.jsx
+│   │   ├── ManageUsers.jsx
+│   │   └── ManageOrders.jsx
+│   │
+│   └── NotFound.jsx
+│
+├── context/
+│   ├── AuthContext.jsx
+│   └── CartContext.jsx
+│
+├── hooks/
+│   ├── useAuth.js
+│   ├── useCart.js
+│   └── useFetch.js
+│
+├── routes/
+│   └── AppRoutes.jsx
+│
+├── utils/
+│   ├── constants.js
+│   └── validators.js
+│
+├── App.jsx
+└── main.jsx
