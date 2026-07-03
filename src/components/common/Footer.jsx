@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import {
-    Facebook, Instagram, Twitter, Mail,
-    Truck, ShieldCheck, RotateCcw, CreditCard,
-} from "lucide-react";
+    Mail, Truck, ShieldCheck, RotateCcw, CreditCard,
+    FacebookIcon, InstagramIcon, TwitterIcon,
+} from "../common/Icons";
 
 const trustPoints = [
     { icon: Truck, label: "Fast Delivery", desc: "Nationwide shipping" },
@@ -115,13 +115,13 @@ export default function Footer() {
                     </p>
                     <div className="flex items-center gap-4">
                         <a href="#" aria-label="Facebook" className="text-paper/50 hover:text-amber transition-colors">
-                            <Facebook size={17} />
+                            <FacebookIcon />
                         </a>
                         <a href="#" aria-label="Instagram" className="text-paper/50 hover:text-amber transition-colors">
-                            <Instagram size={17} />
+                            <InstagramIcon />
                         </a>
                         <a href="#" aria-label="Twitter" className="text-paper/50 hover:text-amber transition-colors">
-                            <Twitter size={17} />
+                            <TwitterIcon />
                         </a>
                     </div>
                 </div>
