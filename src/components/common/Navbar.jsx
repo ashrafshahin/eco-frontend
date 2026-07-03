@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { ShoppingCart, User, Menu, X, Search, Heart } from "../common/Icons";
+import { useCart } from "../../context/CartContext";
 
 const categories = ["Electronics", "Fashion", "Home & Living", "Books", "Beauty", "Sports"];
 
@@ -8,6 +9,7 @@ export default function Navbar() {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState("");
     const navigate = useNavigate();
+    const { totalItems } = useCart();
 
     const linkClass = ({ isActive }) =>
         `text-sm font-medium transition-colors ${isActive ? "text-amber" : "text-ink/70 hover:text-ink"
@@ -63,7 +65,7 @@ export default function Navbar() {
                         <Link to="/cart" className="relative text-ink/70 hover:text-ink transition-colors">
                             <ShoppingCart size={20} />
                             <span className="absolute -top-2 -right-2 bg-amber text-ink text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                                0
+                                {totalItems}
                             </span>
                         </Link>
                     </div>

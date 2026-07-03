@@ -1,9 +1,11 @@
 import { Link } from "react-router";
 import { Heart, ShoppingCart } from "lucide-react";
+import { useCart } from "../../context/CartContext";
 
 export default function ProductCard({ product }) {
     const image = product.mainImage || product.images?.[0];
     const outOfStock = product.stock === 0;
+    const { addToCart } = useCart();
 
     return (
         <div className="group relative bg-white rounded-xl border border-ink/10 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
@@ -44,8 +46,12 @@ export default function ProductCard({ product }) {
                     <span className="font-display text-lg font-semibold text-ink">৳{product.price.toLocaleString()}</span>
                     <button
                         disabled={outOfStock}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            addToCart(product, 1);
+                        }}
                         className="w-9 h-9 rounded-full bg-ink text-paper flex items-center justify-center
-              hover:bg-amber hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+    hover:bg-amber hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                         aria-label="Add to cart"
                     >
                         <ShoppingCart size={15} />

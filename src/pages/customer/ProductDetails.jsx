@@ -5,11 +5,13 @@ import ProductImageGallery from "../../components/product/ProductImageGallery";
 import QuantitySelector from "../../components/cart/QuantitySelector";
 import Button from "../../components/common/Button";
 import { mockProducts } from "../../utils/mockProducts";
+import { useCart } from "../../context/CartContext";
 
 export default function ProductDetails() {
     const { id } = useParams();
     const [quantity, setQuantity] = useState(1);
     const [adding, setAdding] = useState(false);
+    const { addToCart } = useCart();
 
     // TODO: replace with data fetched from GET /get-single-product/:id
     const product = mockProducts.find((p) => p._id === id);
@@ -29,9 +31,8 @@ export default function ProductDetails() {
 
     const handleAddToCart = () => {
         setAdding(true);
-        // TODO: connect to POST /create-cart/:userId or /update-cart/:userId/:productId
-        console.log("Add to cart:", { productId: product._id, quantity });
-        setTimeout(() => setAdding(false), 600);
+        addToCart(product, quantity);
+        setTimeout(() => setAdding(false), 500);
     };
 
     return (
