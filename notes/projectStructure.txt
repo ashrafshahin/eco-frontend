@@ -52,7 +52,7 @@ src/
 ├── layouts/
 │   ├── MainLayout.jsx       // Navbar + Footer wrapper
 │   └── AdminLayout.jsx      // Sidebar wrapper
-│
+│   └── AuthLayout.jsx
 ├── pages/
 │   ├── customer/
 │   │   ├── Home.jsx

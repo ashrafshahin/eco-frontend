@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+
 import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/customer/Home";
 import ProductListing from "../pages/customer/ProductListing";
@@ -31,15 +32,15 @@ const router = createBrowserRouter([
             { path: "order-failed", element: <OrderFailed /> },
             { path: "my-orders", element: <MyOrders /> },
             { path: "profile", element: <Profile /> },
-            { path: "login", element: <Login /> },
-            { path: "register", element: <Register /> },
-            { path: "forgot-password", element: <ForgotPassword /> },
-            { path: "reset-password/:token", element: <ResetPassword /> },
-            { path: "verify-email/:token", element: <VerifyEmail /> },
-            { path: "resend-verification", element: <ResendVerification /> },
             { path: "*", element: <NotFound /> },
         ],
     },
+    { path: "/login", element: <Login /> },
+    { path: "/register", element: <Register /> },
+    { path: "/forgot-password", element: <ForgotPassword /> },
+    { path: "/reset-password/:token", element: <ResetPassword /> },
+    { path: "/verify-email/:token", element: <VerifyEmail /> },
+    { path: "/resend-verification", element: <ResendVerification /> },
 ]);
 
 export default router;
