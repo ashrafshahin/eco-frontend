@@ -32,6 +32,9 @@ import {
     AlertCircle,
     Package,
     Star, 
+    Clock,
+    LogOut,
+
 } from "lucide-react";
 
 // ---- Re-exported lucide icons (safe, non-brand) ----
@@ -64,7 +67,10 @@ export {
     Check,
     AlertCircle,
     Package,
-    Star,   
+    Star, 
+    Clock,
+    LogOut,
+    
 };
 
 // ---- Custom brand/social icons (not available in lucide-react) ----
