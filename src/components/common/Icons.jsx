@@ -38,6 +38,9 @@ import {
     Users,
     ShoppingBag,
     ImagePlus,
+    ArrowRight,
+    Headphones,
+    Zap,
 
 } from "lucide-react";
 
@@ -78,6 +81,9 @@ export {
     Users,
     ShoppingBag,
     ImagePlus,
+    ArrowRight,
+    Headphones,
+    Zap,
 
 };
 
