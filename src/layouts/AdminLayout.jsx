@@ -29,7 +29,7 @@ export default function AdminLayout() {
             {/* Sidebar — desktop */}
             <aside className="hidden lg:flex flex-col w-60 bg-ink shrink-0">
                 <Link to="/admin" className="font-display text-xl font-semibold text-paper px-5 h-16 flex items-center border-b border-paper/10">
-                    Learn<span className="text-amber">Cart</span>
+                    Eco<span className="text-amber">Bazaar</span>
                     <span className="text-xs font-sans font-normal text-paper/40 ml-2">Admin</span>
                 </Link>
 
@@ -60,7 +60,7 @@ export default function AdminLayout() {
                     <aside className="absolute left-0 top-0 h-full w-60 bg-ink flex flex-col">
                         <div className="flex items-center justify-between px-5 h-16 border-b border-paper/10">
                             <Link to="/admin" className="font-display text-xl font-semibold text-paper">
-                                Learn<span className="text-amber">Cart</span>
+                                Eco<span className="text-amber">Bazaar</span>
                             </Link>
                             <button onClick={() => setSidebarOpen(false)}>
                                 <X size={20} className="text-paper/60" />
@@ -94,7 +94,7 @@ export default function AdminLayout() {
                         <Menu size={22} className="text-ink" />
                     </button>
                     <span className="font-display text-lg font-semibold text-ink">
-                        Learn<span className="text-amber">Cart</span> Admin
+                        Eco<span className="text-amber">Bazaar</span> Admin
                     </span>
                     <div className="w-6" />
                 </header>

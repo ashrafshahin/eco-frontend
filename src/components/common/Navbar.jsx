@@ -38,7 +38,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-4 sm:gap-8 h-16">
                     {/* Brand */}
                     <Link to="/" className="font-display text-2xl font-semibold text-ink tracking-tight shrink-0">
-                        Learn<span className="text-amber">Cart</span>
+                        Eco<span className="text-amber">Bazaar</span>
                     </Link>
 
                     {/* Search — desktop */}

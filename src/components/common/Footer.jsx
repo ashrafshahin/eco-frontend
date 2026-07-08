@@ -47,7 +47,7 @@ export default function Footer() {
                     {/* Brand + newsletter */}
                     <div className="lg:col-span-2">
                         <h3 className="font-display text-xl font-semibold text-paper">
-                            Learn<span className="text-amber">Cart</span>
+                            Eco<span className="text-amber">Bazaar</span>
                         </h3>
                         <p className="text-sm mt-2 text-paper/60 max-w-xs">
                             A training platform for people who'd rather learn by doing.
@@ -111,7 +111,7 @@ export default function Footer() {
                 {/* Bottom bar */}
                 <div className="border-t border-paper/10 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <p className="text-xs text-paper/40">
-                        © {new Date().getFullYear()} LearnCart. Built as a learning project.
+                        © {new Date().getFullYear()} EcoBazaar. Built with AI. Powered by Ashraf Shahin.
                     </p>
                     <div className="flex items-center gap-4">
                         <a href="#" aria-label="Facebook" className="text-paper/50 hover:text-amber transition-colors">
