@@ -39,12 +39,21 @@ export default function Profile() {
         }, 700);
     };
 
-    const initials = form.name
+    // const initials = form.name
+    //     .split(" ")
+    //     .map((n) => n[0])
+    //     .slice(0, 2)
+    //     .join("")
+    //     .toUpperCase();
+
+    
+    const initials = (form.name || "")
         .split(" ")
+        .filter(Boolean)
         .map((n) => n[0])
         .slice(0, 2)
         .join("")
-        .toUpperCase();
+        .toUpperCase() || "?";
 
     return (
         <div>
