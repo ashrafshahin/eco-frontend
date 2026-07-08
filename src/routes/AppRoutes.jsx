@@ -4,6 +4,13 @@ import { createBrowserRouter } from "react-router";
 import MainLayout from "../layouts/MainLayout";
 import AccountLayout from "../layouts/AccountLayout";
 
+// Admin
+import AdminLayout from "../layouts/AdminLayout";
+import Dashboard from "../pages/admin/Dashboard";
+import ManageProducts from "../pages/admin/ManageProducts";
+import AddProduct from "../pages/admin/AddProduct";
+import EditProduct from "../pages/admin/EditProduct";
+
 // Customer pages
 import Home from "../pages/customer/Home";
 import ProductListing from "../pages/customer/ProductListing";
@@ -46,6 +53,17 @@ const router = createBrowserRouter([
                 children: [
                     { path: "profile", element: <Profile /> },
                     { path: "my-orders", element: <MyOrders /> },
+                ],
+            },
+            // Add this as a new top-level entry in the router array (sibling to MainLayout, not nested inside it):
+            {
+                path: "/admin",
+                element: <AdminLayout />,
+                children: [
+                    { index: true, element: <Dashboard /> },
+                    { path: "products", element: <ManageProducts /> },
+                    { path: "products/create", element: <AddProduct /> },
+                    { path: "products/edit/:id", element: <EditProduct /> },
                 ],
             },
 

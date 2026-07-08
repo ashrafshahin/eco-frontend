@@ -34,6 +34,10 @@ import {
     Star, 
     Clock,
     LogOut,
+    LayoutDashboard,
+    Users,
+    ShoppingBag,
+    ImagePlus,
 
 } from "lucide-react";
 
@@ -70,7 +74,11 @@ export {
     Star, 
     Clock,
     LogOut,
-    
+    LayoutDashboard,
+    Users,
+    ShoppingBag,
+    ImagePlus,
+
 };
 
 // ---- Custom brand/social icons (not available in lucide-react) ----
