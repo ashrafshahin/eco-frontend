@@ -31,7 +31,7 @@ import {
     Check,
     AlertCircle,
     Package,
-    Star,
+    Star, 
 } from "lucide-react";
 
 // ---- Re-exported lucide icons (safe, non-brand) ----
@@ -64,7 +64,7 @@ export {
     Check,
     AlertCircle,
     Package,
-    Star,
+    Star,   
 };
 
 // ---- Custom brand/social icons (not available in lucide-react) ----
