@@ -2,7 +2,7 @@ import { useState } from "react";
 import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
 import { User, Mail, Phone, MapPin } from "../../components/common/Icons";
-import { mockUser } from "../../utils/mockUser";
+import { mockUsers } from "../../utils/mockUsers";
 
 export default function Profile() {
     const [form, setForm] = useState({ ...mockUser });

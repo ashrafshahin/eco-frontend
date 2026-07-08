@@ -3,13 +3,7 @@ import { createBrowserRouter } from "react-router";
 // Layouts
 import MainLayout from "../layouts/MainLayout";
 import AccountLayout from "../layouts/AccountLayout";
-
-// Admin
 import AdminLayout from "../layouts/AdminLayout";
-import Dashboard from "../pages/admin/Dashboard";
-import ManageProducts from "../pages/admin/ManageProducts";
-import AddProduct from "../pages/admin/AddProduct";
-import EditProduct from "../pages/admin/EditProduct";
 
 // Customer pages
 import Home from "../pages/customer/Home";
@@ -30,6 +24,15 @@ import ResetPassword from "../pages/auth/ResetPassword";
 import VerifyEmail from "../pages/auth/VerifyEmail";
 import ResendVerification from "../pages/auth/ResendVerification";
 
+// Admin pages
+import Dashboard from "../pages/admin/Dashboard";
+import ManageProducts from "../pages/admin/ManageProducts";
+import AddProduct from "../pages/admin/AddProduct";
+import EditProduct from "../pages/admin/EditProduct";
+import ManageUsers from "../pages/admin/ManageUsers";
+import UserDetails from "../pages/admin/UserDetails";
+import ManageOrders from "../pages/admin/ManageOrders";
+
 // Fallback
 import NotFound from "../pages/NotFound";
 
@@ -46,7 +49,6 @@ const router = createBrowserRouter([
             { path: "order-success", element: <OrderSuccess /> },
             { path: "order-failed", element: <OrderFailed /> },
 
-            // Account section — shares sidebar via AccountLayout, still nested inside MainLayout
             {
                 path: "",
                 element: <AccountLayout />,
@@ -55,23 +57,27 @@ const router = createBrowserRouter([
                     { path: "my-orders", element: <MyOrders /> },
                 ],
             },
-            // Add this as a new top-level entry in the router array (sibling to MainLayout, not nested inside it):
-            {
-                path: "/admin",
-                element: <AdminLayout />,
-                children: [
-                    { index: true, element: <Dashboard /> },
-                    { path: "products", element: <ManageProducts /> },
-                    { path: "products/create", element: <AddProduct /> },
-                    { path: "products/edit/:id", element: <EditProduct /> },
-                ],
-            },
 
             { path: "*", element: <NotFound /> },
         ],
     },
 
-    // Auth pages — full-screen split layout, no Navbar/Footer
+    {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+            { index: true, element: <Dashboard /> },
+            { path: "products", element: <ManageProducts /> },
+            { path: "products/create", element: <AddProduct /> },
+            { path: "products/edit/:id", element: <EditProduct /> },
+            { path: "users", element: <ManageUsers /> },
+            { path: "users/:id", element: <UserDetails /> },
+            { path: "orders", element: <ManageOrders /> },
+            { path: "*", element: <NotFound /> },
+
+        ],
+    },
+
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register /> },
     { path: "/forgot-password", element: <ForgotPassword /> },
