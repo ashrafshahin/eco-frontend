@@ -1,5 +1,6 @@
 import { Outlet, NavLink, useNavigate } from "react-router";
 import { User, Package, LogOut } from "../components/common/Icons";
+import { useAuth } from "../context/AuthContext";
 
 const links = [
     { to: "/profile", label: "Profile", icon: User },
@@ -8,15 +9,14 @@ const links = [
 
 export default function AccountLayout() {
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     const linkClass = ({ isActive }) =>
         `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"
         }`;
 
     const handleLogout = () => {
-        // TODO: once AuthContext exists, call logout() from there instead
-        // (this should also clear any user info stored in context/state, not just the token)
-        localStorage.removeItem("token"); // adjust key name to whatever you'll store the JWT under
+        logout();
         navigate("/login");
     };
 

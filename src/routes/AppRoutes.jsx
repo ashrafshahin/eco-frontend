@@ -5,6 +5,9 @@ import MainLayout from "../layouts/MainLayout";
 import AccountLayout from "../layouts/AccountLayout";
 import AdminLayout from "../layouts/AdminLayout";
 
+// Common
+import ProtectedRoute from "../components/common/ProtectedRoute";
+
 // Customer pages
 import Home from "../pages/customer/Home";
 import ProductListing from "../pages/customer/ProductListing";
@@ -49,9 +52,14 @@ const router = createBrowserRouter([
             { path: "order-success", element: <OrderSuccess /> },
             { path: "order-failed", element: <OrderFailed /> },
 
+            // Account section — any logged-in role can access
             {
                 path: "",
-                element: <AccountLayout />,
+                element: (
+                    <ProtectedRoute allowedRoles={["customer", "manager", "admin"]}>
+                        <AccountLayout />
+                    </ProtectedRoute>
+                ),
                 children: [
                     { path: "profile", element: <Profile /> },
                     { path: "my-orders", element: <MyOrders /> },
@@ -62,22 +70,41 @@ const router = createBrowserRouter([
         ],
     },
 
+    // Admin section — Manager + Admin can enter; Users pages are Admin-only
     {
         path: "/admin",
-        element: <AdminLayout />,
+        element: (
+            <ProtectedRoute allowedRoles={["manager", "admin"]}>
+                <AdminLayout />
+            </ProtectedRoute>
+        ),
         children: [
             { index: true, element: <Dashboard /> },
             { path: "products", element: <ManageProducts /> },
             { path: "products/create", element: <AddProduct /> },
             { path: "products/edit/:id", element: <EditProduct /> },
-            { path: "users", element: <ManageUsers /> },
-            { path: "users/:id", element: <UserDetails /> },
+            {
+                path: "users",
+                element: (
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                        <ManageUsers />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "users/:id",
+                element: (
+                    <ProtectedRoute allowedRoles={["admin"]}>
+                        <UserDetails />
+                    </ProtectedRoute>
+                ),
+            },
             { path: "orders", element: <ManageOrders /> },
             { path: "*", element: <NotFound /> },
-
         ],
     },
 
+    // Auth pages — full-screen split layout, no Navbar/Footer
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register /> },
     { path: "/forgot-password", element: <ForgotPassword /> },

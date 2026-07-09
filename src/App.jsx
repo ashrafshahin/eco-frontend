@@ -8,13 +8,16 @@ import { RouterProvider } from "react-router";
 import router from "./routes/AppRoutes";
 import { CartProvider } from "./context/CartContext";
 import ScrollToTop from "./components/common/ScrollToTop";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <CartProvider>
-      <RouterProvider router={router} />
+    <AuthProvider>
+      <CartProvider>
+        <RouterProvider router={router} />
 
-    </CartProvider>
+      </CartProvider>
+    </AuthProvider>
     
   )
 };

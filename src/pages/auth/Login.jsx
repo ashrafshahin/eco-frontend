@@ -1,18 +1,25 @@
 import { useState } from "react";
-import { Link } from "react-router";
-import { Mail, Lock } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router";
+import { Mail, Lock } from "../../components/common/Icons";
 import AuthLayout from "../../layouts/AuthLayout";
 import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
     const [form, setForm] = useState({ email: "", password: "" });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [submitError, setSubmitError] = useState("");
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { login, devLoginAs } = useAuth();
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
         setErrors({ ...errors, [e.target.name]: "" });
+        setSubmitError("");
     };
 
     const validate = () => {
@@ -29,9 +36,23 @@ export default function Login() {
         if (Object.keys(errs).length) return setErrors(errs);
 
         setLoading(true);
+        setSubmitError("");
         // TODO: connect to POST /login
-        console.log("Login submit:", form);
-        setTimeout(() => setLoading(false), 800);
+        try {
+            login(form.email, form.password);
+            setTimeout(() => {
+                setLoading(false);
+                navigate(location.state?.from?.pathname || "/");
+            }, 500);
+        } catch (err) {
+            setLoading(false);
+            setSubmitError(err.message);
+        }
+    };
+
+    const handleDevLogin = (role) => {
+        devLoginAs(role);
+        navigate(role === "admin" ? "/admin" : "/");
     };
 
     return (
@@ -64,6 +85,10 @@ export default function Login() {
                     </Link>
                 </div>
 
+                {submitError && (
+                    <p className="text-sm text-red-500 text-center bg-red-50 py-2 rounded-lg">{submitError}</p>
+                )}
+
                 <Button type="submit" loading={loading} className="mt-1">
                     Log In
                 </Button>
@@ -81,6 +106,23 @@ export default function Login() {
                     Register
                 </Link>
             </p>
+
+            {/* DEV ONLY — remove once real backend auth is wired */}
+            <div className="mt-8 pt-6 border-t border-dashed border-ink/15">
+                <p className="text-xs text-slate/50 text-center mb-3">Dev quick login (testing only)</p>
+                <div className="grid grid-cols-3 gap-2">
+                    {["customer", "manager", "admin"].map((role) => (
+                        <button
+                            key={role}
+                            type="button"
+                            onClick={() => handleDevLogin(role)}
+                            className="py-2 rounded-lg text-xs font-semibold capitalize border border-ink/15 text-ink/60 hover:bg-ink/5 transition-colors"
+                        >
+                            {role}
+                        </button>
+                    ))}
+                </div>
+            </div>
         </AuthLayout>
     );
 };

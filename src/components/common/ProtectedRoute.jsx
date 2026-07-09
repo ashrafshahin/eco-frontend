@@ -1,16 +1,19 @@
 import { Navigate, useLocation } from "react-router";
+import { useAuth } from "../../context/AuthContext";
 
-export default function ProtectedRoute({ children, requireAdmin = false }) {
+// allowedRoles: array of roles permitted, e.g. ["customer", "manager", "admin"]
+// Admin always passes regardless of what's listed — full access by design.
+export default function ProtectedRoute({ children, allowedRoles }) {
+    const { user, isAuthenticated } = useAuth();
     const location = useLocation();
-    const token = localStorage.getItem("token");
-    // TODO: once AuthContext exists, read role from there instead of a raw localStorage flag
-    const role = localStorage.getItem("role");
 
-    if (!token) {
+    if (!isAuthenticated) {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    if (requireAdmin && role !== "admin") {
+    const hasAccess = user.role === "admin" || !allowedRoles || allowedRoles.includes(user.role);
+
+    if (!hasAccess) {
         return <Navigate to="/" replace />;
     }
 

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router";
-import { User, Mail, Lock } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { User, Mail, Lock } from "../../components/common/Icons";
 import AuthLayout from "../../layouts/AuthLayout";
 import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
+import { useAuth } from "../../context/AuthContext";
 
 function getPasswordStrength(password) {
     if (!password) return { label: "", width: "0%", color: "" };
@@ -23,15 +24,26 @@ function getPasswordStrength(password) {
 }
 
 export default function Register() {
-    const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "" });
+    const [form, setForm] = useState({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        role: "customer",
+    });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [submitError, setSubmitError] = useState("");
+
+    const navigate = useNavigate();
+    const { register } = useAuth();
 
     const strength = getPasswordStrength(form.password);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
         setErrors({ ...errors, [e.target.name]: "" });
+        setSubmitError("");
     };
 
     const validate = () => {
@@ -51,9 +63,23 @@ export default function Register() {
         if (Object.keys(errs).length) return setErrors(errs);
 
         setLoading(true);
+        setSubmitError("");
         // TODO: connect to POST /registration
-        console.log("Register submit:", form);
-        setTimeout(() => setLoading(false), 800);
+        try {
+            register({
+                name: form.name,
+                email: form.email,
+                password: form.password,
+                role: form.role,
+            });
+            setTimeout(() => {
+                setLoading(false);
+                navigate("/");
+            }, 500);
+        } catch (err) {
+            setLoading(false);
+            setSubmitError(err.message);
+        }
     };
 
     return (
@@ -113,6 +139,32 @@ export default function Register() {
                     error={errors.confirmPassword}
                     placeholder="••••••••"
                 />
+
+                <div>
+                    <label className="text-sm font-medium text-ink block mb-2">I am registering as</label>
+                    <div className="grid grid-cols-2 gap-3">
+                        {["customer", "manager"].map((role) => (
+                            <button
+                                type="button"
+                                key={role}
+                                onClick={() => setForm({ ...form, role })}
+                                className={`py-2.5 rounded-lg text-sm font-semibold capitalize border transition-colors ${form.role === role
+                                        ? "bg-ink text-paper border-ink"
+                                        : "border-ink/15 text-ink/60 hover:border-ink/30"
+                                    }`}
+                            >
+                                {role}
+                            </button>
+                        ))}
+                    </div>
+                    <p className="text-xs text-slate/60 mt-1.5">
+                        Admin accounts are created separately and aren't available via public registration.
+                    </p>
+                </div>
+
+                {submitError && (
+                    <p className="text-sm text-red-500 text-center bg-red-50 py-2 rounded-lg">{submitError}</p>
+                )}
 
                 <Button type="submit" loading={loading} className="mt-1">
                     Create Account

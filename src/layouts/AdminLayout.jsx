@@ -3,6 +3,7 @@ import { Outlet, NavLink, Link, useNavigate } from "react-router";
 import {
     LayoutDashboard, Package, Users, ShoppingBag, LogOut, Menu, X,
 } from "../components/common/Icons";
+import { useAuth } from "../context/AuthContext";
 
 const navItems = [
     { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -14,9 +15,10 @@ const navItems = [
 export default function AdminLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
+        logout();
         navigate("/login");
     };
 
