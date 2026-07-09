@@ -2,10 +2,10 @@ import { useState } from "react";
 import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
 import { User, Mail, Phone, MapPin } from "../../components/common/Icons";
-import { mockUsers } from "../../utils/mockUsers";
+import { mockUser } from "../../utils/mockUsers";
 
 export default function Profile() {
-    const [form, setForm] = useState({ ...mockUsers });
+    const [form, setForm] = useState({ ...mockUser });
     const [errors, setErrors] = useState({});
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);

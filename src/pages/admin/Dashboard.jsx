@@ -1,12 +1,12 @@
 import { Package, Users, ShoppingBag } from "../../components/common/Icons";
 import { mockProducts } from "../../utils/mockProducts";
-import { mockUsers } from "../../utils/mockUsers";
+import { mockUser } from "../../utils/mockUsers";
 import { mockOrders } from "../../utils/mockOrders";
 
 export default function Dashboard() {
     const stats = [
         { label: "Total Products", value: mockProducts.length, icon: Package },
-        { label: "Total Users", value: mockUsers.length, icon: Users },
+        { label: "Total Users", value: mockUser.length, icon: Users },
         { label: "Total Orders", value: mockOrders.length, icon: ShoppingBag },
     ];
 

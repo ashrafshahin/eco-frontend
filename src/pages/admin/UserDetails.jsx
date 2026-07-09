@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router";
 import { Mail, Phone, User as UserIcon, Package } from "../../components/common/Icons";
-import { mockUsers } from "../../utils/mockUsers";
+import { mockUser } from "../../utils/mockUsers";
 import { mockOrders } from "../../utils/mockOrders";
 import OrderStatusBadge from "../../components/common/OrderStatusBadge";
 
@@ -8,7 +8,7 @@ export default function UserDetails() {
     const { id } = useParams();
 
     // TODO: replace with data fetched from GET /getsingleuser/:id
-    const user = mockUsers.find((u) => u._id === id);
+    const user = mockUser.find((u) => u._id === id);
 
     if (!user) {
         return (

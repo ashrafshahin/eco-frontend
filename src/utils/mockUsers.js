@@ -1,4 +1,4 @@
-export const mockUsers = [
+export const mockUser = [
     {
         _id: "u1",
         name: "Ashraf Hossain",

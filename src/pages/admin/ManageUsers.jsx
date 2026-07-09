@@ -2,13 +2,13 @@ import { useState, useMemo } from "react";
 import { Search } from "../../components/common/Icons";
 import UserTable from "../../components/admin/UserTable";
 import Modal from "../../components/common/Modal";
-import { mockUsers } from "../../utils/mockUsers";
+import { mockUser } from "../../utils/mockUsers";
 
 const roleFilters = ["all", "customer", "admin"];
 
 export default function ManageUsers() {
     // TODO: replace with data fetched from GET /getallusers
-    const [users, setUsers] = useState(mockUsers);
+    const [users, setUsers] = useState(mockUser);
     const [search, setSearch] = useState("");
     const [roleFilter, setRoleFilter] = useState("all");
     const [deleteTarget, setDeleteTarget] = useState(null);
