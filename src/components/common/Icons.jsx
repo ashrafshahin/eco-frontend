@@ -53,6 +53,7 @@ import {
     HeartPulse,
     Gem,
     PawPrint,
+    Tag,
 
 } from "lucide-react";
 
@@ -96,7 +97,7 @@ export {
     ArrowRight,
     Headphones,
     Zap,
-    
+
     Smartphone,
     Shirt,
     HomeIcon,
@@ -109,6 +110,7 @@ export {
     HeartPulse,
     Gem,
     PawPrint,
+    Tag,
 
 };
 

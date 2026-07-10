@@ -1,24 +1,36 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router";
-import { SlidersHorizontal, X } from "lucide-react";
+import { SlidersHorizontal, X } from "../../components/common/Icons";
 import ProductGrid from "../../components/product/ProductGrid";
 import Pagination from "../../components/common/Pagination";
+import PriceRangeSlider from "../../components/product/PriceRangeSlider";
 import { mockProducts } from "../../utils/mockProducts";
+import { categories } from "../../utils/mockCategories";
 
-const categories = ["Electronics", "Fashion", "Home & Living", "Books", "Beauty", "Sports"];
 const PER_PAGE = 8;
+const PRICE_FLOOR = 0;
+const PRICE_CEIL = 10000; // TODO: adjust to match real product price range, or calculate dynamically once backend is wired
 
 export default function ProductListing() {
     const [searchParams, setSearchParams] = useSearchParams();
     const search = searchParams.get("search") || "";
     const categoryParam = searchParams.get("category") || "";
+    const subParam = searchParams.get("sub") || "";
+    const minPrice = searchParams.get("minPrice");
+    const maxPrice = searchParams.get("maxPrice");
 
     const [sort, setSort] = useState("newest");
     const [page, setPage] = useState(1);
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+    const [priceRange, setPriceRange] = useState([
+        minPrice ? Number(minPrice) : PRICE_FLOOR,
+        maxPrice ? Number(maxPrice) : PRICE_CEIL,
+    ]);
 
     // TODO: replace mockProducts with data fetched from GET /get-all-products
     const products = mockProducts;
+
+    const activeCategory = categories.find((c) => c.name === categoryParam);
 
     const filtered = useMemo(() => {
         let result = [...products];
@@ -29,22 +41,43 @@ export default function ProductListing() {
         if (categoryParam) {
             result = result.filter((p) => p.category === categoryParam);
         }
+        // TODO: once products have a `subcategory` field, add:
+        // if (subParam) result = result.filter((p) => p.subcategory === subParam);
+
+        result = result.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
+
         if (sort === "price-low") result.sort((a, b) => a.price - b.price);
         if (sort === "price-high") result.sort((a, b) => b.price - a.price);
         if (sort === "name") result.sort((a, b) => a.name.localeCompare(b.name));
 
         return result;
-    }, [products, search, categoryParam, sort]);
+    }, [products, search, categoryParam, subParam, sort, priceRange]);
 
-    useEffect(() => setPage(1), [search, categoryParam, sort]);
+    useEffect(() => setPage(1), [search, categoryParam, subParam, sort, priceRange]);
 
     const totalPages = Math.ceil(filtered.length / PER_PAGE);
     const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
-    const setCategory = (cat) => {
+    const setCategory = (catName) => {
         const next = new URLSearchParams(searchParams);
-        if (cat) next.set("category", cat);
+        if (catName) next.set("category", catName);
         else next.delete("category");
+        next.delete("sub"); // reset subcategory when switching categories
+        setSearchParams(next);
+    };
+
+    const setSub = (sub) => {
+        const next = new URLSearchParams(searchParams);
+        if (sub && sub !== subParam) next.set("sub", sub);
+        else next.delete("sub");
+        setSearchParams(next);
+    };
+
+    const handlePriceChange = (range) => {
+        setPriceRange(range);
+        const next = new URLSearchParams(searchParams);
+        next.set("minPrice", range[0]);
+        next.set("maxPrice", range[1]);
         setSearchParams(next);
     };
 
@@ -54,7 +87,7 @@ export default function ProductListing() {
             <div className="flex items-end justify-between flex-wrap gap-4 mb-6">
                 <div>
                     <h1 className="font-display text-3xl font-semibold text-ink">
-                        {categoryParam || (search ? `Results for "${search}"` : "All Products")}
+                        {subParam || categoryParam || (search ? `Results for "${search}"` : "All Products")}
                     </h1>
                     <p className="text-sm text-slate mt-1">{filtered.length} products found</p>
                 </div>
@@ -82,27 +115,61 @@ export default function ProductListing() {
 
             <div className="flex gap-8">
                 {/* Sidebar filters — desktop */}
-                <aside className="hidden lg:block w-56 shrink-0">
-                    <h3 className="text-sm font-semibold text-ink mb-3">Category</h3>
-                    <div className="flex flex-col gap-1">
-                        <button
-                            onClick={() => setCategory("")}
-                            className={`text-left text-sm px-3 py-2 rounded-lg transition-colors ${!categoryParam ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"
-                                }`}
-                        >
-                            All Categories
-                        </button>
-                        {categories.map((cat) => (
+                <aside className="hidden lg:flex lg:flex-col gap-5 w-56 shrink-0">
+                    <div>
+                        <h3 className="text-sm font-semibold text-ink mb-3">Category</h3>
+                        <div className="flex flex-col gap-1">
                             <button
-                                key={cat}
-                                onClick={() => setCategory(cat)}
-                                className={`text-left text-sm px-3 py-2 rounded-lg transition-colors ${categoryParam === cat ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"
+                                onClick={() => setCategory("")}
+                                className={`text-left text-sm px-3 py-2 rounded-lg transition-colors ${!categoryParam ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"
                                     }`}
                             >
-                                {cat}
+                                All Categories
                             </button>
-                        ))}
+
+                            {/* Price range — right after the reset button */}
+                            <div className="pt-3">
+                                <PriceRangeSlider
+                                    min={PRICE_FLOOR}
+                                    max={PRICE_CEIL}
+                                    value={priceRange}
+                                    onChange={handlePriceChange}
+                                />
+                            </div>
+
+                            <div className="pt-3 flex flex-col gap-1">
+                                {categories.map((cat) => (
+                                    <button
+                                        key={cat.name}
+                                        onClick={() => setCategory(cat.name)}
+                                        className={`text-left text-sm px-3 py-2 rounded-lg transition-colors ${categoryParam === cat.name ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"
+                                            }`}
+                                    >
+                                        {cat.name}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     </div>
+
+                    {/* Subcategories — only shown once a category is active */}
+                    {activeCategory && (
+                        <div className="pt-5 border-t border-ink/10">
+                            <h3 className="text-sm font-semibold text-ink mb-3">{activeCategory.name} — Refine</h3>
+                            <div className="flex flex-col gap-1">
+                                {activeCategory.subcategories.map((sub) => (
+                                    <button
+                                        key={sub}
+                                        onClick={() => setSub(sub)}
+                                        className={`text-left text-sm px-3 py-2 rounded-lg transition-colors ${subParam === sub ? "bg-amber text-ink font-medium" : "text-slate hover:bg-ink/5"
+                                            }`}
+                                    >
+                                        {sub}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </aside>
 
                 {/* Grid */}
@@ -123,24 +190,54 @@ export default function ProductListing() {
                                 <X size={20} className="text-ink/60" />
                             </button>
                         </div>
+
                         <h4 className="text-sm font-semibold text-ink mb-3">Category</h4>
-                        <div className="flex flex-col gap-1">
-                            <button
-                                onClick={() => { setCategory(""); setMobileFiltersOpen(false); }}
-                                className={`text-left text-sm px-3 py-2 rounded-lg ${!categoryParam ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"}`}
-                            >
-                                All Categories
-                            </button>
+                        <button
+                            onClick={() => { setCategory(""); setMobileFiltersOpen(false); }}
+                            className={`text-left text-sm px-3 py-2 rounded-lg w-full ${!categoryParam ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"}`}
+                        >
+                            All Categories
+                        </button>
+
+                        {/* Price range — right after reset button */}
+                        <div className="pt-3">
+                            <PriceRangeSlider
+                                min={PRICE_FLOOR}
+                                max={PRICE_CEIL}
+                                value={priceRange}
+                                onChange={handlePriceChange}
+                            />
+                        </div>
+
+                        <div className="pt-3 flex flex-col gap-1">
                             {categories.map((cat) => (
                                 <button
-                                    key={cat}
-                                    onClick={() => { setCategory(cat); setMobileFiltersOpen(false); }}
-                                    className={`text-left text-sm px-3 py-2 rounded-lg ${categoryParam === cat ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"}`}
+                                    key={cat.name}
+                                    onClick={() => setCategory(cat.name)}
+                                    className={`text-left text-sm px-3 py-2 rounded-lg ${categoryParam === cat.name ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"}`}
                                 >
-                                    {cat}
+                                    {cat.name}
                                 </button>
                             ))}
                         </div>
+
+                        {activeCategory && (
+                            <div className="mt-6 pt-5 border-t border-ink/10">
+                                <h4 className="text-sm font-semibold text-ink mb-3">{activeCategory.name} — Refine</h4>
+                                <div className="flex flex-col gap-1">
+                                    {activeCategory.subcategories.map((sub) => (
+                                        <button
+                                            key={sub}
+                                            onClick={() => { setSub(sub); setMobileFiltersOpen(false); }}
+                                            className={`text-left text-sm px-3 py-2 rounded-lg ${subParam === sub ? "bg-amber text-ink font-medium" : "text-slate hover:bg-ink/5"
+                                                }`}
+                                        >
+                                            {sub}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
