@@ -41,6 +41,18 @@ import {
     ArrowRight,
     Headphones,
     Zap,
+    Smartphone,
+    Shirt,
+    Home as HomeIcon,
+    BookOpen,
+    Sparkles,
+    Dumbbell,
+    ShoppingBasket,
+    Gamepad2,
+    Car,
+    HeartPulse,
+    Gem,
+    PawPrint,
 
 } from "lucide-react";
 
@@ -84,6 +96,19 @@ export {
     ArrowRight,
     Headphones,
     Zap,
+    
+    Smartphone,
+    Shirt,
+    HomeIcon,
+    BookOpen,
+    Sparkles,
+    Dumbbell,
+    ShoppingBasket,
+    Gamepad2,
+    Car,
+    HeartPulse,
+    Gem,
+    PawPrint,
 
 };
 

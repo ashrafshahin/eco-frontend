@@ -6,14 +6,17 @@ import { mockProducts } from "../../utils/mockProducts";
 import { mockOffers } from "../../utils/mockOffers";
 import HeroProductSlider from "../../components/product/HeroProductSlider";
 
-const categories = [
-    { name: "Electronics", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400" },
-    { name: "Fashion", image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=400" },
-    { name: "Home & Living", image: "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=400" },
-    { name: "Books", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400" },
-    { name: "Beauty", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400" },
-    { name: "Sports", image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=400" },
-];
+import { categories } from "../../utils/mockCategories";
+import CategoryGrid from "../../components/product/CategoryGrid";
+
+// const categories = [
+//     { name: "Electronics", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400" },
+//     { name: "Fashion", image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=400" },
+//     { name: "Home & Living", image: "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=400" },
+//     { name: "Books", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400" },
+//     { name: "Beauty", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400" },
+//     { name: "Sports", image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=400" },
+// ];
 
 const trustPoints = [
     { icon: Truck, label: "Fast Delivery", desc: "Nationwide, 2-5 days" },
@@ -84,29 +87,13 @@ export default function Home() {
             {/* Shop by category */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
                 <div className="flex items-end justify-between mb-6">
-                    <h2 className="font-display text-2xl sm:text-3xl font-semibold text-ink">Shop by Category</h2>
+                    <div>
+                        <h2 className="font-display text-2xl sm:text-3xl font-semibold text-ink">Shop by Category</h2>
+                        <p className="text-sm text-slate mt-1">Browse our full range of departments</p>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                    {categories.map((cat) => (
-                        <Link
-                            key={cat.name}
-                            to={`/products?category=${encodeURIComponent(cat.name)}`}
-                            className="group flex flex-col items-center gap-3"
-                        >
-                            <div className="w-full aspect-square rounded-full overflow-hidden bg-ink/5 border border-ink/10 group-hover:border-amber transition-colors">
-                                <img
-                                    src={cat.image}
-                                    alt={cat.name}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                            </div>
-                            <span className="text-sm font-medium text-ink/80 group-hover:text-amber transition-colors text-center">
-                                {cat.name}
-                            </span>
-                        </Link>
-                    ))}
-                </div>
+                <CategoryGrid categories={categories} />
             </section>
 
             {/* Featured products */}
