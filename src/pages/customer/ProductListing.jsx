@@ -29,15 +29,19 @@ export default function ProductListing() {
     ]);
 
     // TODO: replace mockProducts with data fetched from GET /get-all-products
+    // Once wired to a real API, prefer filtering status server-side (?status=active)
+    // rather than fetching everything and filtering client-side as done below.
     const products = mockProducts;
 
     const activeCategory = categories.find((c) => c.name === categoryParam);
 
     const filtered = useMemo(() => {
-        let result = [...products];
+        // Customers should only ever see active/published products —
+        // pending (not yet approved) and inactive (delisted) products are excluded.
+        let result = products.filter((p) => p.status === "active");
 
         if (search) {
-            result = result.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
+            result = result.filter((p) => p.title.toLowerCase().includes(search.toLowerCase()));
         }
         if (categoryParam) {
             result = result.filter((p) => p.category === categoryParam);
@@ -45,11 +49,11 @@ export default function ProductListing() {
         // TODO: once products have a `subcategory` field, add:
         // if (subParam) result = result.filter((p) => p.subcategory === subParam);
 
-        result = result.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
+        result = result.filter((p) => p.salePrice >= priceRange[0] && p.salePrice <= priceRange[1]);
 
-        if (sort === "price-low") result.sort((a, b) => a.price - b.price);
-        if (sort === "price-high") result.sort((a, b) => b.price - a.price);
-        if (sort === "name") result.sort((a, b) => a.name.localeCompare(b.name));
+        if (sort === "price-low") result.sort((a, b) => a.salePrice - b.salePrice);
+        if (sort === "price-high") result.sort((a, b) => b.salePrice - a.salePrice);
+        if (sort === "name") result.sort((a, b) => a.title.localeCompare(b.title));
 
         return result;
     }, [products, search, categoryParam, subParam, sort, priceRange]);

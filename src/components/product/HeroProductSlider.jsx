@@ -2,6 +2,14 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { ArrowRight } from "../common/Icons";
 
+function getMainImage(product) {
+    return product.images?.find((img) => img.isMain)?.url || product.images?.[0]?.url;
+}
+
+function getDiscountPercent(product) {
+    return product.price > product.salePrice ? Math.round((1 - product.salePrice / product.price) * 100) : 0;
+}
+
 export default function HeroProductSlider({ products }) {
     const [active, setActive] = useState(0);
 
@@ -14,11 +22,11 @@ export default function HeroProductSlider({ products }) {
 
     if (!products.length) return null;
     const product = products[active];
-    const image = product.mainImage || product.images?.[0];
+    const image = getMainImage(product);
+    const discount = getDiscountPercent(product);
 
     return (
         <div className="relative w-full max-w-md mx-auto">
-            {/* Glow accent behind image */}
             <div className="absolute -inset-6 bg-amber/20 rounded-full blur-3xl" />
 
             <div className="relative bg-paper/5 border border-paper/10 rounded-2xl p-6 backdrop-blur-sm">
@@ -27,28 +35,27 @@ export default function HeroProductSlider({ products }) {
                         <img
                             key={product._id}
                             src={image}
-                            alt={product.name}
+                            alt={product.title}
                             className="w-full h-full object-cover animate-in fade-in duration-500"
                         />
-                        {product.discount && (
+                        {discount > 0 && (
                             <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                                -{product.discount}%
+                                -{discount}%
                             </span>
                         )}
                     </div>
                 </Link>
 
-                {/* Floating price card */}
                 <div className="flex items-center justify-between mt-4 gap-3">
                     <div className="min-w-0">
-                        <p className="text-paper text-sm font-semibold line-clamp-1">{product.name}</p>
+                        <p className="text-paper text-sm font-semibold line-clamp-1">{product.title}</p>
                         <div className="flex items-center gap-2 mt-1">
                             <span className="font-display text-lg font-semibold text-amber">
-                                ৳{product.price.toLocaleString()}
+                                ৳{product.salePrice.toLocaleString()}
                             </span>
-                            {product.originalPrice && (
+                            {discount > 0 && (
                                 <span className="text-xs text-paper/40 line-through">
-                                    ৳{product.originalPrice.toLocaleString()}
+                                    ৳{product.price.toLocaleString()}
                                 </span>
                             )}
                         </div>
@@ -62,7 +69,6 @@ export default function HeroProductSlider({ products }) {
                     </Link>
                 </div>
 
-                {/* Dots */}
                 <div className="flex items-center justify-center gap-1.5 mt-5">
                     {products.map((_, i) => (
                         <button

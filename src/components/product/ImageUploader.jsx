@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { ImagePlus, X, Star } from "../common/Icons";
 
-export default function ImageUploader({ images, onChange, mainImageIndex, onSetMain }) {
+// images: array of { file?, url?, preview?, isMain }
+export default function ImageUploader({ images, onChange }) {
     const inputRef = useRef();
 
     const handleFiles = (fileList) => {
@@ -9,12 +10,20 @@ export default function ImageUploader({ images, onChange, mainImageIndex, onSetM
         const newImages = files.map((file) => ({
             file,
             preview: URL.createObjectURL(file),
+            isMain: images.length === 0 && files.indexOf(file) === 0, // first upload defaults to main
         }));
         onChange([...images, ...newImages].slice(0, 5));
     };
 
     const removeImage = (index) => {
-        onChange(images.filter((_, i) => i !== index));
+        const wasMain = images[index]?.isMain;
+        let next = images.filter((_, i) => i !== index);
+        if (wasMain && next.length > 0) next[0] = { ...next[0], isMain: true };
+        onChange(next);
+    };
+
+    const setMain = (index) => {
+        onChange(images.map((img, i) => ({ ...img, isMain: i === index })));
     };
 
     return (
@@ -35,14 +44,14 @@ export default function ImageUploader({ images, onChange, mainImageIndex, onSetM
 
                         <button
                             type="button"
-                            onClick={() => onSetMain(i)}
-                            className={`absolute bottom-1.5 left-1.5 flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-full transition-colors ${mainImageIndex === i
+                            onClick={() => setMain(i)}
+                            className={`absolute bottom-1.5 left-1.5 flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-full transition-colors ${img.isMain
                                     ? "bg-amber text-ink"
                                     : "bg-ink/60 text-paper opacity-0 group-hover:opacity-100"
                                 }`}
                         >
-                            <Star size={10} fill={mainImageIndex === i ? "currentColor" : "none"} />
-                            {mainImageIndex === i ? "Main" : "Set main"}
+                            <Star size={10} fill={img.isMain ? "currentColor" : "none"} />
+                            {img.isMain ? "Main" : "Set main"}
                         </button>
                     </div>
                 ))}

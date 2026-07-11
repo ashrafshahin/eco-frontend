@@ -1,18 +1,22 @@
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Loader2 } from "../common/Icons";
 
-export default function QuantitySelector({ value, onChange, max = 99 }) {
+export default function QuantitySelector({ value, onIncrement, onDecrement, disabled, min = 1 }) {
     return (
         <div className="flex items-center border border-ink/15 rounded-lg w-fit">
             <button
-                onClick={() => onChange(Math.max(1, value - 1))}
-                className="w-9 h-9 flex items-center justify-center text-ink/60 hover:text-ink transition-colors"
+                onClick={onDecrement}
+                disabled={disabled || value <= min}
+                className="w-9 h-9 flex items-center justify-center text-ink/60 hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
                 <Minus size={14} />
             </button>
-            <span className="w-10 text-center text-sm font-medium">{value}</span>
+            <span className="w-10 flex items-center justify-center text-sm font-medium">
+                {disabled ? <Loader2 size={13} className="animate-spin text-ink/40" /> : value}
+            </span>
             <button
-                onClick={() => onChange(Math.min(max, value + 1))}
-                className="w-9 h-9 flex items-center justify-center text-ink/60 hover:text-ink transition-colors"
+                onClick={onIncrement}
+                disabled={disabled}
+                className="w-9 h-9 flex items-center justify-center text-ink/60 hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
                 <Plus size={14} />
             </button>

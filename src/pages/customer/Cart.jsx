@@ -3,9 +3,12 @@ import { ShoppingCart } from "../../components/common/Icons";
 import { useCart } from "../../context/CartContext";
 import CartItem from "../../components/cart/CartItem";
 import CartSummary from "../../components/cart/CartSummary";
+import { PageLoader } from "../../components/common/Loader";
 
 export default function Cart() {
-    const { items, subtotal, totalItems } = useCart();
+    const { items, subtotal, totalItems, loading } = useCart();
+
+    if (loading) return <PageLoader />;
 
     if (items.length === 0) {
         return (
@@ -32,7 +35,7 @@ export default function Cart() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 bg-white rounded-xl border border-ink/10 px-5">
                     {items.map((item) => (
-                        <CartItem key={item._id} item={item} />
+                        <CartItem key={item.productId} item={item} />
                     ))}
                 </div>
 

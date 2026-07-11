@@ -1,66 +1,81 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { fetchCart, addToCartApi, updateCartQuantityApi, removeCartItemApi } from "../api/cartApi";
 
 const CartContext = createContext(null);
 
-const STORAGE_KEY = "learncart_cart";
+// TODO: replace with the real logged-in user's _id once auth is wired (e.g. from useAuth())
+const DEV_USER_ID = "guest";
 
 export function CartProvider({ children }) {
-    const [items, setItems] = useState(() => {
-        try {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            return saved ? JSON.parse(saved) : [];
-        } catch {
-            return [];
-        }
-    });
+    const [items, setItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [pendingIds, setPendingIds] = useState([]);
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    }, [items]);
+        fetchCart(DEV_USER_ID).then(setItems).finally(() => setLoading(false));
+    }, []);
 
-    const addToCart = (product, quantity = 1) => {
-        setItems((prev) => {
-            const existing = prev.find((i) => i._id === product._id);
-            if (existing) {
-                return prev.map((i) =>
-                    i._id === product._id
-                        ? { ...i, quantity: Math.min(i.quantity + quantity, product.stock ?? 99) }
-                        : i
-                );
-            }
-            return [
-                ...prev,
-                {
-                    _id: product._id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.mainImage || product.images?.[0],
-                    stock: product.stock,
-                    quantity,
-                },
-            ];
-        });
+    const setPending = (productId, isPending) => {
+        setPendingIds((prev) => (isPending ? [...prev, productId] : prev.filter((id) => id !== productId)));
     };
 
-    const updateQuantity = (productId, quantity) => {
-        if (quantity < 1) return;
-        setItems((prev) =>
-            prev.map((i) => (i._id === productId ? { ...i, quantity } : i))
-        );
-    };
+    const addToCart = useCallback(async (product, quantity = 1) => {
+        setPending(product._id, true);
+        try {
+            const updated = await addToCartApi(DEV_USER_ID, product, quantity);
+            setItems(updated);
+        } finally {
+            setPending(product._id, false);
+        }
+    }, []);
 
-    const removeFromCart = (productId) => {
-        setItems((prev) => prev.filter((i) => i._id !== productId));
-    };
+    const incrementQuantity = useCallback(async (productId) => {
+        setPending(productId, true);
+        setError("");
+        try {
+            const updated = await updateCartQuantityApi(DEV_USER_ID, productId, "increment");
+            setItems(updated);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setPending(productId, false);
+        }
+    }, []);
 
-    const clearCart = () => setItems([]);
+    const decrementQuantity = useCallback(async (productId) => {
+        setPending(productId, true);
+        try {
+            const updated = await updateCartQuantityApi(DEV_USER_ID, productId, "decrement");
+            setItems(updated);
+        } finally {
+            setPending(productId, false);
+        }
+    }, []);
+
+    const removeFromCart = useCallback(async (productId) => {
+        setPending(productId, true);
+        try {
+            const updated = await removeCartItemApi(DEV_USER_ID, productId);
+            setItems(updated);
+        } finally {
+            setPending(productId, false);
+        }
+    }, []);
+
+    const clearCart = () => setItems([]); // TODO: wire to a real "clear cart" endpoint if you add one
+
+    const isPending = (productId) => pendingIds.includes(productId);
 
     const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
     const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
 
     return (
         <CartContext.Provider
-            value={{ items, addToCart, updateQuantity, removeFromCart, clearCart, subtotal, totalItems }}
+            value={{
+                items, loading, error, subtotal, totalItems,
+                addToCart, incrementQuantity, decrementQuantity, removeFromCart, clearCart, isPending,
+            }}
         >
             {children}
         </CartContext.Provider>
