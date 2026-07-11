@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router";
+import { Link, NavLink, useNavigate, useLocation, useSearchParams } from "react-router";
 import { ShoppingCart, User, Menu, X, Search, ChevronDown } from "./Icons";
 import { useCart } from "../../context/CartContext";
 import { categories } from "../../utils/mockCategories";
@@ -10,7 +10,14 @@ export default function Navbar() {
     const [openMobileCat, setOpenMobileCat] = useState(null);
     const [hoveredCat, setHoveredCat] = useState(null);
     const navigate = useNavigate();
+    const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
     const { totalItems } = useCart();
+
+    const activeCategoryParam = searchParams.get("category");
+    const activeSubParam = searchParams.get("sub");
+    const activeCategory = categories.find((c) => c.name === activeCategoryParam);
+    const showRefineBar = location.pathname === "/products" && activeCategory;
 
     const linkClass = ({ isActive }) =>
         `text-sm font-medium transition-colors ${isActive ? "text-amber" : "text-ink/70 hover:text-ink"
@@ -23,6 +30,16 @@ export default function Navbar() {
 
     const toggleMobileCat = (name) => {
         setOpenMobileCat((prev) => (prev === name ? null : name));
+    };
+
+    const handleSubClick = (sub) => {
+        const next = new URLSearchParams(searchParams);
+        if (activeSubParam === sub) {
+            next.delete("sub");
+        } else {
+            next.set("sub", sub);
+        }
+        setSearchParams(next);
     };
 
     return (
@@ -83,67 +100,84 @@ export default function Navbar() {
             </div>
 
             {/* Category strip with mega-menu — desktop */}
-            <nav className="hidden md:block border-t border-ink/10 bg-white/50">
+            <nav className="hidden md:block border-t border-ink/10 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center gap-6 h-11 overflow-x-auto">
-                        <NavLink to="/products" className={linkClass}>
+                    <div className="flex items-center flex-wrap gap-x-6 gap-y-0 min-h-11">
+                        <NavLink
+                            to="/products"
+                            className={({ isActive }) =>
+                                `text-sm font-medium py-2.5 border-b-2 transition-colors ${isActive ? "text-amber border-amber" : "text-ink/70 border-transparent hover:text-ink"
+                                }`
+                            }
+                        >
                             All Products
                         </NavLink>
 
-                        {categories.map((cat) => (
-                            <div
-                                key={cat.name}
-                                className="relative h-full flex items-center"
-                                onMouseEnter={() => setHoveredCat(cat.name)}
-                                onMouseLeave={() => setHoveredCat(null)}
-                            >
-                                <Link
-                                    to={`/products?category=${encodeURIComponent(cat.name)}`}
-                                    className="flex items-center gap-1 text-sm text-ink/60 hover:text-amber whitespace-nowrap transition-colors"
+                        {categories.map((cat) => {
+                            const isActiveTab = activeCategoryParam === cat.name;
+                            return (
+                                <div
+                                    key={cat.name}
+                                    className="relative"
+                                    onMouseEnter={() => setHoveredCat(cat.name)}
+                                    onMouseLeave={() => setHoveredCat(null)}
                                 >
-                                    {cat.name}
-                                    <ChevronDown size={13} className={`transition-transform ${hoveredCat === cat.name ? "rotate-180" : ""}`} />
-                                </Link>
+                                    <Link
+                                        to={`/products?category=${encodeURIComponent(cat.name)}`}
+                                        className={`block text-sm py-2.5 whitespace-nowrap border-b-2 transition-colors ${isActiveTab || hoveredCat === cat.name
+                                                ? "text-amber border-amber font-medium"
+                                                : "text-ink/70 border-transparent hover:text-ink"
+                                            }`}
+                                    >
+                                        {cat.name}
+                                    </Link>
 
-                                {hoveredCat === cat.name && (
-                                    <div className="absolute top-full left-0 bg-slate-50 border border-ink/10 rounded-lg shadow-lg min-w-[200px] z-20 overflow-hidden">
-                                        {/* Category header */}
-                                        <div className="px-4 py-2.5 border-b border-ink/10 bg-white">
-                                            <Link
-                                                to={`/products?category=${encodeURIComponent(cat.name)}`}
-                                                className="text-sm font-semibold text-ink hover:text-amber transition-colors"
-                                            >
-                                                {cat.name}
-                                            </Link>
-                                        </div>
-
-                                        {/* Subcategories */}
-                                        <div className="py-2">
+                                    {hoveredCat === cat.name && (
+                                        <div className="absolute top-full left-0 bg-white border border-ink/10 rounded-lg shadow-lg min-w-[190px] py-1.5 z-20">
                                             {cat.subcategories.map((sub) => (
                                                 <Link
                                                     key={sub}
                                                     to={`/products?category=${encodeURIComponent(cat.name)}&sub=${encodeURIComponent(sub)}`}
-                                                    className="block px-4 py-2 text-sm text-ink/70 hover:text-amber hover:bg-white transition-colors"
+                                                    className="block px-4 py-2 text-sm text-ink/70 hover:text-amber hover:bg-ink/[0.03] transition-colors"
                                                 >
                                                     {sub}
                                                 </Link>
                                             ))}
                                         </div>
-
-                                        {/* View all footer */}
-                                        <Link
-                                            to={`/products?category=${encodeURIComponent(cat.name)}`}
-                                            className="block px-4 py-2.5 text-xs font-semibold text-amber border-t border-ink/10 bg-white hover:bg-ink/[0.02] transition-colors"
-                                        >
-                                            View all {cat.name} →
-                                        </Link>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </nav>
+
+            {/* Refine bar — shows subcategories when a category is active on /products */}
+            {showRefineBar && (
+                <div className="border-t border-ink/10 bg-amber/5">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
+                        <div className="flex items-center gap-3 flex-wrap">
+                            <span className="text-sm font-semibold text-ink whitespace-nowrap">
+                                {activeCategory.name} <span className="text-slate/50 font-normal">— Refine</span>
+                            </span>
+                            <div className="flex items-center gap-2 flex-wrap">
+                                {activeCategory.subcategories.map((sub) => (
+                                    <button
+                                        key={sub}
+                                        onClick={() => handleSubClick(sub)}
+                                        className={`text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap transition-colors ${activeSubParam === sub
+                                                ? "bg-amber text-ink"
+                                                : "bg-white border border-ink/15 text-ink/60 hover:border-amber hover:text-amber"
+                                            }`}
+                                    >
+                                        {sub}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Mobile menu */}
             {open && (
