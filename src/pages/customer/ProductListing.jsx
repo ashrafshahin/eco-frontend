@@ -1,9 +1,10 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router";
-import { SlidersHorizontal, X } from "../../components/common/Icons";
+import { SlidersHorizontal } from "../../components/common/Icons";
 import ProductGrid from "../../components/product/ProductGrid";
 import Pagination from "../../components/common/Pagination";
 import PriceRangeSlider from "../../components/product/PriceRangeSlider";
+import MobileFilterDrawer from "../../components/product/MobileFilterDrawer";
 import { mockProducts } from "../../utils/mockProducts";
 import { categories } from "../../utils/mockCategories";
 
@@ -179,68 +180,21 @@ export default function ProductListing() {
                 </div>
             </div>
 
-            {/* Mobile filters drawer */}
-            {mobileFiltersOpen && (
-                <div className="fixed inset-0 z-50 lg:hidden">
-                    <div className="absolute inset-0 bg-ink/40" onClick={() => setMobileFiltersOpen(false)} />
-                    <div className="absolute right-0 top-0 h-full w-72 bg-paper p-5 overflow-y-auto">
-                        <div className="flex items-center justify-between mb-5">
-                            <h3 className="font-semibold text-ink">Filters</h3>
-                            <button onClick={() => setMobileFiltersOpen(false)}>
-                                <X size={20} className="text-ink/60" />
-                            </button>
-                        </div>
-
-                        <h4 className="text-sm font-semibold text-ink mb-3">Category</h4>
-                        <button
-                            onClick={() => { setCategory(""); setMobileFiltersOpen(false); }}
-                            className={`text-left text-sm px-3 py-2 rounded-lg w-full ${!categoryParam ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"}`}
-                        >
-                            All Categories
-                        </button>
-
-                        {/* Price range — right after reset button */}
-                        <div className="pt-3">
-                            <PriceRangeSlider
-                                min={PRICE_FLOOR}
-                                max={PRICE_CEIL}
-                                value={priceRange}
-                                onChange={handlePriceChange}
-                            />
-                        </div>
-
-                        <div className="pt-3 flex flex-col gap-1">
-                            {categories.map((cat) => (
-                                <button
-                                    key={cat.name}
-                                    onClick={() => setCategory(cat.name)}
-                                    className={`text-left text-sm px-3 py-2 rounded-lg ${categoryParam === cat.name ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"}`}
-                                >
-                                    {cat.name}
-                                </button>
-                            ))}
-                        </div>
-
-                        {activeCategory && (
-                            <div className="mt-6 pt-5 border-t border-ink/10">
-                                <h4 className="text-sm font-semibold text-ink mb-3">{activeCategory.name} — Refine</h4>
-                                <div className="flex flex-col gap-1">
-                                    {activeCategory.subcategories.map((sub) => (
-                                        <button
-                                            key={sub}
-                                            onClick={() => { setSub(sub); setMobileFiltersOpen(false); }}
-                                            className={`text-left text-sm px-3 py-2 rounded-lg ${subParam === sub ? "bg-amber text-ink font-medium" : "text-slate hover:bg-ink/5"
-                                                }`}
-                                        >
-                                            {sub}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
+            {/* Mobile filter drawer */}
+            <MobileFilterDrawer
+                open={mobileFiltersOpen}
+                onClose={() => setMobileFiltersOpen(false)}
+                categories={categories}
+                categoryParam={categoryParam}
+                setCategory={setCategory}
+                activeCategory={activeCategory}
+                subParam={subParam}
+                setSub={setSub}
+                priceRange={priceRange}
+                onPriceChange={handlePriceChange}
+                priceFloor={PRICE_FLOOR}
+                priceCeil={PRICE_CEIL}
+            />
         </div>
     );
 };
