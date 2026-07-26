@@ -54,6 +54,9 @@ import {
     Gem,
     PawPrint,
     Tag,
+    TrendingUp,
+    
+    
 
 } from "lucide-react";
 
@@ -111,6 +114,10 @@ export {
     Gem,
     PawPrint,
     Tag,
+
+    
+    TrendingUp,
+    
 
 };
 
