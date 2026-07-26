@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate, useLocation, useSearchParams } from "react-router";
-import { ShoppingCart, User, Menu, X, Search, ChevronDown } from "./Icons";
+import { ShoppingCart, User, Menu, X, Search, ChevronDown, Mail, Phone, Truck } from "./Icons";
 import { useCart } from "../../context/CartContext";
 import { categories } from "../../utils/mockCategories";
 
@@ -43,12 +43,25 @@ export default function Navbar() {
     };
 
     return (
-        <header className="sticky top-0 z-50 bg-paper/95 backdrop-blur border-b border-ink/10">
+        <header className="sticky top-0 z-50 bg-paper/95 backdrop-blur border-b border-ink/10 shadow-sm">
             {/* Top utility bar */}
             <div className="hidden sm:block bg-ink text-paper/70 text-xs">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex justify-between items-center">
-                    <span>Free shipping on orders over ৳2000</span>
-                    <div className="flex gap-4">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center">
+                    <div className="flex items-center gap-5">
+                        <span className="flex items-center gap-1.5">
+                            <Truck size={12} className="text-amber shrink-0" />
+                            Free shipping on orders over ৳2000
+                        </span>
+                        <a href="mailto:support@ecobazaar.com" className="hidden lg:flex items-center gap-1.5 hover:text-amber transition-colors">
+                            <Mail size={12} className="text-amber shrink-0" />
+                            support@ecobazaar.com
+                        </a>
+                        <a href="tel:+8801700000000" className="hidden lg:flex items-center gap-1.5 hover:text-amber transition-colors">
+                            <Phone size={12} className="text-amber shrink-0" />
+                            +880 1700-000000
+                        </a>
+                    </div>
+                    <div className="flex gap-5">
                         <Link to="/my-orders" className="hover:text-amber transition-colors">Track Order</Link>
                         <Link to="/resend-verification" className="hover:text-amber transition-colors">Help</Link>
                     </div>
@@ -79,16 +92,27 @@ export default function Navbar() {
                     </form>
 
                     {/* Right actions */}
-                    <div className="hidden md:flex items-center gap-5 ml-auto shrink-0">
-                        <Link to="/login" className="flex items-center gap-1.5 text-sm font-medium text-ink/70 hover:text-ink transition-colors">
-                            <User size={19} />
+                    <div className="hidden md:flex items-center gap-1 ml-auto shrink-0">
+                        <Link
+                            to="/login"
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors"
+                        >
+                            <div className="w-7 h-7 rounded-full bg-ink/5 flex items-center justify-center">
+                                <User size={15} />
+                            </div>
                             Account
                         </Link>
-                        <Link to="/cart" className="relative text-ink/70 hover:text-ink transition-colors">
-                            <ShoppingCart size={20} />
-                            <span className="absolute -top-2 -right-2 bg-amber text-ink text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                                {totalItems}
-                            </span>
+                        <Link
+                            to="/cart"
+                            className="relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors ml-1"
+                        >
+                            <div className="relative w-7 h-7 rounded-full bg-ink/5 flex items-center justify-center">
+                                <ShoppingCart size={15} />
+                                <span className="absolute -top-1.5 -right-1.5 bg-amber text-ink text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                    {totalItems}
+                                </span>
+                            </div>
+                            Cart
                         </Link>
                     </div>
 
@@ -240,6 +264,16 @@ export default function Navbar() {
                                 </div>
                             );
                         })}
+
+                        {/* Contact info — mobile */}
+                        <div className="flex flex-col gap-2 pt-4 mt-2 border-t border-ink/10">
+                            <a href="mailto:support@ecobazaar.com" className="flex items-center gap-2 text-sm text-ink/60">
+                                <Mail size={15} className="text-amber" /> support@ecobazaar.com
+                            </a>
+                            <a href="tel:+8801700000000" className="flex items-center gap-2 text-sm text-ink/60">
+                                <Phone size={15} className="text-amber" /> +880 1700-000000
+                            </a>
+                        </div>
 
                         <div className="flex items-center gap-4 pt-4 mt-2 border-t border-ink/10">
                             <Link to="/cart" onClick={() => setOpen(false)} className="flex items-center gap-1.5 text-sm text-ink/70">
