@@ -29,8 +29,6 @@ export default function ProductListing() {
     ]);
 
     // TODO: replace mockProducts with data fetched from GET /get-all-products
-    // Once wired to a real API, prefer filtering status server-side (?status=active)
-    // rather than fetching everything and filtering client-side as done below.
     const products = mockProducts;
 
     const activeCategory = categories.find((c) => c.name === categoryParam);
@@ -41,7 +39,23 @@ export default function ProductListing() {
         let result = products.filter((p) => p.status === "active");
 
         if (search) {
-            result = result.filter((p) => p.title.toLowerCase().includes(search.toLowerCase()));
+            const q = search.toLowerCase();
+            result = result.filter((p) => {
+                const titleMatch = p.title.toLowerCase().includes(q);
+                const skuMatch = p.sku?.toLowerCase().includes(q);
+                const categoryMatch = p.category?.toLowerCase().includes(q);
+                const brandMatch = p.brand?.toLowerCase().includes(q);
+                const tagsMatch = p.tags?.some((tag) => tag.toLowerCase().includes(q));
+
+                // Match against subcategory names belonging to this product's category
+                // (products don't have their own subcategory field yet — TODO below)
+                const productCategory = categories.find((c) => c.name === p.category);
+                const subcategoryMatch = productCategory?.subcategories.some((sub) =>
+                    sub.toLowerCase().includes(q)
+                );
+
+                return titleMatch || skuMatch || categoryMatch || brandMatch || tagsMatch || subcategoryMatch;
+            });
         }
         if (categoryParam) {
             result = result.filter((p) => p.category === categoryParam);
