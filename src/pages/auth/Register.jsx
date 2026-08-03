@@ -5,6 +5,7 @@ import AuthLayout from "../../layouts/AuthLayout";
 import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
 import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
 
 function getPasswordStrength(password) {
     if (!password) return { label: "", width: "0%", color: "" };
@@ -29,7 +30,7 @@ export default function Register() {
         email: "",
         password: "",
         confirmPassword: "",
-        role: "customer",
+        role: "user",
     });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
@@ -48,16 +49,16 @@ export default function Register() {
 
     const validate = () => {
         const errs = {};
-        if (!form.name.trim()) errs.name = "Name is required";
+        if (!form.name.trim()) errs.name = "Name is required...";
         if (!form.email) errs.email = "Email is required";
-        else if (!/\S+@\S+\.\S+/.test(form.email)) errs.email = "Enter a valid email";
-        if (!form.password) errs.password = "Password is required";
+        else if (!/\S+@\S+\.\S+/.test(form.email)) errs.email = "Enter a valid email...";
+        if (!form.password) errs.password = "Password is required...";
         else if (form.password.length < 6) errs.password = "At least 6 characters";
-        if (form.confirmPassword !== form.password) errs.confirmPassword = "Passwords don't match";
+        if (form.confirmPassword !== form.password) errs.confirmPassword = "Passwords don't match...";
         return errs;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const errs = validate();
         if (Object.keys(errs).length) return setErrors(errs);
@@ -66,16 +67,12 @@ export default function Register() {
         setSubmitError("");
         // TODO: connect to POST /registration
         try {
-            register({
-                name: form.name,
-                email: form.email,
-                password: form.password,
-                role: form.role,
-            });
-            setTimeout(() => {
-                setLoading(false);
-                navigate("/");
-            }, 500);
+            let data = await axios.post('http://localhost:5000/registration', form)
+            navigate('/login')
+
+            console.log(data, 'register form data...');
+            // console.log(form);
+
         } catch (err) {
             setLoading(false);
             setSubmitError(err.message);
@@ -141,32 +138,15 @@ export default function Register() {
                 />
 
                 <div>
-                    <label className="text-sm font-medium text-ink block mb-2">I am registering as</label>
-                    <div className="grid grid-cols-2 gap-3">
-                        {["customer", "manager"].map((role) => (
-                            <button
-                                type="button"
-                                key={role}
-                                onClick={() => setForm({ ...form, role })}
-                                className={`py-2.5 rounded-lg text-sm font-semibold capitalize border transition-colors ${form.role === role
-                                        ? "bg-ink text-paper border-ink"
-                                        : "border-ink/15 text-ink/60 hover:border-ink/30"
-                                    }`}
-                            >
-                                {role}
-                            </button>
-                        ))}
-                    </div>
-                    <p className="text-xs text-slate/60 mt-1.5">
-                        Admin accounts are created separately and aren't available via public registration.
-                    </p>
+                    <label className="text-m font-medium text-ink block mb-2 mt-2">Terms & Conditions <input type="checkbox" />  </label>
+
                 </div>
 
                 {submitError && (
                     <p className="text-sm text-red-500 text-center bg-red-50 py-2 rounded-lg">{submitError}</p>
                 )}
 
-                <Button type="submit" loading={loading} className="mt-1">
+                <Button type="submit" className="mt-1">
                     Create Account
                 </Button>
             </form>

@@ -58,7 +58,7 @@ export default function Navbar() {
                         </a>
                         <a href="tel:+8801700000000" className="hidden lg:flex items-center gap-1.5 hover:text-amber transition-colors">
                             <Phone size={12} className="text-amber shrink-0" />
-                            +880 1700-000000
+                            +880 18166 77503
                         </a>
                     </div>
                     <div className="flex gap-5">

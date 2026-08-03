@@ -27,13 +27,13 @@ export default function HeroMiniShowcase({ products }) {
     const discount = getDiscountPercent(product);
 
     return (
-        <div className="relative w-full max-w-[280px] mx-auto">
+        <div className="relative w-full max-w-70 mx-auto">
             {/* Soft glow behind card */}
             <div className="absolute -inset-4 bg-amber/15 rounded-3xl blur-2xl" />
 
             <div className="relative bg-paper/[0.06] border border-paper/15 rounded-2xl p-4 backdrop-blur-sm shadow-2xl">
                 <Link to={`/products/${product._id}`} className="block">
-                    <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-paper/5">
+                    <div className="relative aspect-4/3 rounded-xl overflow-hidden bg-paper/5">
                         <img
                             key={product._id}
                             src={image}

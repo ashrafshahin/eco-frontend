@@ -154,7 +154,7 @@ export default function Footer() {
                             </a>
                             <a href="tel:+8801700000000" className="flex items-center gap-2.5 text-sm text-paper/60 hover:text-amber transition-colors">
                                 <Phone size={14} className="text-amber shrink-0" />
-                                +880 1700-000000
+                                +880 18166 77503
                             </a>
                             <div className="flex items-start gap-2.5 text-sm text-paper/60">
                                 <MapPin size={14} className="text-amber shrink-0 mt-0.5" />

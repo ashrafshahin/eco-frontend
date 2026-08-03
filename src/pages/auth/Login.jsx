@@ -5,6 +5,7 @@ import AuthLayout from "../../layouts/AuthLayout";
 import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
 import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
 
 export default function Login() {
     const [form, setForm] = useState({ email: "", password: "" });
@@ -24,13 +25,13 @@ export default function Login() {
 
     const validate = () => {
         const errs = {};
-        if (!form.email) errs.email = "Email is required";
-        else if (!/\S+@\S+\.\S+/.test(form.email)) errs.email = "Enter a valid email";
-        if (!form.password) errs.password = "Password is required";
+        if (!form.email) errs.email = "Email is required...";
+        else if (!/\S+@\S+\.\S+/.test(form.email)) errs.email = "Enter a valid email...";
+        if (!form.password) errs.password = "Password is required...";
         return errs;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const errs = validate();
         if (Object.keys(errs).length) return setErrors(errs);
@@ -39,11 +40,13 @@ export default function Login() {
         setSubmitError("");
         // TODO: connect to POST /login
         try {
-            login(form.email, form.password);
-            setTimeout(() => {
-                setLoading(false);
-                navigate(location.state?.from?.pathname || "/");
-            }, 500);
+            const data = await axios.post('http://localhost:5000/login', form);
+            navigate('/')
+            console.log(data, 'login data check...');
+            
+
+            // console.log('login check', form);
+            
         } catch (err) {
             setLoading(false);
             setSubmitError(err.message);
@@ -89,7 +92,7 @@ export default function Login() {
                     <p className="text-sm text-red-500 text-center bg-red-50 py-2 rounded-lg">{submitError}</p>
                 )}
 
-                <Button type="submit" loading={loading} className="mt-1">
+                <Button type="submit" className="mt-1">
                     Log In
                 </Button>
             </form>
