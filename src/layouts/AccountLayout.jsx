@@ -16,8 +16,8 @@ export default function AccountLayout() {
         }`;
 
     const handleLogout = () => {
-        logout();
-        navigate("/login");
+        localStorage.removeItem('userinfo')
+        navigate("/");
     };
 
     return (

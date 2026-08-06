@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate, useLocation, useSearchParams } from "react-router";
 import { ShoppingCart, User, Menu, X, Search, ChevronDown, Mail, Phone, Truck } from "./Icons";
 import { useCart } from "../../context/CartContext";
@@ -13,6 +13,15 @@ export default function Navbar() {
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
     const { totalItems } = useCart();
+    
+    const [userInfo, setUserInfo] = useState({});
+    useEffect(() => {
+        const data = JSON.parse(localStorage.getItem('userinfo'))
+        setUserInfo(data)
+    
+        console.log(data, 'check data...');
+        
+    },[]);
 
     const activeCategoryParam = searchParams.get("category");
     const activeSubParam = searchParams.get("sub");
@@ -93,15 +102,29 @@ export default function Navbar() {
 
                     {/* Right actions */}
                     <div className="hidden md:flex items-center gap-1 ml-auto shrink-0">
+                        
+                        {userInfo.email ?
                         <Link
-                            to="/login"
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors"
-                        >
+                            to="/profile"
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors">
                             <div className="w-7 h-7 rounded-full bg-ink/5 flex items-center justify-center">
                                 <User size={15} />
                             </div>
-                            Account
-                        </Link>
+                            {userInfo.name}
+
+                            </Link>
+                            :
+                            <Link
+                                to="/"
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors">
+                                <div className="w-7 h-7 rounded-full bg-ink/5 flex items-center justify-center">
+                                    <User size={15} />
+                                </div>
+                                Account
+
+                            </Link>
+                        }
+                        
                         <Link
                             to="/cart"
                             className="relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors ml-1"

@@ -41,11 +41,10 @@ export default function Login() {
         // TODO: connect to POST /login
         try {
             const data = await axios.post('http://localhost:5000/login', form);
-            navigate('/')
-            console.log(data, 'login data check...');
+            navigate('/') 
+            console.log(data,'login data check...');
             
-
-            // console.log('login check', form);
+            localStorage.setItem('userinfo', JSON.stringify(data.data.data))
             
         } catch (err) {
             setLoading(false);
