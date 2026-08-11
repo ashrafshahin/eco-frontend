@@ -22,7 +22,7 @@ export default function Navbar() {
         console.log(data, 'check data...');
         
     },[]);
-
+    
     const activeCategoryParam = searchParams.get("category");
     const activeSubParam = searchParams.get("sub");
     const activeCategory = categories.find((c) => c.name === activeCategoryParam);
@@ -102,20 +102,19 @@ export default function Navbar() {
 
                     {/* Right actions */}
                     <div className="hidden md:flex items-center gap-1 ml-auto shrink-0">
+
+                        {userInfo?.email ?
                         
-                        {userInfo.email ?
-                        <Link
-                            to="/profile"
+                            <Link to="/profile"
                             className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors">
                             <div className="w-7 h-7 rounded-full bg-ink/5 flex items-center justify-center">
                                 <User size={15} />
                             </div>
-                            {userInfo.name}
+                                {userInfo.name}
 
                             </Link>
                             :
-                            <Link
-                                to="/"
+                            <Link to="/login"
                                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors">
                                 <div className="w-7 h-7 rounded-full bg-ink/5 flex items-center justify-center">
                                     <User size={15} />
@@ -124,7 +123,7 @@ export default function Navbar() {
 
                             </Link>
                         }
-                        
+                       
                         <Link
                             to="/cart"
                             className="relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors ml-1"
