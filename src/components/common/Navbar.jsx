@@ -110,7 +110,7 @@ export default function Navbar() {
                             <div className="w-7 h-7 rounded-full bg-ink/5 flex items-center justify-center">
                                 <User size={15} />
                             </div>
-                                {userInfo.name}
+                                {userInfo?.name}
 
                             </Link>
                             :

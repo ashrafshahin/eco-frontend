@@ -1,11 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
 import { User, Mail, Phone, MapPin } from "../../components/common/Icons";
 import { mockUser } from "../../utils/mockUsers";
+import axios from "axios";
 
 export default function Profile() {
-    const [form, setForm] = useState({ ...mockUser });
+    // role likha thakle thik thake 
+    const [form, setForm] = useState({
+        name: "",
+        email: "",
+        // role:"",
+        phone:"",
+        address:"",
+        city: "",
+        postalCode:"",
+        
+     });
     const [errors, setErrors] = useState({});
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
@@ -25,27 +36,15 @@ export default function Profile() {
         return errs;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const errs = validate();
         if (Object.keys(errs).length) return setErrors(errs);
 
-        setSaving(true);
-        // TODO: connect to POST /updateuser/:id
-        console.log("Update profile:", form);
-        setTimeout(() => {
-            setSaving(false);
-            setSaved(true);
-        }, 700);
+        const data = await axios.post(`http://localhost:5000/updateuser/${userInfo._id}`, form);
+        console.log("Update profile:...check korchi", form);
+        
     };
-
-    // const initials = form.name
-    //     .split(" ")
-    //     .map((n) => n[0])
-    //     .slice(0, 2)
-    //     .join("")
-    //     .toUpperCase();
-
     
     const initials = (form.name || "")
         .split(" ")
@@ -54,6 +53,42 @@ export default function Profile() {
         .slice(0, 2)
         .join("")
         .toUpperCase() || "?";
+    
+    // full stack works //
+    const [userInfo, setUserInfo] = useState({});
+
+    useEffect(() => {
+        const data = JSON.parse(localStorage.getItem('userinfo'));
+        setUserInfo(data);
+        console.log(data, '... check data in profile ...');
+        
+    }, []);
+
+    useEffect(() => {
+        const getData = async () => {
+            if (userInfo?._id) 
+            {const data = await axios.get(`http://localhost:5000/getsingleuser/${userInfo?._id}`)
+            
+                console.log(data.data.userData, '... get single user data...');
+                console.log(userInfo, '... single user info ki ase...');
+                
+                // break na koleo amer ta kaj korche... but role upore thakte hobe...
+                // setForm(data.data.userData)
+                const dataShort = data.data.userData
+                setForm({
+                    name: dataShort.name,
+                     email: dataShort.email,
+                    phone: dataShort.phone,
+                    address: dataShort.address,
+                     city: dataShort.city,
+                    postalCode: dataShort.postalCode,
+                })
+        }
+        }
+        getData()
+        
+    }, [userInfo?._id]);
+    
 
     return (
         <div>
@@ -62,9 +97,13 @@ export default function Profile() {
                     {initials}
                 </div>
                 <div>
-                    <h1 className="font-display text-2xl font-semibold text-ink">{form.name}</h1>
+                    <h1 className="font-display text-2xl font-semibold text-ink">
+                        {/* {form.name} */}
+                        {userInfo?.name}
+                    </h1>
                     <p className="text-sm text-slate">
                         Member since {new Date(form.joined).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                        
                     </p>
                 </div>
             </div>
