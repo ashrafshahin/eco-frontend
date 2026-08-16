@@ -24,7 +24,7 @@ export default function VerifyEmail() {
         <AuthLayout
             title={
                 status === "verifying"
-                    ? "Verifying your email..."
+                    ? "Verifying your email..." 
                     : status === "success"
                         ? "Email verified"
                         : "Verification failed"

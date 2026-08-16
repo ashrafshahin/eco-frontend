@@ -6,6 +6,7 @@ import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
+import { ColorRing } from "react-loader-spinner";
 
 export default function Login() {
     const [form, setForm] = useState({ email: "", password: "" });
@@ -91,9 +92,26 @@ export default function Login() {
                     <p className="text-sm text-red-500 text-center bg-red-50 py-2 rounded-lg">{submitError}</p>
                 )}
 
-                <Button type="submit" className="mt-1">
-                    Log In
-                </Button>
+                {/* loader bosano hoise ... */}
+                {
+                    loading ?
+                        <Button type="submit" className="mt-1">
+                                <ColorRing
+                                visible={true}
+                                height="40"
+                                width="40"
+                                ariaLabel="color-ring-loading"
+                                wrapperStyle={{}}
+                                wrapperClass="color-ring-wrapper"
+                                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                                />
+                        </Button>
+                        :
+                        <Button type="submit" className="mt-1">
+                            Create Account
+                        </Button>
+                      
+                }
             </form>
 
             <div className="flex items-center gap-3 my-6">
