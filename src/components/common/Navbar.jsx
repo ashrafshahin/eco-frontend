@@ -14,15 +14,6 @@ export default function Navbar() {
     const [searchParams, setSearchParams] = useSearchParams();
     const { totalItems } = useCart();
     
-    const [userInfo, setUserInfo] = useState({});
-    useEffect(() => {
-        const data = JSON.parse(localStorage.getItem('userinfo'))
-        setUserInfo(data)
-    
-        console.log(data, 'check data...');
-        
-    },[]);
-    
     const activeCategoryParam = searchParams.get("category");
     const activeSubParam = searchParams.get("sub");
     const activeCategory = categories.find((c) => c.name === activeCategoryParam);
@@ -51,6 +42,15 @@ export default function Navbar() {
         setSearchParams(next);
     };
 
+    const [userInfo, setUserInfo] = useState({});
+    useEffect(() => {
+        const data = JSON.parse(localStorage.getItem('userinfo'))
+        setUserInfo(data)
+    
+        console.log(data, 'check data...');
+        
+    },[]);
+
     return (
         <header className="sticky top-0 z-50 bg-paper/95 backdrop-blur border-b border-ink/10 shadow-sm">
             {/* Top utility bar */}
@@ -65,7 +65,7 @@ export default function Navbar() {
                             <Mail size={12} className="text-amber shrink-0" />
                             support@ecobazaar.com
                         </a>
-                        <a href="tel:+8801700000000" className="hidden lg:flex items-center gap-1.5 hover:text-amber transition-colors">
+                        <a href="tel:+8801816677503" className="hidden lg:flex items-center gap-1.5 hover:text-amber transition-colors">
                             <Phone size={12} className="text-amber shrink-0" />
                             +880 18166 77503
                         </a>
@@ -109,7 +109,7 @@ export default function Navbar() {
                             className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors">
                             <div className="w-7 h-7 rounded-full bg-ink/5 flex items-center justify-center">
                                 <User size={15} />
-                            </div>
+                                </div>     
                                 {userInfo?.name}
 
                             </Link>
@@ -179,7 +179,7 @@ export default function Navbar() {
                                     </Link>
 
                                     {hoveredCat === cat.name && (
-                                        <div className="absolute top-full left-0 bg-white border border-ink/10 rounded-lg shadow-lg min-w-[190px] py-1.5 z-20">
+                                        <div className="absolute top-full left-0 bg-white border border-ink/10 rounded-lg shadow-lg min-w-48 py-1.5 z-20">
                                             {cat.subcategories.map((sub) => (
                                                 <Link
                                                     key={sub}
@@ -292,8 +292,8 @@ export default function Navbar() {
                             <a href="mailto:support@ecobazaar.com" className="flex items-center gap-2 text-sm text-ink/60">
                                 <Mail size={15} className="text-amber" /> support@ecobazaar.com
                             </a>
-                            <a href="tel:+8801700000000" className="flex items-center gap-2 text-sm text-ink/60">
-                                <Phone size={15} className="text-amber" /> +880 1700-000000
+                            <a href="tel:+8801816677503" className="flex items-center gap-2 text-sm text-ink/60">
+                                <Phone size={15} className="text-amber" /> +880 1816677503
                             </a>
                         </div>
 
@@ -301,9 +301,28 @@ export default function Navbar() {
                             <Link to="/cart" onClick={() => setOpen(false)} className="flex items-center gap-1.5 text-sm text-ink/70">
                                 <ShoppingCart size={18} /> Cart
                             </Link>
-                            <Link to="/login" onClick={() => setOpen(false)} className="flex items-center gap-1.5 text-sm text-ink/70">
-                                <User size={18} /> Account
+                            
+                            {userInfo?.email ?
+                        
+                            <Link to="/profile"
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors">
+                            <div className="w-7 h-7 rounded-full bg-ink/5 flex items-center justify-center">
+                                <User size={15} />
+                                </div>
+                                
+                                {userInfo?.name}
+
                             </Link>
+                            :
+                            <Link to="/login"
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-ink/70 hover:text-ink hover:bg-ink/5 transition-colors">
+                                <div className="w-7 h-7 rounded-full bg-ink/5 flex items-center justify-center">
+                                    <User size={15} />
+                                </div>
+                                Account
+
+                            </Link>
+                        }
                         </div>
                     </nav>
                 </div>

@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import {
     Mail, Phone, MapPin, Truck, ShieldCheck, RotateCcw, CreditCard, Star,
-    FacebookIcon, InstagramIcon, TwitterIcon, LinkedinIcon, WhatsappIcon,
+    FacebookIcon, InstagramIcon, TwitterIcon, LinkedinIcon, WhatsappIcon, User,
 } from "./Icons";
 import { categories } from "../../utils/mockCategories";
 import { mockProducts } from "../../utils/mockProducts";
@@ -33,6 +33,15 @@ export default function Footer() {
         setSubscribed(true);
         setEmail("");
     };
+
+    const [userInfo, setUserInfo] = useState({});
+    useEffect(() => {
+        const data = JSON.parse(localStorage.getItem('userinfo'))
+        setUserInfo(data)
+    
+        console.log(data, 'check data...');
+        
+    },[]);
 
     return (
         <footer className="bg-ink text-paper/80 mt-20">
@@ -152,7 +161,7 @@ export default function Footer() {
                                 <Mail size={14} className="text-amber shrink-0" />
                                 support@ecobazaar.com
                             </a>
-                            <a href="tel:+8801700000000" className="flex items-center gap-2.5 text-sm text-paper/60 hover:text-amber transition-colors">
+                            <a href="tel:+8801816677503" className="flex items-center gap-2.5 text-sm text-paper/60 hover:text-amber transition-colors">
                                 <Phone size={14} className="text-amber shrink-0" />
                                 +880 18166 77503
                             </a>
@@ -196,7 +205,29 @@ export default function Footer() {
 
                     {/* Account */}
                     <div>
-                        <h4 className="text-sm font-semibold text-paper mb-3">Account</h4>
+                        <h4 className="text-sm font-semibold text-paper mb-3">
+                            {userInfo?.email ?
+                        
+                            <Link to="/profile"
+                            className="flex items-center text-blue-800">
+                            <div className="rounded-full bg-ink/5 flex items-center justify-center">
+                                <User size={15} />
+                                </div>
+                                
+                                {userInfo?.name}
+
+                            </Link>
+                            :
+                            <Link to="/login"
+                                className="flex items-center text-amber-500 ">
+                                <div className=" rounded-full bg-ink/5 flex items-center justify-center">
+                                    <User size={15} />
+                                </div>
+                               My Account
+
+                            </Link>
+                        }
+                        </h4>
                         <ul className="space-y-2 text-sm text-paper/60">
                             <li><Link to="/login" className="hover:text-amber transition-colors">Login</Link></li>
                             <li><Link to="/register" className="hover:text-amber transition-colors">Register</Link></li>
