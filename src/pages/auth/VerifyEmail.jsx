@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import AuthLayout from "../../layouts/AuthLayout";
+import axios from "axios";
 
 export default function VerifyEmail() {
     const { token } = useParams();
@@ -8,9 +9,15 @@ export default function VerifyEmail() {
 
     useEffect(() => {
         // TODO: connect to POST /verifyemail/:token
-        console.log("Verifying token:", token);
-        const timer = setTimeout(() => setStatus("success"), 1200);
-        return () => clearTimeout(timer);
+        const data = axios.post(`http://localhost:5000/verify-email/${token}`)
+        
+        console.log(data, 'data ki pai token er sathe...');
+        console.log("Verifying token: check korchi...", token);
+
+        setStatus("success")
+        return
+        // const timer = setTimeout(() => setStatus("success"), 1000);
+        // return () => clearTimeout(timer);
     }, [token]);
 
     return (

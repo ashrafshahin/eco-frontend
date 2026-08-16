@@ -93,14 +93,11 @@ export default function Profile() {
     return (
         <div>
             <div className="flex items-center gap-4 mb-8">
-                <div className="w-16 h-16 rounded-full bg-ink text-paper flex items-center justify-center font-display text-xl font-semibold shrink-0">
-                    {initials}
+                <div className=" h-16 rounded-full bg-ink text-paper flex items-center justify-center font-display text-xl font-semibold shrink-0">
+                  {userInfo?.name}
                 </div>
                 <div>
-                    <h1 className="font-display text-2xl font-semibold text-ink">
-                        {/* {form.name} */}
-                        {userInfo?.name}
-                    </h1>
+                    
                     <p className="text-sm text-slate">
                         Member since {new Date(form.joined).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
                         
