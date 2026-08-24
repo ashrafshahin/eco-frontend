@@ -129,6 +129,13 @@ export default function Login() {
                     Register
                 </Link>
             </p>
+            <br />
+            <p className="text-sm text-slate text-center">
+                Email Verification is mendatory...{" "}
+                <Link to="/resend-verification" className="text-ink font-semibold hover:underline underline-offset-2"> Email Verify</Link>
+            </p>
+
+            
 
             {/* DEV ONLY — remove once real backend auth is wired */}
             <div className="mt-8 pt-6 border-t border-dashed border-ink/15">

@@ -72,7 +72,8 @@ export default function Navbar() {
                     </div>
                     <div className="flex gap-5">
                         <Link to="/my-orders" className="hover:text-amber transition-colors">Track Order</Link>
-                        <Link to="/resend-verification" className="hover:text-amber transition-colors">Help</Link>
+                        <Link to="/resend-verification" className="hover:text-amber transition-colors"> Email Verify</Link>
+                        <Link to="/customer-service" className="hover:text-amber transition-colors">Help</Link>
                     </div>
                 </div>
             </div>

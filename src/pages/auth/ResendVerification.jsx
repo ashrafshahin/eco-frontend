@@ -2,6 +2,8 @@ import { useState } from "react";
 import AuthLayout from "../../layouts/AuthLayout";
 import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
+import axios from "axios";
+import { Navigate } from "react-router";
 
 export default function ResendVerification() {
     const [email, setEmail] = useState("");
@@ -9,18 +11,23 @@ export default function ResendVerification() {
     const [loading, setLoading] = useState(false);
     const [sent, setSent] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!email) return setError("Email is required");
         if (!/\S+@\S+\.\S+/.test(email)) return setError("Enter a valid email");
 
-        setLoading(true);
         // TODO: connect to POST /resendverificationemail
+
+        const data = await axios.post(`http://localhost:5000/resend-verification/`,
+            { email: email }
+        );
+        
+        // navigate("/login");
+        
+        console.log(data, 'resend email work checking....');
+        
         console.log("Resend verification submit:", email);
-        setTimeout(() => {
-            setLoading(false);
-            setSent(true);
-        }, 800);
+        
     };
 
     if (sent) {
