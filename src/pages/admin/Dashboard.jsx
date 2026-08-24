@@ -6,6 +6,8 @@ import { mockProducts } from "../../utils/mockProducts";
 import { mockUser } from "../../utils/mockUsers";
 import { mockOrders } from "../../utils/mockOrders";
 import OrderStatusBadge from "../../components/common/OrderStatusBadge";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function getMainImage(product) {
     return product.images?.find((img) => img.isMain)?.url || product.images?.[0]?.url;
@@ -21,12 +23,23 @@ export default function Dashboard() {
     const recentOrders = [...mockOrders].reverse().slice(0, 5);
     const topRated = [...mockProducts].sort((a, b) => b.averageRating - a.averageRating).slice(0, 4);
 
+    const [users, setUsers] = useState([]);
+    useEffect(() => {
+            async function getUsers() {
+                const data = await axios.get(`http://localhost:5000/getallusers/`);
+                console.log(data.data.users, 'get all users work checking...');
+                setUsers(data.data.users);
+            }
+            getUsers();
+    }, []);
+    
     const stats = [
         { label: "Revenue", value: `৳${revenue.toLocaleString()}`, icon: TrendingUp, tone: "amber" },
         { label: "Products", value: mockProducts.length, icon: Package, tone: "blue" },
-        { label: "Users", value: mockUser.length, icon: Users, tone: "green" },
+        { label: "Users", value: users.length, icon: Users, tone: "green" },
         { label: "Orders", value: mockOrders.length, icon: ShoppingBag, tone: "purple" },
     ];
+    
 
     const toneStyles = {
         amber: "bg-amber/10 text-amber",

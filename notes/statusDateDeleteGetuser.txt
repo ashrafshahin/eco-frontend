@@ -1,0 +1,52 @@
+work done here: admin dashboard work...
+1. GET all users from database..
+2. users name INITIAL problem solved...
+3. users STATUS UPDATE
+4. DATE & TIME setup
+5. DELETE user done...
+6. in Dashboard - All users number shows on Statistics...
+
+
+
+Console -> Network -> Response 
+pabo date dese ki na backend...
+
+{
+    "success": true,
+    "message": "All User data displayed...",
+    "users": [
+        {
+            "_id": "6a8c9ff8b0817cbd9e4d2a3b",
+            "name": "Idona Ballard",
+            "email": "vyjunuzu@mailinator.com",
+            "role": "user",
+            "isVerified": false,
+            "isHold": false,
+            "createdAt": "2026-08-24T19:48:08.066Z",
+            "updatedAt": "2026-08-24T19:48:08.066Z",
+            "__v": 0
+        },
+        {
+            "_id": "6a8c9ffeb0817cbd9e4d2a3c",
+            "name": "Uriel Strong",
+            "email": "fimafin@mailinator.com",
+            "role": "user",
+            "isVerified": false,
+            "isHold": false,
+            "createdAt": "2026-08-24T19:48:14.360Z",
+            "updatedAt": "2026-08-24T19:48:14.360Z",
+            "__v": 0
+        },
+        {
+            "_id": "6a8ca004b0817cbd9e4d2a3d",
+            "name": "Salvador Glover",
+            "email": "surudebyz@mailinator.com",
+            "role": "user",
+            "isVerified": false,
+            "isHold": false,
+            "createdAt": "2026-08-24T19:48:20.651Z",
+            "updatedAt": "2026-08-24T19:48:20.651Z",
+            "__v": 0
+        },
+    ]
+}

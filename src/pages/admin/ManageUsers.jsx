@@ -1,38 +1,40 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Search } from "../../components/common/Icons";
 import UserTable from "../../components/admin/UserTable";
 import Modal from "../../components/common/Modal";
 import { mockUser } from "../../utils/mockUsers";
+import axios from "axios";
 
 const roleFilters = ["all", "customer", "admin"];
 
 export default function ManageUsers() {
     // TODO: replace with data fetched from GET /getallusers
-    const [users, setUsers] = useState(mockUser);
+    const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
     const [roleFilter, setRoleFilter] = useState("all");
     const [deleteTarget, setDeleteTarget] = useState(null);
     const [deleting, setDeleting] = useState(false);
 
-    const filtered = useMemo(() => {
-        return users.filter((u) => {
-            const matchesSearch =
-                u.name.toLowerCase().includes(search.toLowerCase()) ||
-                u.email.toLowerCase().includes(search.toLowerCase());
-            const matchesRole = roleFilter === "all" || u.role === roleFilter;
-            return matchesSearch && matchesRole;
-        });
-    }, [users, search, roleFilter]);
+    // TODO: replace with data fetched from GET /getallusers
+    useEffect(() => {
+        async function getUsers() {
+            const data = await axios.get(`http://localhost:5000/getallusers/`);
+            console.log(data.data.users, 'get all users work checking...');
+            setUsers(data.data.users);
+        }
+        getUsers();
+    }, []);
 
     const handleDelete = () => {
         setDeleting(true);
         // TODO: connect to DELETE /deleteuser/:id
-        console.log("Delete user:", deleteTarget._id);
+        const data = axios.delete(`http://localhost:5000/deleteuser/${deleteTarget._id}`);
+        console.log("Delete user:", data);
         setTimeout(() => {
-            setUsers((prev) => prev.filter((u) => u._id !== deleteTarget._id));
-            setDeleting(false);
-            setDeleteTarget(null);
-        }, 500);
+         setUsers((prev) => prev.filter((u) => u._id !== deleteTarget._id));
+         setDeleting(false);
+         setDeleteTarget(null);
+         }, 500);
     };
 
     return (
@@ -69,7 +71,7 @@ export default function ManageUsers() {
                 </div>
             </div>
 
-            <UserTable users={filtered} onDeleteClick={setDeleteTarget} />
+            <UserTable users={users} onDeleteClick={setDeleteTarget} />
 
             <Modal
                 open={!!deleteTarget}

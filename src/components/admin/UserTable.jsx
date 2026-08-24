@@ -50,7 +50,14 @@ export default function UserTable({ users, onDeleteClick }) {
           </thead>
           <tbody>
             {users.map((user) => {
-              const initials = user.name.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
+              const initials = user.name
+                          ? user.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .slice(0, 2)
+                              .join("")
+                              .toUpperCase()
+                          : "xxx";
               return (
                 <tr key={user._id} className="border-b border-ink/5 last:border-0 hover:bg-ink/[0.02]">
                   <td className="px-5 py-3">
@@ -66,9 +73,22 @@ export default function UserTable({ users, onDeleteClick }) {
                   </td>
                   <td className="px-5 py-3 text-slate">{user.phone}</td>
                   <td className="px-5 py-3"><RoleBadge role={user.role} /></td>
-                  <td className="px-5 py-3"><StatusBadge status={user.status} /></td>
+                  <td className="px-5 py-3"><StatusBadge status={user.isHold ? "deactivated" : "active"} /></td>
                   <td className="px-5 py-3 text-slate">
-                    {new Date(user.joined).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
+                    
+                    {/* ANY OF THE WAYS IS PERFECT... */}
+                    {/* {new Date(user.createdAt).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })} */}
+                    {/* {new Date(user.createdAt).toDateString()} */}
+                    {new Date(user.createdAt).toLocaleString("en-GB", {
+                                timeZone: "Asia/Dhaka",
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                second: "2-digit",
+                                hour12: false,
+                              })}
                   </td>
                   <td className="px-5 py-3">
                     <div className="flex items-center justify-end gap-2">
