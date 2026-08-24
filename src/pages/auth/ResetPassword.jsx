@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import AuthLayout from "../../layouts/AuthLayout";
 import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
+import axios from "axios";
 
 export default function ResetPassword() {
     const { token } = useParams();
@@ -18,24 +19,25 @@ export default function ResetPassword() {
 
     const validate = () => {
         const errs = {};
-        if (!form.password) errs.password = "Password is required";
+        if (!form.password) errs.password = "Password is required...";
         else if (form.password.length < 6) errs.password = "At least 6 characters";
         if (form.confirmPassword !== form.password) errs.confirmPassword = "Passwords don't match";
         return errs;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const errs = validate();
         if (Object.keys(errs).length) return setErrors(errs);
 
-        setLoading(true);
-        // TODO: connect to POST /resetpassword/:token
+        // // TODO: connect to POST /resetpassword/:token
+        const data = await axios.post(`http://localhost:5000/reset-password/${token}`, form);
+    
+        navigate("/login");
+
+        console.log(data, 'reset password data checking...');
         console.log("Reset password submit:", { token, ...form });
-        setTimeout(() => {
-            setLoading(false);
-            navigate("/login");
-        }, 800);
+       
     };
 
     return (

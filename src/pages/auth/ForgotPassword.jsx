@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import AuthLayout from "../../layouts/AuthLayout";
 import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
+import axios from "axios";
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState("");
@@ -10,18 +11,17 @@ export default function ForgotPassword() {
     const [loading, setLoading] = useState(false);
     const [sent, setSent] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!email) return setError("Email is required");
-        if (!/\S+@\S+\.\S+/.test(email)) return setError("Enter a valid email");
+        if (!email) return setError("Email is required...");
+        if (!/\S+@\S+\.\S+/.test(email)) return setError("Enter a valid email...");
 
-        setLoading(true);
-        // TODO: connect to POST /forgotpassword
+        const data = await axios.post(`http://localhost:5000/forgot-password`, {
+            email: email
+        });
+
         console.log("Forgot password submit:", email);
-        setTimeout(() => {
-            setLoading(false);
-            setSent(true);
-        }, 800);
+        
     };
 
     if (sent) {
@@ -56,7 +56,7 @@ export default function ForgotPassword() {
                     error={error}
                     placeholder="you@example.com"
                 />
-                <Button type="submit" loading={loading}>Send Reset Link</Button>
+                <Button type="submit" >Send Reset Link</Button>
             </form>
 
             <Link to="/login" className="block text-sm text-ink font-medium hover:underline mt-6 text-center">
