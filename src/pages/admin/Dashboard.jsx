@@ -23,20 +23,42 @@ export default function Dashboard() {
     const recentOrders = [...mockOrders].reverse().slice(0, 5);
     const topRated = [...mockProducts].sort((a, b) => b.averageRating - a.averageRating).slice(0, 4);
 
+    // Dashboard sob users , active users, deleted users er count dekhabe. Tai 3 ta state use kora hocche....///
     const [users, setUsers] = useState([]);
+    const [activeUsers, setActiveUsers] = useState([]);
+    const [deletedUsers, setDeletedUsers] = useState([]);
+
     useEffect(() => {
-            async function getUsers() {
+            async function users() {
                 const data = await axios.get(`http://localhost:5000/getallusers/`);
                 console.log(data.data.users, 'get all users work checking...');
                 setUsers(data.data.users);
             }
-            getUsers();
+            users();
+    }, []);
+    useEffect(() => {
+            async function activeUsers() {
+                const data = await axios.get(`http://localhost:5000/allactiveusers/`);
+                console.log(data.data.users, 'get all active users work checking...');
+                setActiveUsers(data.data.users);
+            }
+            activeUsers();
+    }, []);
+    useEffect(() => {
+            async function getDeletedUsers() {
+                const data = await axios.get(`http://localhost:5000/alldeletedusers/`);
+                console.log(data.data.users, 'get all deleted users work checking...');
+                setDeletedUsers(data.data.users);
+            }
+            getDeletedUsers();
     }, []);
     
     const stats = [
         { label: "Revenue", value: `৳${revenue.toLocaleString()}`, icon: TrendingUp, tone: "amber" },
         { label: "Products", value: mockProducts.length, icon: Package, tone: "blue" },
-        { label: "Users", value: users.length, icon: Users, tone: "green" },
+        { label: "All Users", value: users.length, icon: Users, tone: "green" },
+        { label: "Active Users", value: activeUsers.length, icon: Users, tone: "green" },
+        { label: "Deleted Users", value: deletedUsers.length, icon: Users, tone: "amber" },
         { label: "Orders", value: mockOrders.length, icon: ShoppingBag, tone: "purple" },
     ];
     

@@ -5,7 +5,7 @@ import Modal from "../../components/common/Modal";
 import { mockUser } from "../../utils/mockUsers";
 import axios from "axios";
 
-const roleFilters = ["all", "customer", "admin"];
+const roleFilters = ["all", "customer", "admin", "DeletedUsers"];
 
 export default function ManageUsers() {
     // TODO: replace with data fetched from GET /getallusers
@@ -25,6 +25,8 @@ export default function ManageUsers() {
         getUsers();
     }, []);
 
+    // upore state  niye delete korar por state update korte hobe, jate UI update hoye jai. delete korar por setUsers diye state update kora hocche, jate UI theke oita remove hoye jai. ...///
+
     const handleDelete = () => {
         setDeleting(true);
         // TODO: connect to DELETE /deleteuser/:id
@@ -35,6 +37,24 @@ export default function ManageUsers() {
          setDeleting(false);
          setDeleteTarget(null);
          }, 500);
+    };
+
+    const handleAllUsersButton = async () => {
+        const data = await axios.get(`http://localhost:5000/getallusers/`);
+            console.log(data.data.users, 'get all users work checking...');
+            setUsers(data.data.users);
+    };
+
+    const handleActiveUsers = async () => {
+        const data = await axios.get(`http://localhost:5000/allactiveusers/`);
+            console.log(data.data.users, 'get all active users work checking...');
+            setUsers(data.data.users);
+    };
+
+    const handleDeleteUsers = async () => {
+        const data = await axios.get(`http://localhost:5000/alldeletedusers/`);
+            console.log(data.data.users, 'get all deleted users work checking...');
+            setUsers(data.data.users);
     };
 
     return (
@@ -58,7 +78,20 @@ export default function ManageUsers() {
                 </div>
 
                 <div className="flex gap-2">
-                    {roleFilters.map((role) => (
+                    
+                    <button onClick={handleAllUsersButton} className={`px-4 py-2 rounded-lg text-xs font-semibold capitalize transition-colors `}>
+                        All Users
+                    </button>
+
+                    <button onClick={handleActiveUsers} className={`px-4 py-2 rounded-lg text-xs font-semibold capitalize transition-colors `}>
+                        Active Users
+                    </button>
+
+                    <button onClick={handleDeleteUsers} className={`px-4 py-2 rounded-lg text-xs font-semibold capitalize transition-colors `}>
+                        Deleted Users
+                    </button>
+                
+                    {/* {roleFilters.map((role) => (
                         <button
                             key={role}
                             onClick={() => setRoleFilter(role)}
@@ -67,7 +100,7 @@ export default function ManageUsers() {
                         >
                             {role}
                         </button>
-                    ))}
+                    ))} */}
                 </div>
             </div>
 
