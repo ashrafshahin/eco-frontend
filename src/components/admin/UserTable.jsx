@@ -73,7 +73,7 @@ export default function UserTable({ users, onDeleteClick }) {
                   </td>
                   <td className="px-5 py-3 text-slate">{user.phone}</td>
                   <td className="px-5 py-3"><RoleBadge role={user.role} /></td>
-                  <td className="px-5 py-3"><StatusBadge status={user.isHold ? "deactivated" : "active"} /></td>
+                  <td className="px-5 py-3"><StatusBadge status={user.isDelete ? "deleted" : "active"} /></td>
                   <td className="px-5 py-3 text-slate">
                     
                     {/* ANY OF THE WAYS IS PERFECT... */}

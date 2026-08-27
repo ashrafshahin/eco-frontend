@@ -24,17 +24,17 @@ export default function Dashboard() {
     const topRated = [...mockProducts].sort((a, b) => b.averageRating - a.averageRating).slice(0, 4);
 
     // Dashboard sob users , active users, deleted users er count dekhabe. Tai 3 ta state use kora hocche....///
-    const [users, setUsers] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
     const [activeUsers, setActiveUsers] = useState([]);
     const [deletedUsers, setDeletedUsers] = useState([]);
 
     useEffect(() => {
-            async function users() {
+            async function allUsers() {
                 const data = await axios.get(`http://localhost:5000/getallusers/`);
                 console.log(data.data.users, 'get all users work checking...');
-                setUsers(data.data.users);
+                setAllUsers(data.data.users);
             }
-            users();
+            allUsers();
     }, []);
     useEffect(() => {
             async function activeUsers() {
@@ -56,7 +56,7 @@ export default function Dashboard() {
     const stats = [
         { label: "Revenue", value: `৳${revenue.toLocaleString()}`, icon: TrendingUp, tone: "amber" },
         { label: "Products", value: mockProducts.length, icon: Package, tone: "blue" },
-        { label: "All Users", value: users.length, icon: Users, tone: "green" },
+        { label: "All Users", value: allUsers.length, icon: Users, tone: "green" },
         { label: "Active Users", value: activeUsers.length, icon: Users, tone: "green" },
         { label: "Deleted Users", value: deletedUsers.length, icon: Users, tone: "amber" },
         { label: "Orders", value: mockOrders.length, icon: ShoppingBag, tone: "purple" },
