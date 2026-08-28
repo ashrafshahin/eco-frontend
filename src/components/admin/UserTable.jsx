@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Eye, Trash2 } from "../common/Icons";
+import { Eye, ShieldCheck, Trash2 } from "../common/Icons";
 
 function RoleBadge({ role }) {
   return (
@@ -25,7 +25,7 @@ function StatusBadge({ status }) {
   );
 }
 
-export default function UserTable({ users, onDeleteClick }) {
+export default function UserTable({ users, onDeleteClick, onActiveClick }) {
   if (users.length === 0) {
     return (
       <div className="text-center py-16 bg-white rounded-xl border border-ink/10">
@@ -76,8 +76,6 @@ export default function UserTable({ users, onDeleteClick }) {
                   <td className="px-5 py-3"><StatusBadge status={user.isDelete ? "deleted" : "active"} /></td>
                   <td className="px-5 py-3 text-slate">
                     
-                    {/* ANY OF THE WAYS IS PERFECT... */}
-                    {/* {new Date(user.createdAt).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })} */}
                     {/* {new Date(user.createdAt).toDateString()} */}
                     {new Date(user.createdAt).toLocaleString("en-GB", {
                                 timeZone: "Asia/Dhaka",
@@ -98,12 +96,23 @@ export default function UserTable({ users, onDeleteClick }) {
                       >
                         <Eye size={15} />
                       </Link>
-                      <button
+                      {user.isDelete ? 
+                        <button
+                        onClick={() => onActiveClick(user)}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center text-ink/50 hover:bg-red-50 hover:text-red-500 transition-colors"
+                        >
+                          <ShieldCheck size={15} className="text-green-500" /> 
+                        
+                      </button>
+                        :
+                        <button
                         onClick={() => onDeleteClick(user)}
                         className="w-8 h-8 rounded-lg flex items-center justify-center text-ink/50 hover:bg-red-50 hover:text-red-500 transition-colors"
                       >
-                        <Trash2 size={15} />
+                       <Trash2 size={15} className="text-red-500" />
                       </button>
+                       } 
+                      
                     </div>
                   </td>
                 </tr>

@@ -15,6 +15,9 @@ export default function ManageUsers() {
     const [deleteTarget, setDeleteTarget] = useState(null);
     const [deleting, setDeleting] = useState(false);
 
+    const [activeTarget, setActiveTarget] = useState(null);
+    const [activating, setActivating] = useState(false);
+
     // TODO: replace with data fetched from GET /getallusers
     useEffect(() => {
         async function getUsers() {
@@ -39,6 +42,20 @@ export default function ManageUsers() {
          }, 500);
     };
 
+    const handleActive = async () => {
+        setActivating(true);
+        // TODO: connect to POST /update/:id
+        const data = await axios.post(`http://localhost:5000/updateuser/${activeTarget._id}`,
+            { isDelete: false });
+        console.log("Activate user:", data);
+        setTimeout(() => {
+         setUsers((prev) => prev.filter((u) => u._id !== activeTarget._id));
+         setActivating(false);
+         setActiveTarget(null);
+         }, 500);
+    };
+
+
     const handleAllUsersButton = async () => {
         const data = await axios.get(`http://localhost:5000/getallusers/`);
             console.log(data.data.users, 'get all users work checking...');
@@ -56,6 +73,15 @@ export default function ManageUsers() {
             console.log(data.data.users, 'get all deleted users work checking...');
             setUsers(data.data.users);
     };
+
+    // const onActiveClick = async (id) => {
+        
+    //     await axios.post(`http://localhost:5000/updateuser/${id}`, { isDelete: false });
+        
+    //     const data = await axios.get(`http://localhost:5000/getallusers/`);
+    //     console.log(data.data.users, 'Activate user work checking...');
+    //     setUsers(data.data.users);
+    // };
 
     return (
         <div>
@@ -91,20 +117,10 @@ export default function ManageUsers() {
                         Deleted Users
                     </button>
                 
-                    {/* {roleFilters.map((role) => (
-                        <button
-                            key={role}
-                            onClick={() => setRoleFilter(role)}
-                            className={`px-4 py-2 rounded-lg text-xs font-semibold capitalize transition-colors ${roleFilter === role ? "bg-ink text-paper" : "bg-white border border-ink/15 text-ink/60 hover:bg-ink/5"
-                                }`}
-                        >
-                            {role}
-                        </button>
-                    ))} */}
                 </div>
             </div>
 
-            <UserTable users={users} onDeleteClick={setDeleteTarget} />
+            <UserTable users={users} onDeleteClick={setDeleteTarget} onActiveClick={setActiveTarget} />
 
             <Modal
                 open={!!deleteTarget}
@@ -118,18 +134,53 @@ export default function ManageUsers() {
                         >
                             Cancel
                         </button>
-                        <button
+
+                            <button
                             onClick={handleDelete}
                             disabled={deleting}
                             className="px-4 py-2 rounded-lg text-sm font-semibold bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-60"
                         >
                             {deleting ? "Deleting..." : "Delete"}
                         </button>
+                        
+                        
                     </>
                 }
             >
                 <p className="text-sm text-slate">
                     Are you sure you want to delete <strong className="text-ink">{deleteTarget?.name}</strong>? This can't be undone.
+                </p>
+            </Modal>
+
+            <Modal
+                open={!!activeTarget}
+                onClose={() => setActiveTarget(null)}
+                title="Activate user?"
+                footer={
+                    <>
+                        <button
+                            onClick={() => setActiveTarget(null)}
+                            className="px-4 py-2 rounded-lg text-sm font-medium text-ink/70 hover:bg-ink/5 transition-colors"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            onClick={handleActive}
+                            disabled={activating}
+                            className="px-4 py-2 rounded-lg text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-60"
+                        >
+                            {activating ? "Activating..." : "Activate"}
+                        </button>
+                    </>
+                     }
+                 >
+                <p className="text-sm text-slate">
+                    Are you sure you want to activate{" "}
+                    <strong className="text-ink">
+                        {activeTarget?.name}
+                    </strong>
+                    ?
                 </p>
             </Modal>
         </div>
