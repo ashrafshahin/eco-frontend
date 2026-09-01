@@ -74,14 +74,15 @@ export default function ManageUsers() {
             setUsers(data.data.users);
     };
 
-    // const onActiveClick = async (id) => {
+    // search related work //
+
+    const handleSearch = async () => {
         
-    //     await axios.post(`http://localhost:5000/updateuser/${id}`, { isDelete: false });
-        
-    //     const data = await axios.get(`http://localhost:5000/getallusers/`);
-    //     console.log(data.data.users, 'Activate user work checking...');
-    //     setUsers(data.data.users);
-    // };
+        const data = await axios.post(`http://localhost:5000/search/`, { name: search});
+        console.log('api call checking...', data);  
+
+
+    };
 
     return (
         <div>
@@ -101,6 +102,10 @@ export default function ManageUsers() {
                         className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-ink/15 bg-white text-sm
               focus:outline-none focus:ring-4 focus:ring-amber/15 focus:border-amber transition-all"
                     />
+                    <button onClick={handleSearch} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate/50 hover:text-ink transition-colors border-2 border-amber/20 hover:border-amber/40 rounded-lg px-2 py-1 text-xs flex items-center gap-1 text-green-500 hover:bg-black-100 hover:text-blue-300 ">
+                         <Search size={16} /> 
+                        Search
+                    </button>
                 </div>
 
                 <div className="flex gap-2">

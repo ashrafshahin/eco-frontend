@@ -1,0 +1,17 @@
+mongoDB query rejex operator use korte hobe
+google search
+mongodb regex query
+https://www.mongodb.com/docs/manual/reference/operator/query/regex/
+
+Syntax
+Use one of the following syntax variations:
+
+{ <field>: { $regex: /pattern/, $options: '<options>' } }
+{ "<field>": { "$regex": "pattern", "$options": "<options>" } }
+{ <field>: { $regex: /pattern/<options> } }
+
+see here for this work:
+https://stackoverflow.com/questions/55007496/mongodb-search-for-users-filter-based-on-name-with-regex
+
+i = case insensitive.
+

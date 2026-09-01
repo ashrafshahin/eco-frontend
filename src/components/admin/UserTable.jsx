@@ -90,12 +90,13 @@ export default function UserTable({ users, onDeleteClick, onActiveClick }) {
                   </td>
                   <td className="px-5 py-3">
                     <div className="flex items-center justify-end gap-2">
-                      <Link
+                      {/* <Link
                         to={`/admin/users/${user._id}`}
                         className="w-8 h-8 rounded-lg flex items-center justify-center text-ink/50 hover:bg-ink/5 hover:text-ink transition-colors"
                       >
                         <Eye size={15} />
-                      </Link>
+                      </Link> */}
+                      
                       {user.isDelete ? 
                         <button
                         onClick={() => onActiveClick(user)}
