@@ -78,9 +78,8 @@ export default function ManageUsers() {
 
     const handleSearch = async () => {
         
-        const data = await axios.post(`http://localhost:5000/search/`, { name: search});
+        const data = await axios.post(`http://localhost:5000/search/`, { name: search, email:search, role:search });
         console.log('api call checking...', data);  
-
 
     };
 
@@ -90,6 +89,7 @@ export default function ManageUsers() {
                 <h1 className="font-display text-2xl font-semibold text-ink">Users</h1>
                 <p className="text-sm text-slate mt-1">{users.length} registered users</p>
             </div>
+        
 
             <div className="flex items-center gap-3 flex-wrap mb-5">
                 <div className="relative flex-1 max-w-sm">
