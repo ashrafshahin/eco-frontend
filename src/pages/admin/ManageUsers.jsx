@@ -78,16 +78,49 @@ export default function ManageUsers() {
 
     const handleSearch = async () => {
         
-        const data = await axios.post(`http://localhost:5000/search/`, { name: search, email:search, role:search });
-        console.log('api call checking...', data);  
+        const data = await axios.post(`http://localhost:5000/search/`,
+            {
+                name: search,
+                email: search,
+                role: search
+            });
+        // backend e ki name ase data.data pore ki ase dekho...
+        // console.log("SEARCH RESULTS:", data.data.searchResults);
 
+        setUsers(data.data.searchResults);
+    };
+
+    const handleSearchChange = async (e) => {
+        console.log('search value checking...', e.target.value)
+
+         setSearch(e.target.value);
+        if (!e.target.value) {
+            const data = await axios.get(`http://localhost:5000/getallusers/`);
+            setUsers(data.data.users);
+        }
+        setSearch(data.data.users || []);
+    };
+
+    const handleKeyDown = async (e) => {
+        
+        // Scenario One:  Enter press korle search result debe...Mentor V
+        if (e.key === "Enter") {
+           const data = await axios.post(`http://localhost:5000/search/`,
+            {name: search, email: search, role: search});
+        setUsers(data.data.searchResults); 
+        };
+
+        // Scenario Two: Instant search result debe... API call hobe onak ber 
+        // const data = await axios.post(`http://localhost:5000/search/`,
+        //     {name: search, email: search, role: search});
+        // setUsers(data.data.searchResults);
     };
 
     return (
         <div>
             <div className="mb-6">
                 <h1 className="font-display text-2xl font-semibold text-ink">Users</h1>
-                <p className="text-sm text-slate mt-1">{users.length} registered users</p>
+                <p className="text-sm text-slate mt-1">{users?.length} registered users</p>
             </div>
         
 
@@ -96,8 +129,9 @@ export default function ManageUsers() {
                     <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate/50" />
                     <input
                         type="text"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        // value={search}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleKeyDown}
                         placeholder="Search by name or email..."
                         className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-ink/15 bg-white text-sm
               focus:outline-none focus:ring-4 focus:ring-amber/15 focus:border-amber transition-all"
