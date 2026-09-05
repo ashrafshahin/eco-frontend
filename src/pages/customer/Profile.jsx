@@ -75,6 +75,7 @@ export default function Profile() {
                 // break na koleo amer ta kaj korche... but role upore thakte hobe...
                 // setForm(data.data.userData)
                 const dataShort = data.data.userData
+                setUserInfo(dataShort);
                 setForm({
                     name: dataShort.name,
                      email: dataShort.email,
@@ -82,6 +83,7 @@ export default function Profile() {
                     address: dataShort.address,
                      city: dataShort.city,
                     postalCode: dataShort.postalCode,
+                    
                 })
         }
         }
@@ -89,7 +91,6 @@ export default function Profile() {
         
     }, [userInfo?._id]);
     
-
     return (
         <div>
             <div className="flex items-center gap-4 mb-8">
@@ -98,10 +99,11 @@ export default function Profile() {
                 </div>
                 <div>
                     
-                    <p className="text-sm text-slate">
-                        Member since {new Date(form.joined).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-                        
+                    <p className="text-sm text-slate text-emerald-700 ">
+                        Member since {new Date(userInfo?.createdAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                     
                     </p>
+                    
                 </div>
             </div>
 

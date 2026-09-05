@@ -3,12 +3,22 @@ import { Mail, Phone, User as UserIcon, Package } from "../../components/common/
 import { mockUser } from "../../utils/mockUsers";
 import { mockOrders } from "../../utils/mockOrders";
 import OrderStatusBadge from "../../components/common/OrderStatusBadge";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function UserDetails() {
     const { id } = useParams();
-
-    // TODO: replace with data fetched from GET /getsingleuser/:id
-    const user = mockUser.find((u) => u._id === id);
+    console.log(id);
+    const [user, setUser] = useState({});
+    
+    useEffect(() => {
+        async function getData() {
+            const data = await axios.get(`http://localhost:5000/getsingleuser/${id}`);
+            console.log(data.data.userData, 'get single user work checking: ...');
+            setUser(data.data.userData);
+        }
+        getData();
+    }, []);
 
     if (!user) {
         return (
@@ -21,7 +31,7 @@ export default function UserDetails() {
         );
     }
 
-    const initials = user.name.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
+    // const initials = user.name.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
     // TODO: filter real orders by user id once order data is user-linked
     const userOrders = mockOrders.slice(0, 2);
 
@@ -33,7 +43,7 @@ export default function UserDetails() {
 
             <div className="flex items-center gap-4 mt-4 mb-8">
                 <div className="w-16 h-16 rounded-full bg-ink text-paper flex items-center justify-center font-display text-xl font-semibold shrink-0">
-                    {initials}
+                    {/* {initials} */}
                 </div>
                 <div>
                     <h1 className="font-display text-2xl font-semibold text-ink">{user.name}</h1>
@@ -62,7 +72,8 @@ export default function UserDetails() {
                         </div>
                         <div className="flex items-center gap-3 text-slate">
                             <UserIcon size={16} className="text-ink/40 shrink-0" />
-                            Joined {new Date(user.joined).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
+                            {/* Joined {new Date(user.createdAt).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })} */}
+                            {new Date(user.createdAt).toString()}
                         </div>
                     </div>
                 </div>
