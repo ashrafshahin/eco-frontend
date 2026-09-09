@@ -1,0 +1,6 @@
+TypeError: Cannot read properties of undefined (reading 'toLocaleString')
+    at http://localhost:5173/src/components/admin/ProductTable.jsx:178:44
+    at Array.map (<anonymous>)
+    at ProductTable (http://localhost:5173/src/components/admin/ProductTable.jsx:116:69
+
+    solve product.price
