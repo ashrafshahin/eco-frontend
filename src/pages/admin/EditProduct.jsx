@@ -1,13 +1,27 @@
 import { useParams, useNavigate, Link } from "react-router";
 import ProductForm from "../../components/product/ProductForm";
 import { mockProducts } from "../../utils/mockProducts";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 
 export default function EditProduct() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [product, setProduct] = useState(null);
+
+    useEffect(() => {
+        async function fetchProduct() {
+            const data = await axios.put(`http://localhost:5000/update-product/${id}`);
+            setProduct(data.data.product);
+            console.log(data.data.product, "Edit product page data ase kina : ...");
+            
+        };
+        fetchProduct();
+    }, [id]);
 
     // TODO: replace with data fetched from GET /get-single-product/:id
-    const product = mockProducts.find((p) => p._id === id);
+    // const product = mockProducts.find((p) => p._id === id);
 
     if (!product) {
         return (
