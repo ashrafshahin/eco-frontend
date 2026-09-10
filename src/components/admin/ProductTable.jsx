@@ -67,10 +67,17 @@ export default function ProductTable({ products, onDeleteClick }) {
                                     <td className="px-5 py-3 text-slate">{product.sku}</td>
                                     <td className="px-5 py-3 text-slate">{product.category}</td>
                                     <td className="px-5 py-3">
-                                        <span className="text-ink font-medium">৳{product.price}</span>
-                                        {hasDiscount && (
+                                        {/* Product Discount calculation with understanding discount type ... */}
+                                        <span className="text-ink font-medium">
+                                            ৳{product.discountType === 'flat' ?
+                                                product.price - product.discount :
+                                                product.discountType === 'percentage' ?
+                                                product.price - (product.price * product.discount) / 100 :
+                                                    product.price}
+                                        </span>
+                                        {/* {hasDiscount && (
                                             <span className="text-xs text-slate/40 line-through ml-1.5">৳{product.price}</span>
-                                        )}
+                                        )} */}
                                     </td>
                                     <td className="px-5 py-3">
                                         {product.stock === 0 ? (
