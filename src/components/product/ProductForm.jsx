@@ -1,13 +1,26 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import InputField from "../common/InputField";
 import Button from "../common/Button";
 import ImageUploader from "./ImageUploader";
-import { categories } from "../../utils/mockCategories";
+// import { categories } from "../../utils/mockCategories";
+import axios from "axios";
 
 const statusOptions = ["pending", "active", "inactive"];
 const discountTypes = ["none", "percentage", "flat"];
 
 export default function ProductForm({ initialData, onSubmit, submitLabel = "Save Product" }) {
+    const [categories, setCategories] = useState([]);
+    useEffect(() => {
+        async function fetchCategories() {
+            const data = await axios.get(`http://localhost:5000/get-category`);
+            setCategories(data.data.category);
+            
+            console.log(data.data.category, "product category get kortese....");
+            
+        };
+        fetchCategories();
+    }, []);
+
     const [form, setForm] = useState({
         title: initialData?.title || "",
         sku: initialData?.sku || "",
@@ -15,7 +28,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         description: initialData?.description || "",
         price: initialData?.price ?? "",
         stock: initialData?.stock ?? "",
-        category: initialData?.category || categories[0].name,
+        category: initialData?.category || categories[0]._id,
         brand: initialData?.brand || "",
         additionalInformation: initialData?.additionalInformation || "",
         status: initialData?.status || "pending",
@@ -132,8 +145,9 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                             className="w-full px-3.5 py-2.5 rounded-lg border border-ink/15 bg-white text-sm
                 focus:outline-none focus:ring-4 focus:ring-amber/15 focus:border-amber transition-all"
                         >
+                            <option value="">None</option>
                             {categories.map((cat) => (
-                                <option key={cat.name} value={cat.name}>{cat.name}</option>
+                                <option key={cat._id} value={cat._id}>{cat.catTitle}</option>
                             ))}
                         </select>
                     </div>
