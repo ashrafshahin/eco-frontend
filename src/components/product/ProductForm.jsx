@@ -20,10 +20,12 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         additionalInformation: initialData?.additionalInformation || "",
         status: initialData?.status || "pending",
         tags: initialData?.tags?.join(", ") || "",
-        discountType: initialData?.discountPrice?.type || "none",
-        discountValue: initialData?.discountPrice?.value || "",
-        discountStart: initialData?.discountPrice?.startDate?.slice(0, 10) || "",
-        discountEnd: initialData?.discountPrice?.endDate?.slice(0, 10) || "",
+        discountType: initialData?.discountType || "none",
+        discountValue: initialData?.discount || "",
+        // discountStart: initialData?.discountStartDate?.slice(0, 10) || "",
+        // discountEnd: initialData?.discountEndDate?.slice(0, 10) || "",
+        discountStart: initialData?.discountStartDate.split("T")[0] || "",
+        discountEnd: initialData?.discountEndDate?.split("T")[0] || "",
     });
     const [images, setImages] = useState(
         initialData?.images?.map((img) => ({ url: img.url, isMain: img.isMain })) || []
@@ -103,7 +105,8 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             <div className="bg-white rounded-xl border border-ink/10 p-5 sm:p-6">
-                <h2 className="font-display text-lg font-semibold text-ink mb-5">Product Images</h2>
+                <h2 className="font-display text-lg font-semibold text-ink mb-5">
+                    Product Images </h2>
                 <ImageUploader images={images} onChange={setImages} />
                 {errors.images && <p className="text-xs text-red-500 mt-2">{errors.images}</p>}
             </div>
@@ -116,7 +119,8 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                         <InputField label="Product title" name="title" value={form.title} onChange={handleChange} error={errors.title} placeholder="e.g. Wireless Headphones" />
                     </div>
 
-                    <InputField label="SKU" name="sku" value={form.sku} onChange={handleChange} error={errors.sku} placeholder="e.g. ELEC-HEAD-001" />
+                    <InputField disabled label="SKU" name="sku" value={form.sku} onChange={handleChange} error={errors.sku} placeholder="e.g. ELEC-HEAD-001" />
+                    
                     <InputField label="Brand" name="brand" value={form.brand} onChange={handleChange} placeholder="e.g. SoundCore" />
 
                     <div>

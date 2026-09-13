@@ -37,7 +37,7 @@ export default function EditProduct() {
     return (
         <div>
             <h1 className="font-display text-2xl font-semibold text-ink mb-1">Edit Product</h1>
-            <p className="text-sm text-slate mb-6">Update details for "{product.name}".</p>
+            <p className="text-sm text-slate mb-6">Update details for "{product.title}".</p>
 
             <ProductForm
                 initialData={product}
