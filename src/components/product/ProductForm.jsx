@@ -4,12 +4,16 @@ import Button from "../common/Button";
 import ImageUploader from "./ImageUploader";
 // import { categories } from "../../utils/mockCategories";
 import axios from "axios";
+import { useParams } from "react-router";
 
 const statusOptions = ["pending", "active", "inactive"];
 const discountTypes = ["none", "percentage", "flat"];
 
 export default function ProductForm({ initialData, onSubmit, submitLabel = "Save Product" }) {
+   
     const [categories, setCategories] = useState([]);
+    const { id } = useParams();
+
     useEffect(() => {
         async function fetchCategories() {
             const data = await axios.get(`http://localhost:5000/get-category`);
@@ -21,6 +25,8 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         fetchCategories();
     }, []);
 
+    // DATABASE K FOLLOW KORE KEYS DETE HOBE MUST... DB THEKE DATA ASTESE... ***
+    // LEFT SIDE E frontend  -> right e database match korte hobe...
     const [form, setForm] = useState({
         title: initialData?.title || "",
         sku: initialData?.sku || "",
@@ -51,7 +57,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         setErrors({ ...errors, [e.target.name]: "" });
     };
 
-    // Live-calculated sale price preview — mirrors what the backend would compute
+    // Live-calculated sale price preview in Edit Product form — mirrors what the backend would compute
     const salePricePreview = useMemo(() => {
         const price = Number(form.price) || 0;
         const value = Number(form.discountValue) || 0;
@@ -74,45 +80,47 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         return errs;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const errs = validate();
         if (Object.keys(errs).length) return setErrors(errs);
 
-        setSaving(true);
+        // setSaving(true);
 
+        // FORM THEKE DATA EDIT HOYE DATABASE E JABE...
+        // LEFT SIDE E Backend Schema  -> right e frontent form match korte hobe...
         const payload = {
-            title: form.title,
-            sku: form.sku,
-            shortDescription: form.shortDescription,
-            description: form.description,
-            price: Number(form.price),
-            salePrice: salePricePreview,
-            discountPrice: {
-                type: form.discountType,
-                value: Number(form.discountValue) || 0,
-                startDate: form.discountStart || undefined,
-                endDate: form.discountEnd || undefined,
-            },
-            stock: Number(form.stock),
-            category: form.category,
-            brand: form.brand,
-            tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
-            additionalInformation: form.additionalInformation,
-            status: form.status,
-            images,
+        title: form?.title || "",
+        sku: form?.sku || "",
+        shortDescription: form?.shortDescription || "",
+        description: form?.description || "",
+        price: form?.price ?? "",
+        stock: form?.stock ?? "",
+        category: form?.category || categories[0]._id,
+        brand: form?.brand || "",
+        additionalInformation: form?.additionalInformation || "",
+        status: form?.status || "pending",
+        tags: form?.tags?.split(",") || "",
+        discountType: form?.discountType || "none",
+        discount: form?.discountValue || "",
+        discountStartDate: form?.discountStart || "",
+        discountEndDate: form?.discountEnd || "",
+        images,
         };
+
+        const data = await axios.put(`http://localhost:5000/update-product/${id}`, payload);
+        console.log(data, "edit product database connection kore update check:...");
+        console.log("Product submit: payload check korte ...", payload);
 
         // TODO: build FormData and connect to POST /create-product or PUT /update-product/:id
         // const formData = new FormData();
         // Object.entries(payload).forEach(([key, val]) => { ... });
         // images.forEach((img) => img.file && formData.append("images", img.file));
-        console.log("Product submit:", payload);
 
-        setTimeout(() => {
-            setSaving(false);
-            onSubmit?.();
-        }, 800);
+        // setTimeout(() => {
+        //     setSaving(false);
+        //     onSubmit?.();
+        // }, 800);
     };
 
     return (
@@ -147,7 +155,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                         >
                             <option value="">None</option>
                             {categories.map((cat) => (
-                                <option key={cat._id} value={cat._id}>{cat.catTitle}</option>
+                                <option key={cat.name} value={cat.name}>{cat.catTitle}</option>
                             ))}
                         </select>
                     </div>
