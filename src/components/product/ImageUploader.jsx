@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { ImagePlus, X, Star } from "../common/Icons";
 
 // images: array of { file?, url?, preview?, isMain }
-export default function ImageUploader({ images, onChange, handleChange, setIsMainIndex }) {
+export default function ImageUploader({ images, onChange, handleChange, setIsMainIndex, setDeleteImage, deleteImage }) {
     const inputRef = useRef();
 
     const handleFiles = (fileList) => {
@@ -15,7 +15,12 @@ export default function ImageUploader({ images, onChange, handleChange, setIsMai
         onChange([...images, ...newImages].slice(0, 5));
     };
 
+    let deleteArr = [...deleteImage];
+
     const removeImage = (index) => {
+        deleteArr.push(index);
+        setDeleteImage(deleteArr);
+
         const wasMain = images[index]?.isMain;
         let next = images.filter((_, i) => i !== index);
         if (wasMain && next.length > 0) next[0] = { ...next[0], isMain: true };

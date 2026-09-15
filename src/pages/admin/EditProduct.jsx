@@ -10,10 +10,14 @@ export default function EditProduct() {
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
 
+    // fetch kora ase tai edit product e sob data chole asche...
     useEffect(() => {
         async function fetchProduct() {
-            const data = await axios.put(`http://localhost:5000/update-product/${id}`);
-            setProduct(data.data.product);
+            const data = await axios.get(`http://localhost:5000/get-single-product/${id}`);
+            
+            // backend e product and isMain alada korechi...
+            setProduct({...data.data.product, isMain: data.data.isMain});
+            
             console.log(data.data.product, "Edit product page data ase kina : ...");
             
         };

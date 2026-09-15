@@ -19,7 +19,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
             const data = await axios.get(`http://localhost:5000/get-category`);
             setCategories(data.data.category);
             
-            console.log(data.data.category, "product category get kortese....");
+            // console.log(data.data.category, "product category get kortese....");
             
         };
         fetchCategories();
@@ -29,7 +29,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
     // LEFT SIDE E frontend  -> right e database match korte hobe...
     const [form, setForm] = useState({
         title: initialData?.title || "",
-        // sku: initialData?.sku || "",
+        sku: initialData?.sku || "",
         shortDescription: initialData?.shortDescription || "",
         description: initialData?.description || "",
         price: initialData?.price ?? "",
@@ -46,7 +46,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         discountStart: initialData?.discountStartDate?.split("T")[0] || "",
         discountEnd: initialData?.discountEndDate?.split("T")[0] || "",
         images: initialData?.images || "",
-        isMain: 0,
+        isMain: initialData?.isMain,
     });
 
     // isMain and image add product error solve...
@@ -57,6 +57,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
     );
     const [errors, setErrors] = useState({});
     const [saving, setSaving] = useState(false);
+    const [deleteImage, setDeleteImage] = useState([]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -75,7 +76,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
     const validate = () => {
         const errs = {};
         if (!form.title.trim()) errs.title = "Product title is required";
-        if (!form.sku.trim()) errs.sku = "SKU is required";
+        // if (!form.sku.trim()) errs.sku = "SKU is required";
         if (!form.price || Number(form.price) <= 0) errs.price = "Enter a valid price";
         if (form.stock === "" || Number(form.stock) < 0) errs.stock = "Enter a valid stock quantity";
         if (!form.description.trim()) errs.description = "Description is required";
@@ -86,6 +87,8 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         return errs;
     };
     
+    let params = useParams()
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const errs = validate();
@@ -106,36 +109,35 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         formData.set("discountStartDate", form.discountStart);
         formData.set("discountEndDate", form.discountEnd);
     
+        // console.log(params, "params e product id asbe...");
 
-        try {
+        if (params.id) {
+            try {
+                const data = await axios.put(
+                    `http://localhost:5000/update-product/${params.id}`, formData
+                );
+
+                console.log(data, "update product ki ase dekhi....:");
+            } catch (error) {
+                console.log("UPDATE PRODUCT ERROR:", error);
+                console.log("UPDATE BACKEND MESSAGE:", error.response?.data);
+        };
+            
+        } else {
+            try {
                 const data = await axios.post(
-                    `http://localhost:5000/create-product`,
-                    formData
+                    `http://localhost:5000/create-product`, formData
                 );
 
                 console.log(data, "add product ki ase dekhi....:");
             } catch (error) {
                 console.log("CREATE PRODUCT ERROR:", error);
-                console.log("BACKEND MESSAGE:", error.response?.data);
+                console.log("CREATE BACKEND MESSAGE:", error.response?.data);
         };
-
+            
+        };
         
-        
-        
-
-        
-        // const data = await axios.put(`http://localhost:5000/update-product/${id}`, formData);
-        // console.log(data, "edit product database connection kore update check:...");
-        
-
         // setSaving(true);
-
-     
-
-        // TODO: build FormData and connect to POST /create-product or PUT /update-product/:id
-        // const formData = new FormData();
-        // Object.entries(payload).forEach(([key, val]) => { ... });
-        // images.forEach((img) => img.file && formData.append("images", img.file));
 
         // setTimeout(() => {
         //     setSaving(false);
@@ -148,8 +150,30 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
             <div className="bg-white rounded-xl border border-ink/10 p-5 sm:p-6">
                 <h2 className="font-display text-lg font-semibold text-ink mb-5">
                     Product Images </h2>
-                <ImageUploader images={images} onChange={setImages} setIsMainIndex={setIsMainIndex} />
-                <input hidden  type="string" multiple onChange={handleChange} name="isMain" value={isMainIndex} className=" bg-black/20 text-xl"  />
+                <ImageUploader
+                    images={images}
+                    onChange={setImages}
+                    setIsMainIndex={setIsMainIndex}
+                    setDeleteImage={setDeleteImage}
+                    deleteImage={deleteImage}
+                />
+                
+                <input hidden
+                    type="string"
+                    multiple
+                    onChange={handleChange}
+                    name="isMain"
+                    value={isMainIndex}
+                    className=" bg-black/20 text-xl"
+                />
+                <input hidden
+                    type="string"
+                    multiple
+                    onChange={handleChange}
+                    name="deleteImage"
+                    value={deleteImage}
+                    className=" bg-black/20 text-xl"
+                />
                 {errors.images && <p className="text-xs text-red-500 mt-2">{errors.images}</p>}
             </div>
 
