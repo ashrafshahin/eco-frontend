@@ -29,12 +29,12 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
     // LEFT SIDE E frontend  -> right e database match korte hobe...
     const [form, setForm] = useState({
         title: initialData?.title || "",
-        sku: initialData?.sku || "",
+        // sku: initialData?.sku || "",
         shortDescription: initialData?.shortDescription || "",
         description: initialData?.description || "",
         price: initialData?.price ?? "",
         stock: initialData?.stock ?? "",
-        category: initialData?.category || categories[0]._id,
+        category: initialData?.category || categories[0]?._id || "",
         brand: initialData?.brand || "",
         additionalInformation: initialData?.additionalInformation || "",
         status: initialData?.status || "pending",
@@ -43,9 +43,15 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         discountValue: initialData?.discount || "",
         // discountStart: initialData?.discountStartDate?.slice(0, 10) || "",
         // discountEnd: initialData?.discountEndDate?.slice(0, 10) || "",
-        discountStart: initialData?.discountStartDate.split("T")[0] || "",
+        discountStart: initialData?.discountStartDate?.split("T")[0] || "",
         discountEnd: initialData?.discountEndDate?.split("T")[0] || "",
+        images: initialData?.images || "",
+        isMain: 0,
     });
+
+    // isMain and image add product error solve...
+    const [isMainIndex, setIsMainIndex] = useState(0);
+
     const [images, setImages] = useState(
         initialData?.images?.map((img) => ({ url: img.url, isMain: img.isMain })) || []
     );
@@ -79,38 +85,52 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         }
         return errs;
     };
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         const errs = validate();
         if (Object.keys(errs).length) return setErrors(errs);
 
-        // setSaving(true);
+        // console.log(images, "images check from product form...");
+        
+        const formData = new FormData(e.currentTarget);
+        images.forEach((image) => {
+                if (image.file) {
+                    formData.append("images", image.file);
+                 }
+              });
 
-        // FORM THEKE DATA EDIT HOYE DATABASE E JABE...
-        // LEFT SIDE E Backend Schema  -> right e frontent form match korte hobe...
-        const payload = {
-        title: form?.title || "",
-        sku: form?.sku || "",
-        shortDescription: form?.shortDescription || "",
-        description: form?.description || "",
-        price: form?.price ?? "",
-        stock: form?.stock ?? "",
-        category: form?.category || categories[0]._id,
-        brand: form?.brand || "",
-        additionalInformation: form?.additionalInformation || "",
-        status: form?.status || "pending",
-        tags: form?.tags?.split(",") || "",
-        discountType: form?.discountType || "none",
-        discount: form?.discountValue || "",
-        discountStartDate: form?.discountStart || "",
-        discountEndDate: form?.discountEnd || "",
-        images,
+        formData.set("isMain", isMainIndex);
+       
+        formData.set("discount", form.discountValue);
+        formData.set("discountStartDate", form.discountStart);
+        formData.set("discountEndDate", form.discountEnd);
+    
+
+        try {
+                const data = await axios.post(
+                    `http://localhost:5000/create-product`,
+                    formData
+                );
+
+                console.log(data, "add product ki ase dekhi....:");
+            } catch (error) {
+                console.log("CREATE PRODUCT ERROR:", error);
+                console.log("BACKEND MESSAGE:", error.response?.data);
         };
 
-        const data = await axios.put(`http://localhost:5000/update-product/${id}`, payload);
-        console.log(data, "edit product database connection kore update check:...");
-        console.log("Product submit: payload check korte ...", payload);
+        
+        
+        
+
+        
+        // const data = await axios.put(`http://localhost:5000/update-product/${id}`, formData);
+        // console.log(data, "edit product database connection kore update check:...");
+        
+
+        // setSaving(true);
+
+     
 
         // TODO: build FormData and connect to POST /create-product or PUT /update-product/:id
         // const formData = new FormData();
@@ -128,7 +148,8 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
             <div className="bg-white rounded-xl border border-ink/10 p-5 sm:p-6">
                 <h2 className="font-display text-lg font-semibold text-ink mb-5">
                     Product Images </h2>
-                <ImageUploader images={images} onChange={setImages} />
+                <ImageUploader images={images} onChange={setImages} setIsMainIndex={setIsMainIndex} />
+                <input hidden  type="string" multiple onChange={handleChange} name="isMain" value={isMainIndex} className=" bg-black/20 text-xl"  />
                 {errors.images && <p className="text-xs text-red-500 mt-2">{errors.images}</p>}
             </div>
 
@@ -140,7 +161,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                         <InputField label="Product title" name="title" value={form.title} onChange={handleChange} error={errors.title} placeholder="e.g. Wireless Headphones" />
                     </div>
 
-                    <InputField disabled label="SKU" name="sku" value={form.sku} onChange={handleChange} error={errors.sku} placeholder="e.g. ELEC-HEAD-001" />
+                    <InputField label="SKU" name="sku" value={form.sku} onChange={handleChange} error={errors.sku} placeholder="e.g. ELEC-HEAD-001" />
                     
                     <InputField label="Brand" name="brand" value={form.brand} onChange={handleChange} placeholder="e.g. SoundCore" />
 

@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { ImagePlus, X, Star } from "../common/Icons";
 
 // images: array of { file?, url?, preview?, isMain }
-export default function ImageUploader({ images, onChange }) {
+export default function ImageUploader({ images, onChange, handleChange, setIsMainIndex }) {
     const inputRef = useRef();
 
     const handleFiles = (fileList) => {
@@ -23,8 +23,14 @@ export default function ImageUploader({ images, onChange }) {
     };
 
     const setMain = (index) => {
+        setIsMainIndex(index);
         onChange(images.map((img, i) => ({ ...img, isMain: i === index })));
     };
+
+    const handleimageup = (e) => {
+            handleFiles(e.target.files);
+            // handleChange();
+        };
 
     return (
         <div>
@@ -75,7 +81,8 @@ export default function ImageUploader({ images, onChange }) {
                 accept="image/*"
                 multiple
                 className="hidden"
-                onChange={(e) => handleFiles(e.target.files)}
+                // onChange={(e) => handleFiles(e.target.files)}
+                onChange={handleimageup}
             />
 
             <p className="text-xs text-slate/60 mt-2">
