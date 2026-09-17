@@ -1,0 +1,8 @@
+soft delete korechi tai ato pera holo
+deleted er jonno duitai condition akare ante hobe... dashboard e show korate chaile
+
+if (statusFilter === "deleted") {
+    // deleted API
+} else {
+    // existing API
+}

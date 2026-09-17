@@ -30,10 +30,10 @@ export default function ManageUsers() {
 
     // upore state  niye delete korar por state update korte hobe, jate UI update hoye jai. delete korar por setUsers diye state update kora hocche, jate UI theke oita remove hoye jai. ...///
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         setDeleting(true);
         // TODO: connect to DELETE /deleteuser/:id
-        const data = axios.delete(`http://localhost:5000/deleteuser/${deleteTarget._id}`);
+        const data = await axios.delete(`http://localhost:5000/deleteuser/${deleteTarget._id}`);
         console.log("Delete user:", data);
         setTimeout(() => {
          setUsers((prev) => prev.filter((u) => u._id !== deleteTarget._id));

@@ -139,10 +139,10 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         
         // setSaving(true);
 
-        // setTimeout(() => {
-        //     setSaving(false);
-        //     onSubmit?.();
-        // }, 800);
+        setTimeout(() => {
+            setSaving(false);
+            onSubmit?.();
+        }, 800);
     };
 
     return (

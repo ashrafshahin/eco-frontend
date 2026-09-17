@@ -21,6 +21,10 @@ export default function Dashboard() {
 
     // Dashboard sob products work...
     const [allProducts, setAllProducts] = useState([]);
+    const [activeProducts, setActiveProducts] = useState([]);
+    const [inactiveProducts, setInactiveProducts] = useState([]);
+    const [pendingProducts, setPendingProducts] = useState([]);
+    const [deletedProducts, setDeletedProducts] = useState([]);
     
     const revenue = mockOrders
         .filter((o) => o.status !== "cancelled")
@@ -69,22 +73,67 @@ export default function Dashboard() {
             fetchProducts();
     }, []);
     
+    useEffect(() => {
+            async function activeProducts() {
+                const data = await axios.get(`http://localhost:5000/get-all-products?status=active`);
+                console.log(data.data.product, 'Dashboard: get ACTIVE products work checking: ...');
+                setActiveProducts(data.data.product);
+            }
+            activeProducts();
+    }, []);
+
+    useEffect(() => {
+            async function inactiveProducts() {
+                const data = await axios.get(`http://localhost:5000/get-all-products?status=inactive`);
+                console.log(data.data.product, 'Dashboard: get INACTIVE products work checking: ...');
+                setInactiveProducts(data.data.product);
+            }
+            inactiveProducts();
+    }, []);
+
+    useEffect(() => {
+            async function pendingProducts() {
+                const data = await axios.get(`http://localhost:5000/get-all-products?status=pending`);
+                console.log(data.data.product, 'Dashboard: get PENDING products work checking: ...');
+                setPendingProducts(data.data.product);
+            }
+            pendingProducts();
+    }, []);
+
+    useEffect(() => {
+    async function fetchDeletedProducts() {
+        const data = await axios.get('http://localhost:5000/get-deleted-products');
+
+            console.log(data.data.product, 'Deleted products');
+
+            setDeletedProducts(data.data.product);
+        }
+
+        fetchDeletedProducts();
+    }, []);
+
     const stats = [
         { label: "Revenue", value: `৳${revenue.toLocaleString()}`, icon: TrendingUp, tone: "amber" },
+
         { label: "All Products", value: allProducts.length, icon: Package, tone: "blue" },
-        { label: "Active Products", value: allProducts.length, icon: Package, tone: "green" },
-        { label: "Pending Products", value: allProducts.length, icon: Package, tone: "amber" },
+        { label: "Active Products", value: activeProducts.length, icon: Package, tone: "green" },
+        { label: "Pending Products", value: pendingProducts.length, icon: Package, tone: "amber" },
+        { label: "Inactive Products", value: inactiveProducts.length, icon: Package, tone: "red" },
+        { label: "Deleted Products", value: deletedProducts.length, icon: Package, tone: "red" },
+
         { label: "All Users", value: allUsers.length, icon: Users, tone: "blue" },
         { label: "Active Users", value: activeUsers.length, icon: Users, tone: "green" },
-        { label: "Deleted Users", value: deletedUsers.length, icon: Users, tone: "amber" },
+        { label: "Deleted Users", value: deletedUsers.length, icon: Users, tone: "red" },
+
         { label: "Orders", value: mockOrders.length, icon: ShoppingBag, tone: "purple" },
     ];
     
 
     const toneStyles = {
-        amber: "bg-amber/10 text-amber",
+        amber: "bg-amber-400/30 text-amber",
+        red: "bg-red-500/30 text-red",
         blue: "bg-blue-50 text-blue-600",
-        green: "bg-green-50 text-green-600",
+        green: "bg-green-500/30 text-green-600",
         purple: "bg-purple-50 text-purple-600",
     };
 

@@ -18,7 +18,7 @@ function StatusBadge({ status }) {
     );
 }
 
-export default function ProductTable({ products, onDeleteClick }) {
+export default function ProductTable({ products, onDeleteClick, deletedProducts }) {
     if (products.length === 0) {
         return (
             <div className="text-center py-16 bg-white rounded-xl border border-ink/10">

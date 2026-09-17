@@ -6,7 +6,7 @@ import Modal from "../../components/common/Modal";
 import { mockProducts } from "../../utils/mockProducts";
 import axios from "axios";
 
-const statusFilters = ["all", "active", "pending", "inactive"];
+const statusFilters = ["all", "active", "pending", "inactive", "deleted"];
 
 export default function ManageProducts() {
     // TODO: replace with data fetched from GET /get-all-products
@@ -15,20 +15,26 @@ export default function ManageProducts() {
     const [statusFilter, setStatusFilter] = useState("all");
     const [deleteTarget, setDeleteTarget] = useState(null);
     const [deleting, setDeleting] = useState(false);
+    
 
     const filtered = useMemo(() => {
         return products.filter((p) => {
             const matchesSearch =
                 p.title.toLowerCase().includes(search.toLowerCase()) ||
                 p.sku.toLowerCase().includes(search.toLowerCase());
-            const matchesStatus = statusFilter === "all" || p.status === statusFilter;
+            const matchesStatus =
+                statusFilter === "all" ||
+                statusFilter === "deleted" ||
+                p.status === statusFilter;
             return matchesSearch && matchesStatus;
         });
     }, [products, search, statusFilter]);
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         setDeleting(true);
         // TODO: connect to DELETE /delete-product/:id
+        const data = await axios.delete(`http://localhost:5000/delete-product/${deleteTarget._id}`);
+
         console.log("Delete product:", deleteTarget._id);
         setTimeout(() => {
             setProducts((prev) => prev.filter((p) => p._id !== deleteTarget._id));
@@ -40,14 +46,26 @@ export default function ManageProducts() {
     // get all products here...
     useEffect(() => {
         async function fetchProducts() {
-            const data = await axios.get(`http://localhost:5000/get-all-products`);
-            setProducts(data.data.product)
-            console.log(data.data.product, 'product get e ki ase ....');
-            
+
+            if (statusFilter === "deleted") {
+                const data = await axios.get("http://localhost:5000/get-deleted-products");
+                setProducts(data.data.product);
+                console.log(data.data.product, 'deleted e ki ase :...');
+                
+
+            } else {
+                const data = await axios.get(`http://localhost:5000/get-all-products${statusFilter === "all" ?
+                    "" : `?status=${statusFilter}`}`)
+                
+                setProducts(data.data.product);
+                console.log(data.data.product, 'product get e ki ase ....'); 
+            }
+              
         };
         fetchProducts()
-    }, []);
-
+        
+    }, [statusFilter]);
+    
     return (
         <div>
             <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
@@ -75,7 +93,8 @@ export default function ManageProducts() {
               focus:outline-none focus:ring-4 focus:ring-amber/15 focus:border-amber transition-all"
                     />
                 </div>
-
+                
+               
                 <div className="flex gap-2">
                     {statusFilters.map((s) => (
                         <button
@@ -91,6 +110,7 @@ export default function ManageProducts() {
             </div>
 
             <ProductTable products={filtered} onDeleteClick={setDeleteTarget} />
+            
 
             <Modal
                 open={!!deleteTarget}
