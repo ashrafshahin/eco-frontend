@@ -14,19 +14,25 @@ function getMainImage(product) {
 }
 
 export default function Dashboard() {
+    // Dashboard sob users work...
+    const [allUsers, setAllUsers] = useState([]);
+    const [activeUsers, setActiveUsers] = useState([]);
+    const [deletedUsers, setDeletedUsers] = useState([]);
+
+    // Dashboard sob products work...
+    const [allProducts, setAllProducts] = useState([]);
+    
     const revenue = mockOrders
         .filter((o) => o.status !== "cancelled")
         .reduce((sum, o) => sum + o.total, 0);
 
-    const lowStock = mockProducts.filter((p) => p.stock > 0 && p.stock <= 10);
+    const lowStock = allProducts.filter((p) => p.stock > 0 && p.stock <= 10);
     const outOfStock = mockProducts.filter((p) => p.stock === 0);
     const recentOrders = [...mockOrders].reverse().slice(0, 5);
     const topRated = [...mockProducts].sort((a, b) => b.averageRating - a.averageRating).slice(0, 4);
 
-    // Dashboard sob users , active users, deleted users er count dekhabe. Tai 3 ta state use kora hocche....///
-    const [allUsers, setAllUsers] = useState([]);
-    const [activeUsers, setActiveUsers] = useState([]);
-    const [deletedUsers, setDeletedUsers] = useState([]);
+
+
 
     useEffect(() => {
             async function allUsers() {
@@ -52,11 +58,23 @@ export default function Dashboard() {
             }
             getDeletedUsers();
     }, []);
+
+
+    useEffect(() => {
+            async function fetchProducts() {
+                const data = await axios.get(`http://localhost:5000/get-all-products/`);
+                console.log(data.data.product, 'Dashboard: get all products work checking: ...');
+                setAllProducts(data.data.product);
+            }
+            fetchProducts();
+    }, []);
     
     const stats = [
         { label: "Revenue", value: `৳${revenue.toLocaleString()}`, icon: TrendingUp, tone: "amber" },
-        { label: "Products", value: mockProducts.length, icon: Package, tone: "blue" },
-        { label: "All Users", value: allUsers.length, icon: Users, tone: "green" },
+        { label: "All Products", value: allProducts.length, icon: Package, tone: "blue" },
+        { label: "Active Products", value: allProducts.length, icon: Package, tone: "green" },
+        { label: "Pending Products", value: allProducts.length, icon: Package, tone: "amber" },
+        { label: "All Users", value: allUsers.length, icon: Users, tone: "blue" },
         { label: "Active Users", value: activeUsers.length, icon: Users, tone: "green" },
         { label: "Deleted Users", value: deletedUsers.length, icon: Users, tone: "amber" },
         { label: "Orders", value: mockOrders.length, icon: ShoppingBag, tone: "purple" },
