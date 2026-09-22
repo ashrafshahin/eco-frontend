@@ -34,7 +34,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         description: initialData?.description || "",
         price: initialData?.price ?? "",
         stock: initialData?.stock ?? "",
-        category: initialData?.category || categories[0]?._id || "",
+        category: initialData?.category || "",
         brand: initialData?.brand || "",
         additionalInformation: initialData?.additionalInformation || "",
         status: initialData?.status || "pending",
@@ -47,7 +47,18 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         discountEnd: initialData?.discountEndDate?.split("T")[0] || "",
         images: initialData?.images || "",
         isMain: initialData?.isMain,
+        
+
     });
+
+    useEffect(() => {
+        if (initialData?.category) {
+            setForm((prev) => ({
+                ...prev,
+                category: initialData.category,
+            }));
+        }
+    }, [initialData]);
 
     // isMain and image add product error solve...
     const [isMainIndex, setIsMainIndex] = useState(0);
@@ -97,6 +108,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         // console.log(images, "images check from product form...");
         
         const formData = new FormData(e.currentTarget);
+    
         images.forEach((image) => {
                 if (image.file) {
                     formData.append("images", image.file);
@@ -191,6 +203,14 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
 
                     <div>
                         <label className="text-sm font-medium text-ink block mb-1.5">Category</label>
+
+                        {console.log("INITIAL CATEGORY:", initialData?.category)}
+                        {console.log("FORM CATEGORY:", form.category)}
+                        {console.log(
+                            "CATEGORY OPTIONS:",
+                            categories.map((cat) => cat.catTitle)
+                        )}
+
                         <select
                             name="category"
                             value={form.category}
@@ -200,7 +220,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                         >
                             <option value="">None</option>
                             {categories.map((cat) => (
-                                <option key={cat.name} value={cat.name}>{cat.catTitle}</option>
+                                <option key={cat._id} value={cat.catTitle}>{cat?.catTitle}</option>
                             ))}
                         </select>
                     </div>

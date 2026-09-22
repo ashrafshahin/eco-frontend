@@ -18,17 +18,23 @@ export default function ManageProducts() {
     
 
     const filtered = useMemo(() => {
-        return products.filter((p) => {
-            const matchesSearch =
-                p.title.toLowerCase().includes(search.toLowerCase()) ||
-                p.sku.toLowerCase().includes(search.toLowerCase());
-            const matchesStatus =
-                statusFilter === "all" ||
-                statusFilter === "deleted" ||
-                p.status === statusFilter;
-            return matchesSearch && matchesStatus;
-        });
-    }, [products, search, statusFilter]);
+    return products.filter((p) => {
+
+        const title = String(p?.title ?? "");
+        const sku = String(p?.sku ?? "");
+
+        const matchesSearch =
+            title.toLowerCase().includes(search.toLowerCase()) ||
+            sku.toLowerCase().includes(search.toLowerCase());
+
+        const matchesStatus =
+            statusFilter === "all" ||
+            statusFilter === "deleted" ||
+            p?.status === statusFilter;
+
+        return matchesSearch && matchesStatus;
+    });
+}, [products, search, statusFilter]);
 
     const handleDelete = async () => {
         setDeleting(true);
@@ -59,6 +65,7 @@ export default function ManageProducts() {
                 
                 setProducts(data.data.product);
                 console.log(data.data.product, 'product get e ki ase ....'); 
+
             }
               
         };
