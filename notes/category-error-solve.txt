@@ -1,0 +1,31 @@
+Tomar output-e: PROBLEM ARRAY TE NEW CATEGORY ASE NA ...
+
+INITIAL CATEGORY: Office Accessories
+FORM CATEGORY: Office Accessories
+CATEGORY OPTIONS: []
+
+মানে product-er category 100% thik ache এবং form.category-ও thik ache।
+
+Problem holo:
+
+CATEGORY OPTIONS: []
+
+অর্থাৎ ProductForm-e categories array empty. তাই <option> তৈরি করার মতো কোনো category-ই নেই।
+
+
+
+==== problem backend bulk controller  ====
+
+Excel থেকে category নিয়ে সরাসরি Product collection-এ string হিসেবে save করছে।
+
+কিন্তু কোথাও check করছে না:
+
+item.category
+     ↓
+Category collection-এ আছে কি না?
+
+তাই Excel-এ Wearables থাকলে:
+
+Product.category = "Wearables" ✅
+
+কিন্তু Category collection-এ Wearables তৈরি হচ্ছে না ❌

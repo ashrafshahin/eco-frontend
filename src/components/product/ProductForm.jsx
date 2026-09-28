@@ -14,15 +14,31 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
     const [categories, setCategories] = useState([]);
     const { id } = useParams();
 
+    // useEffect(() => {
+    //     async function fetchCategories() {
+    //         const data = await axios.get(`http://localhost:5000/get-category`);
+    //         setCategories(data.data.category);
+    //     };
+    //     fetchCategories();
+    // }, []);
+
     useEffect(() => {
         async function fetchCategories() {
-            const data = await axios.get(`http://localhost:5000/get-category`);
-            setCategories(data.data.category);
+            try {
+                const response = await axios.get("http://localhost:5000/get-category");
+        
+                // console.log(response.data.category, 'Product Category get / fetch kortese....');
+                setCategories(response.data.category);
+
+                console.log("FULL RESPONSE:", response.data);
+            console.log("CATEGORY:", response.data.category);
+            console.log("IS ARRAY:", Array.isArray(response.data.category));
             
-            // console.log(data.data.category, "product category get kortese....");
-            
-        };
-        fetchCategories();
+           } catch (error) {
+            console.error(error, 'Category fetch error...from ProductForm...')
+           } 
+        }
+        fetchCategories()
     }, []);
 
     // DATABASE K FOLLOW KORE KEYS DETE HOBE MUST... DB THEKE DATA ASTESE... ***
@@ -210,6 +226,10 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                             "CATEGORY OPTIONS:",
                             categories.map((cat) => cat.catTitle)
                         )}
+
+                        {/* console.log("FORM CATEGORY:", form.category);
+                        console.log("INITIAL CATEGORY:", initialData?.category);
+                        console.log("CATEGORY LIST:", categories); */}
 
                         <select
                             name="category"
