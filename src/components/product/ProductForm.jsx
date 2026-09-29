@@ -14,25 +14,13 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
     const [categories, setCategories] = useState([]);
     const { id } = useParams();
 
-    // useEffect(() => {
-    //     async function fetchCategories() {
-    //         const data = await axios.get(`http://localhost:5000/get-category`);
-    //         setCategories(data.data.category);
-    //     };
-    //     fetchCategories();
-    // }, []);
-
     useEffect(() => {
         async function fetchCategories() {
             try {
                 const response = await axios.get("http://localhost:5000/get-category");
         
-                // console.log(response.data.category, 'Product Category get / fetch kortese....');
+                console.log(response.data.category, 'Product Category get / fetch kortese..');
                 setCategories(response.data.category);
-
-                console.log("FULL RESPONSE:", response.data);
-            console.log("CATEGORY:", response.data.category);
-            console.log("IS ARRAY:", Array.isArray(response.data.category));
             
            } catch (error) {
             console.error(error, 'Category fetch error...from ProductForm...')
@@ -54,7 +42,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         brand: initialData?.brand || "",
         additionalInformation: initialData?.additionalInformation || "",
         status: initialData?.status || "pending",
-        tags: initialData?.tags?.join(", ") || "",
+        // tags: initialData?.tags?.join(", ") || "",
         discountType: initialData?.discountType || "none",
         discountValue: initialData?.discount || "",
         // discountStart: initialData?.discountStartDate?.slice(0, 10) || "",
@@ -63,6 +51,10 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         discountEnd: initialData?.discountEndDate?.split("T")[0] || "",
         images: initialData?.images || "",
         isMain: initialData?.isMain,
+        tags: Array.isArray(initialData.tags)
+            ? initialData.tags
+            : initialData.tags?.split(",").map((tag) => tag.trim()).filter(Boolean)
+            || [],
         
 
     });
@@ -120,8 +112,6 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         e.preventDefault();
         const errs = validate();
         if (Object.keys(errs).length) return setErrors(errs);
-
-        // console.log(images, "images check from product form...");
         
         const formData = new FormData(e.currentTarget);
     
@@ -129,10 +119,22 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                 if (image.file) {
                     formData.append("images", image.file);
                  }
-              });
+        });
 
+        const tagValues = Array.isArray(form.tags)
+                ? form.tags
+                : String(form.tags || "")
+                    .split(",")
+                    .map((tag) => tag.trim())
+                    .filter(Boolean);
+
+            formData.delete("tags");
+
+            tagValues.forEach((tag) => {
+                formData.append("tags", tag);
+         });
+        
         formData.set("isMain", isMainIndex);
-       
         formData.set("discount", form.discountValue);
         formData.set("discountStartDate", form.discountStart);
         formData.set("discountEndDate", form.discountEnd);
@@ -220,17 +222,6 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                     <div>
                         <label className="text-sm font-medium text-ink block mb-1.5">Category</label>
 
-                        {console.log("INITIAL CATEGORY:", initialData?.category)}
-                        {console.log("FORM CATEGORY:", form.category)}
-                        {console.log(
-                            "CATEGORY OPTIONS:",
-                            categories.map((cat) => cat.catTitle)
-                        )}
-
-                        {/* console.log("FORM CATEGORY:", form.category);
-                        console.log("INITIAL CATEGORY:", initialData?.category);
-                        console.log("CATEGORY LIST:", categories); */}
-
                         <select
                             name="category"
                             value={form.category}
@@ -306,7 +297,8 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                     <InputField
                         label="Tags (comma separated)"
                         name="tags"
-                        value={form.tags}
+                        // value={form.tags}
+                        value={Array.isArray(form.tags) ? form.tags.join(", ") : form.tags}
                         onChange={handleChange}
                         placeholder="e.g. audio, wireless, noise-cancelling"
                     />
