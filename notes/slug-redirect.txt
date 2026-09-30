@@ -1,0 +1,12 @@
+WHAT HAS BEEN DONE HERE:
+
+এখন ID system touch না করে:
+
+Existing /products/:id রাখি ✅
+New /product/:slug add করি ✅
+Slug-based API add করি ✅
+previousSlugs রাখি ✅
+Old slug → new slug redirect করি ✅
+Existing cart/admin/order code untouched রাখি ✅
+
+slug redirect kaj korche

@@ -1,18 +1,58 @@
-import { useState } from "react";
-import { useParams, Link } from "react-router";
+import { useEffect, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router";
 import { Heart, ShoppingCart, Truck, ShieldCheck, RotateCcw, Star } from "../../components/common/Icons";
 import ProductImageGallery from "../../components/product/ProductImageGallery";
 import Button from "../../components/common/Button";
 import { mockProducts } from "../../utils/mockProducts";
 import { useCart } from "../../context/CartContext";
+import axios from "axios";
 
 export default function ProductDetails() {
-    const { id } = useParams();
+    const { id, slug } = useParams();
+    const navigate = useNavigate();
+    
     const [selectedQty, setSelectedQty] = useState(1);
     const { addToCart, isPending } = useCart();
+    const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     // TODO: replace with data fetched from GET /get-single-product/:id
-    const product = mockProducts.find((p) => p._id === id);
+    // const product = mockProducts.find((p) => p._id === id);
+
+    useEffect(() => {
+        async function fetchProduct() {
+            try {
+                if (slug) {
+                    const response = await axios.get(
+                        `http://localhost:5000/get-single-product-by-slug/${slug}`
+                    );
+
+                    if (response.data.redirect) {
+                        navigate(`/product/${response.data.newSlug}`, {
+                            replace: true,
+                        });
+                        return;
+                    }
+
+                    setProduct(response.data.product);
+                }
+
+                if (id) {
+                    const response = await axios.get(
+                        `http://localhost:5000/get-single-product/${id}`
+                    );
+
+                    setProduct(response.data.product);
+                }
+
+            } catch (error) {
+                console.error(error, "Product fetch error...");
+                setProduct(null);
+            }
+        }
+
+        fetchProduct();
+    }, [id, slug]);
 
     if (!product) {
         return (
@@ -74,10 +114,17 @@ export default function ProductDetails() {
                     )}
 
                     <div className="flex items-center gap-3 mt-4">
-                        <span className="font-display text-3xl font-semibold text-ink">৳{product.salePrice.toLocaleString()}</span>
+                        <span className="font-display text-3xl font-semibold text-ink">
+                            {/* ৳{product.salePrice.toLocaleString()} */}
+                            ৳{product.price}
+                        
+                        </span>
                         {discount > 0 && (
                             <>
-                                <span className="text-base text-slate/40 line-through">৳{product.price.toLocaleString()}</span>
+                                <span className="text-base text-slate/40 line-through">
+                                    {/* ৳{product.price.toLocaleString()} */}
+                                    ৳{product.price}
+                                </span>
                                 <span className="text-xs font-semibold text-red-500 bg-red-50 px-2 py-1 rounded-full">-{discount}%</span>
                             </>
                         )}

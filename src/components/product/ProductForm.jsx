@@ -51,11 +51,13 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         discountEnd: initialData?.discountEndDate?.split("T")[0] || "",
         images: initialData?.images || "",
         isMain: initialData?.isMain,
-        tags: Array.isArray(initialData.tags)
+        tags: Array.isArray(initialData?.tags)
             ? initialData.tags
-            : initialData.tags?.split(",").map((tag) => tag.trim()).filter(Boolean)
-            || [],
-        
+            : String(initialData?.tags || "")
+                .split(",")
+                .map((tag) => tag.trim())
+                .filter(Boolean),
+                
 
     });
 
@@ -120,7 +122,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                     formData.append("images", image.file);
                  }
         });
-
+        // Normalize tags
         const tagValues = Array.isArray(form.tags)
                 ? form.tags
                 : String(form.tags || "")
