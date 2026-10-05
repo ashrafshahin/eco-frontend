@@ -71,7 +71,14 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
     }, [initialData]);
 
     // isMain and image add product error solve...
-    const [isMainIndex, setIsMainIndex] = useState(0);
+    let [isMainIndex, setIsMainIndex] = useState(0);
+    useEffect(() => {
+        initialData?.images.map((item, index) => {
+            if (item.isMain == true) {
+                setIsMainIndex(index)
+            }
+        })    
+    }, []);
 
     const [images, setImages] = useState(
         initialData?.images?.map((img) => ({ url: img.url, isMain: img.isMain })) || []
@@ -104,7 +111,11 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         if (images.length === 0) errs.images = "At least one image is required";
         if (form.discountType !== "none" && (!form.discountValue || Number(form.discountValue) <= 0)) {
             errs.discountValue = "Enter a discount value";
+            
         }
+        // if (!isMainIndex) {
+        //     errs.images = "Main Image is required, Please choose one Main Image...";
+        // }
         return errs;
     };
     
@@ -143,10 +154,11 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
     
         // console.log(params, "params e product id asbe...");
 
-        if (params.id) {
+        const productId = initialData?._id || initialData?.id;
+        if (productId) {
             try {
                 const data = await axios.put(
-                    `http://localhost:5000/update-product/${params.id}`, formData
+                    `http://localhost:5000/update-product/${productId}`, formData
                 );
 
                 console.log(data, "update product ki ase dekhi....:");
