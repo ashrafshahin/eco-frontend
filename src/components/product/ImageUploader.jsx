@@ -21,10 +21,10 @@ export default function ImageUploader({ images, onChange, handleChange, setIsMai
         deleteArr.push(index);
         setDeleteImage(deleteArr);
 
-        const wasMain = images[index]?.isMain;
-        let next = images.filter((_, i) => i !== index);
-        if (wasMain && next.length > 0) next[0] = { ...next[0], isMain: true };
-        onChange(next);
+        // const wasMain = images[index]?.isMain;
+        // let next = images.filter((_, i) => i !== index);
+        // if (wasMain && next.length > 0) next[0] = { ...next[0], isMain: true };
+        // onChange(next);
     };
 
     const setMain = (index) => {
@@ -41,8 +41,18 @@ export default function ImageUploader({ images, onChange, handleChange, setIsMai
         <div>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
                 {images.map((img, i) => (
-                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-ink/10 group">
-                        <img src={ img.preview || `http://localhost:5000/${img.url}`} alt={`Product ${i + 1}`} className="w-full h-full object-cover" />
+                    <div key={i}
+                        className={`relative aspect-square rounded-lg overflow-hidden border border-ink/10 group ${deleteImage.includes(i) && "hidden"}`}
+                    >
+                        <img
+                            // src={img.preview || `http://localhost:5000/${img.url}`}
+                            
+                            src={img.preview ? img.preview :
+                                img.url.includes('https') ? img.url : `http://localhost:5000/${img.url}`}
+                            
+                            alt={`Product ${i + 1}`}
+                            className="w-full h-full object-cover" 
+                        />
 
                         <button
                             type="button"
