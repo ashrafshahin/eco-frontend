@@ -8,6 +8,7 @@ import { useParams } from "react-router";
 
 const statusOptions = ["pending", "active", "inactive"];
 const discountTypes = ["none", "percentage", "flat"];
+const sectionOptions = ["none", "today's-deals", "featured-products", "best-sellers", "new-arrivals"];
 
 export default function ProductForm({ initialData, onSubmit, submitLabel = "Save Product" }) {
    
@@ -57,6 +58,8 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                 .split(",")
                 .map((tag) => tag.trim())
                 .filter(Boolean),
+        
+        section: initialData?.section,
                 
 
     });
@@ -264,7 +267,23 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
                             ))}
                         </select>
                     </div>
+
                 </div>
+
+                <div className="mt-2 mb-2">
+                        <label className="text-sm font-medium text-ink block mb-1.5">Section</label>
+                        <select
+                            name="section"
+                            value={form.section}
+                            onChange={handleChange}
+                            className="w-full px-3.5 py-2.5 rounded-lg border border-ink/15 bg-white text-sm capitalize
+                focus:outline-none focus:ring-4 focus:ring-amber/15 focus:border-amber transition-all"
+                        >
+                            {sectionOptions.map((s) => (
+                                <option key={s} value={s} className="capitalize">{s}</option>
+                            ))}
+                        </select>
+                    </div>
 
                 <div className="mt-4">
                     <label className="text-sm font-medium text-ink block mb-1.5">Short description</label>
