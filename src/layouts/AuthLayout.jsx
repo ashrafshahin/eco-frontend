@@ -8,7 +8,12 @@ export default function AuthLayout({ title, subtitle, children }) {
                 <div className="absolute inset-0 opacity-[0.06] `bg-[radial-gradient(circle_at_1px_1px,_theme(colors.amber)_1px,_transparent_0)]` `bg-[length:24px_24px]`" />
 
                 <Link to="/" className="font-display text-2xl font-semibold relative z-10">
-                    Eco<span className="text-amber">Bazaar</span>
+                    {/* Eco<span className="text-amber">Bazaar</span> */}
+                    <img
+                            src="/ecologo.png"
+                            alt="ecoBazaar"
+                            className="h-50 w-auto object-contain"
+                            />
                 </Link>
 
                 <div className="relative z-10 max-w-sm">

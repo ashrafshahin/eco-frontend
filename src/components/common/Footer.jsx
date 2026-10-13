@@ -122,7 +122,12 @@ export default function Footer() {
                     {/* Brand + newsletter + contact */}
                     <div className="lg:col-span-2">
                         <h3 className="font-display text-xl font-semibold text-paper">
-                            Eco<span className="text-amber">Bazaar</span>
+                            {/* Eco<span className="text-amber">Bazaar</span> */}
+                            <img
+                            src="/ecologo.png"
+                            alt="ecoBazaar"
+                            className="h-40 w-auto object-contain"
+                            />
                         </h3>
                         <p className="text-sm mt-2 text-paper/60 max-w-xs">
                             A training platform for people who'd rather learn by doing.

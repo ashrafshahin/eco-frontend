@@ -31,7 +31,12 @@ export default function AdminLayout() {
             {/* Sidebar — desktop */}
             <aside className="hidden lg:flex flex-col w-60 bg-ink shrink-0">
                 <Link to="/admin" className="font-display text-xl font-semibold text-paper px-5 h-16 flex items-center border-b border-paper/10">
-                    Eco<span className="text-amber">Bazaar</span>
+                    {/* Eco<span className="text-amber">Bazaar</span> */}
+                    <img
+                            src="/ecologo.png"
+                            alt="ecoBazaar"
+                            className="h-22 w-auto object-contain"
+                            />
                     <span className="text-xs font-sans font-normal text-paper/40 ml-2">Admin</span>
                 </Link>
 
