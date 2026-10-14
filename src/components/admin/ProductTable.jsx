@@ -56,9 +56,9 @@ export default function ProductTable({ products, onDeleteClick, deletedProducts 
                                                 {product.images && product.images.length > 0 && product.images.map((image, index) => (
                                                     image.isMain && (
                                                         <img
-                                                            // src={`http://localhost:5000/${image.url}`}
+                                                            // src={`https://eco-backend-w57i.onrender.com/${image.url}`}
                                                             src={image.url.includes('https') ?
-                                                                image.url : `http://localhost:5000/${image.url}`}
+                                                                image.url : `https://eco-backend-w57i.onrender.com/${image.url}`}
                                                             
                                                             alt={product.title} className="w-full h-full object-cover"
                                                         />

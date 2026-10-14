@@ -41,7 +41,7 @@ export default function Profile() {
         const errs = validate();
         if (Object.keys(errs).length) return setErrors(errs);
 
-        const data = await axios.post(`http://localhost:5000/updateuser/${userInfo._id}`, form);
+        const data = await axios.post(`https://eco-backend-w57i.onrender.com/updateuser/${userInfo._id}`, form);
         console.log("Update profile:...check korchi", form);
         
     };
@@ -67,7 +67,7 @@ export default function Profile() {
     useEffect(() => {
         const getData = async () => {
             if (userInfo?._id) 
-            {const data = await axios.get(`http://localhost:5000/getsingleuser/${userInfo?._id}`)
+            {const data = await axios.get(`https://eco-backend-w57i.onrender.com/getsingleuser/${userInfo?._id}`)
             
                 console.log(data.data.userData, '... get single user data...');
                 console.log(userInfo, '... single user info ki ase...');

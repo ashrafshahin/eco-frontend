@@ -9,7 +9,7 @@ export default function VerifyEmail() {
 
     useEffect(() => {
         // TODO: connect to POST /verifyemail/:token
-        const data = axios.post(`http://localhost:5000/verify-email/${token}`)
+        const data = axios.post(`https://eco-backend-w57i.onrender.com/verify-email/${token}`)
         
         console.log(data, 'data ki pai token er sathe...');
         console.log("Verifying token: check korchi...", token);

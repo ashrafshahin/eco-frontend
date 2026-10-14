@@ -21,7 +21,7 @@ export default function ManageUsers() {
     // TODO: replace with data fetched from GET /getallusers
     useEffect(() => {
         async function getUsers() {
-            const data = await axios.get(`http://localhost:5000/getallusers/`);
+            const data = await axios.get(`https://eco-backend-w57i.onrender.com/getallusers/`);
             console.log(data.data.users, 'get all users work checking...');
             setUsers(data.data.users);
         }
@@ -33,7 +33,7 @@ export default function ManageUsers() {
     const handleDelete = async () => {
         setDeleting(true);
         // TODO: connect to DELETE /deleteuser/:id
-        const data = await axios.delete(`http://localhost:5000/deleteuser/${deleteTarget._id}`);
+        const data = await axios.delete(`https://eco-backend-w57i.onrender.com/deleteuser/${deleteTarget._id}`);
         console.log("Delete user:", data);
         setTimeout(() => {
          setUsers((prev) => prev.filter((u) => u._id !== deleteTarget._id));
@@ -45,7 +45,7 @@ export default function ManageUsers() {
     const handleActive = async () => {
         setActivating(true);
         // TODO: connect to POST /update/:id
-        const data = await axios.post(`http://localhost:5000/updateuser/${activeTarget._id}`,
+        const data = await axios.post(`https://eco-backend-w57i.onrender.com/updateuser/${activeTarget._id}`,
             { isDelete: false });
         console.log("Activate user:", data);
         setTimeout(() => {
@@ -57,19 +57,19 @@ export default function ManageUsers() {
 
 
     const handleAllUsersButton = async () => {
-        const data = await axios.get(`http://localhost:5000/getallusers/`);
+        const data = await axios.get(`https://eco-backend-w57i.onrender.com/getallusers/`);
             console.log(data.data.users, 'get all users work checking...');
             setUsers(data.data.users);
     };
 
     const handleActiveUsers = async () => {
-        const data = await axios.get(`http://localhost:5000/allactiveusers/`);
+        const data = await axios.get(`https://eco-backend-w57i.onrender.com/allactiveusers/`);
             console.log(data.data.users, 'get all active users work checking...');
             setUsers(data.data.users);
     };
 
     const handleDeleteUsers = async () => {
-        const data = await axios.get(`http://localhost:5000/alldeletedusers/`);
+        const data = await axios.get(`https://eco-backend-w57i.onrender.com/alldeletedusers/`);
             console.log(data.data.users, 'get all deleted users work checking...');
             setUsers(data.data.users);
     };
@@ -78,7 +78,7 @@ export default function ManageUsers() {
 
     const handleSearch = async () => {
         
-        const data = await axios.post(`http://localhost:5000/search/`,
+        const data = await axios.post(`https://eco-backend-w57i.onrender.com/search/`,
             {
                 name: search,
                 email: search,
@@ -95,7 +95,7 @@ export default function ManageUsers() {
 
          setSearch(e.target.value);
         if (!e.target.value) {
-            const data = await axios.get(`http://localhost:5000/getallusers/`);
+            const data = await axios.get(`https://eco-backend-w57i.onrender.com/getallusers/`);
             setUsers(data.data.users);
         }
         setSearch(data.data.users || []);
@@ -105,13 +105,13 @@ export default function ManageUsers() {
         
         // Scenario One:  Enter press korle search result debe...Mentor V
         if (e.key === "Enter") {
-           const data = await axios.post(`http://localhost:5000/search/`,
+           const data = await axios.post(`https://eco-backend-w57i.onrender.com/search/`,
             {name: search, email: search, role: search});
         setUsers(data.data.searchResults); 
         };
 
         // Scenario Two: Instant search result debe... API call hobe onak ber 
-        // const data = await axios.post(`http://localhost:5000/search/`,
+        // const data = await axios.post(`https://eco-backend-w57i.onrender.com/search/`,
         //     {name: search, email: search, role: search});
         // setUsers(data.data.searchResults);
     };
