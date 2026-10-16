@@ -74,28 +74,7 @@ export default function MobileFilterDrawer({
                         </div>
                     </div>
 
-                    {/* Subcategories */}
-                    {activeCategory && (
-                        <div className="pt-1 border-t border-ink/10">
-                            <h4 className="text-xs font-semibold text-slate/60 uppercase tracking-wide mb-3 pt-5">
-                                {activeCategory.name} — Refine
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                                {activeCategory.subcategories.map((sub) => (
-                                    <button
-                                        key={sub}
-                                        onClick={() => setSub(sub)}
-                                        className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors ${subParam === sub
-                                                ? "bg-amber text-ink"
-                                                : "bg-ink/5 text-ink/60 hover:bg-ink/10"
-                                            }`}
-                                    >
-                                        {sub}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                    
                 </div>
 
                 {/* Footer */}

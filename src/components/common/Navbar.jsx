@@ -2,22 +2,22 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate, useLocation, useSearchParams } from "react-router";
 import { ShoppingCart, User, Menu, X, Search, ChevronDown, Mail, Phone, Truck } from "./Icons";
 import { useCart } from "../../context/CartContext";
-import { categories } from "../../utils/mockCategories";
+// import { categories } from "../../utils/mockCategories";
+import axios from "axios";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState("");
-    const [openMobileCat, setOpenMobileCat] = useState(null);
+    // const [openMobileCat, setOpenMobileCat] = useState(null);
     const [hoveredCat, setHoveredCat] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
     const { totalItems } = useCart();
     
+    const [categories, setCategories] = useState([]);
     const activeCategoryParam = searchParams.get("category");
-    const activeSubParam = searchParams.get("sub");
-    const activeCategory = categories.find((c) => c.name === activeCategoryParam);
-    const showRefineBar = location.pathname === "/products" && activeCategory;
+    const activeCategory = categories.find((c) => c.catTitle === activeCategoryParam);
 
     const linkClass = ({ isActive }) =>
         `text-sm font-medium transition-colors ${isActive ? "text-amber" : "text-ink/70 hover:text-ink"
@@ -28,25 +28,33 @@ export default function Navbar() {
         if (query.trim()) navigate(`/products?search=${encodeURIComponent(query.trim())}`);
     };
 
-    const toggleMobileCat = (name) => {
-        setOpenMobileCat((prev) => (prev === name ? null : name));
-    };
+    // const toggleMobileCat = (name) => {
+    //     setOpenMobileCat((prev) => (prev === name ? null : name));
+    // };
 
-    const handleSubClick = (sub) => {
-        const next = new URLSearchParams(searchParams);
-        if (activeSubParam === sub) {
-            next.delete("sub");
-        } else {
-            next.set("sub", sub);
-        }
-        setSearchParams(next);
-    };
+    // const handleSubClick = (sub) => {
+    //     const next = new URLSearchParams(searchParams);
+    //     if (activeSubParam === sub) {
+    //         next.delete("sub");
+    //     } else {
+    //         next.set("sub", sub);
+    //     }
+    //     setSearchParams(next);
+    // };
 
     const [userInfo, setUserInfo] = useState({});
+    
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem('userinfo'))
         setUserInfo(data)
     
+        async function fetchCategory() {
+            const cate = await axios.get('http://localhost:5000/get-category');
+            setCategories(cate.data.category)
+            // console.log('category: ', cate.data.category);
+            
+        }
+        fetchCategory()
         console.log(data, 'check data...');
         
     },[]);
@@ -164,73 +172,35 @@ export default function Navbar() {
                         >
                             All Products
                         </NavLink>
-
+                         
                         {categories.map((cat) => {
-                            const isActiveTab = activeCategoryParam === cat.name;
+                            const isActiveTab = activeCategoryParam === cat.catTitle;
                             return (
                                 <div
-                                    key={cat.name}
+                                    key={cat.catTitle}
                                     className="relative"
-                                    onMouseEnter={() => setHoveredCat(cat.name)}
+                                    onMouseEnter={() => setHoveredCat(cat.catTitle)}
                                     onMouseLeave={() => setHoveredCat(null)}
                                 >
                                     <Link
-                                        to={`/products?category=${encodeURIComponent(cat.name)}`}
-                                        className={`block text-sm py-2.5 whitespace-nowrap border-b-2 transition-colors ${isActiveTab || hoveredCat === cat.name
+                                        to={`/products?category=${encodeURIComponent(cat.catTitle)}`}
+                                        className={`block text-sm py-2.5 whitespace-nowrap border-b-2 transition-colors ${isActiveTab || hoveredCat === cat.catTitle
                                                 ? "text-amber border-amber font-medium"
                                                 : "text-ink/70 border-transparent hover:text-ink"
                                             }`}
                                     >
-                                        {cat.name}
+                                        {cat.catTitle}
                                     </Link>
 
-                                    {hoveredCat === cat.name && (
-                                        <div className="absolute top-full left-0 bg-white border border-ink/10 rounded-lg shadow-lg min-w-48 py-1.5 z-20">
-                                            {cat.subcategories.map((sub) => (
-                                                <Link
-                                                    key={sub}
-                                                    to={`/products?category=${encodeURIComponent(cat.name)}&sub=${encodeURIComponent(sub)}`}
-                                                    className="block px-4 py-2 text-sm text-ink/70 hover:text-amber hover:bg-ink/[0.03] transition-colors"
-                                                >
-                                                    {sub}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    )}
                                 </div>
                             );
                         })}
+
                     </div>
                 </div>
             </nav>
 
-            {/* Refine bar — shows subcategories when a category is active on /products */}
-            {showRefineBar && (
-                <div className="border-t border-ink/10 bg-amber/5">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
-                        <div className="flex items-center gap-3 flex-wrap">
-                            <span className="text-sm font-semibold text-ink whitespace-nowrap">
-                                {activeCategory.name} <span className="text-slate/50 font-normal">— Refine</span>
-                            </span>
-                            <div className="flex items-center gap-2 flex-wrap">
-                                {activeCategory.subcategories.map((sub) => (
-                                    <button
-                                        key={sub}
-                                        onClick={() => handleSubClick(sub)}
-                                        className={`text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap transition-colors ${activeSubParam === sub
-                                                ? "bg-amber text-ink"
-                                                : "bg-white border border-ink/15 text-ink/60 hover:border-amber hover:text-amber"
-                                            }`}
-                                    >
-                                        {sub}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
+           
             {/* Mobile menu */}
             {open && (
                 <div className="md:hidden border-t border-ink/10 bg-paper px-4 pb-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
@@ -252,46 +222,18 @@ export default function Navbar() {
                             <span className="block py-2">All Products</span>
                         </NavLink>
 
-                        {categories.map((cat) => {
-                            const Icon = cat.icon;
-                            const isOpen = openMobileCat === cat.name;
-                            return (
-                                <div key={cat.name} className="border-b border-ink/5 last:border-0">
-                                    <button
-                                        onClick={() => toggleMobileCat(cat.name)}
-                                        className="w-full flex items-center justify-between py-2.5 text-sm text-ink/70"
-                                    >
-                                        <span className="flex items-center gap-2.5">
-                                            <Icon size={16} className="text-amber" />
-                                            {cat.name}
-                                        </span>
-                                        <ChevronDown size={15} className={`text-ink/40 transition-transform ${isOpen ? "rotate-180" : ""}`} />
-                                    </button>
+                        
+                            {categories.map((cat) => (
+                                <Link
+                                    key={cat._id}
+                                    to={`/products?category=${encodeURIComponent(cat.catTitle)}`}
+                                    onClick={() => setOpen(false)}
+                                    className="block py-2.5 text-sm text-ink/70 border-b border-ink/5 hover:text-amber"
+                                >
+                                    {cat.catTitle}
+                                </Link>
+                            ))}
 
-                                    {isOpen && (
-                                        <div className="pl-7 pb-2 flex flex-col gap-1.5">
-                                            <Link
-                                                to={`/products?category=${encodeURIComponent(cat.name)}`}
-                                                onClick={() => setOpen(false)}
-                                                className="text-xs font-medium text-amber py-1"
-                                            >
-                                                View all {cat.name}
-                                            </Link>
-                                            {cat.subcategories.map((sub) => (
-                                                <Link
-                                                    key={sub}
-                                                    to={`/products?category=${encodeURIComponent(cat.name)}&sub=${encodeURIComponent(sub)}`}
-                                                    onClick={() => setOpen(false)}
-                                                    className="text-xs text-slate py-1"
-                                                >
-                                                    {sub}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })}
 
                         {/* Contact info — mobile */}
                         <div className="flex flex-col gap-2 pt-4 mt-2 border-t border-ink/10">

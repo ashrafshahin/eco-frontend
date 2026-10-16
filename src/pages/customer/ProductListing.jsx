@@ -50,9 +50,7 @@ export default function ProductListing() {
                 // Match against subcategory names belonging to this product's category
                 // (products don't have their own subcategory field yet — TODO below)
                 const productCategory = categories.find((c) => c.name === p.category);
-                const subcategoryMatch = productCategory?.subcategories.some((sub) =>
-                    sub.toLowerCase().includes(q)
-                );
+                
 
                 return titleMatch || skuMatch || categoryMatch || brandMatch || tagsMatch || subcategoryMatch;
             });
@@ -171,21 +169,12 @@ export default function ProductListing() {
                         </div>
                     </div>
 
-                    {/* Subcategories — only shown once a category is active */}
+                   
                     {activeCategory && (
                         <div className="pt-5 border-t border-ink/10">
                             <h3 className="text-sm font-semibold text-ink mb-3">{activeCategory.name} — Refine</h3>
                             <div className="flex flex-col gap-1">
-                                {activeCategory.subcategories.map((sub) => (
-                                    <button
-                                        key={sub}
-                                        onClick={() => setSub(sub)}
-                                        className={`text-left text-sm px-3 py-2 rounded-lg transition-colors ${subParam === sub ? "bg-amber text-ink font-medium" : "text-slate hover:bg-ink/5"
-                                            }`}
-                                    >
-                                        {sub}
-                                    </button>
-                                ))}
+                               
                             </div>
                         </div>
                     )}
