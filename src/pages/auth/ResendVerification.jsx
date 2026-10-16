@@ -18,7 +18,7 @@ export default function ResendVerification() {
 
         // TODO: connect to POST /resendverificationemail
 
-        const data = await axios.post(`https://eco-backend-w57i.onrender.com/resend-verification/`,
+        const data = await axios.post(`http://localhost:5000/resend-verification/`,
             { email: email }
         );
         

@@ -45,10 +45,10 @@ export default function ImageUploader({ images, onChange, handleChange, setIsMai
                         className={`relative aspect-square rounded-lg overflow-hidden border border-ink/10 group ${deleteImage.includes(i) && "hidden"}`}
                     >
                         <img
-                            // src={img.preview || `https://eco-backend-w57i.onrender.com/${img.url}`}
+                            // src={img.preview || `http://localhost:5000/${img.url}`}
                             
                             src={img.preview ? img.preview :
-                                img.url.includes('https') ? img.url : `https://eco-backend-w57i.onrender.com/${img.url}`}
+                                img.url.includes('https') ? img.url : `http://localhost:5000/${img.url}`}
                             
                             alt={`Product ${i + 1}`}
                             className="w-full h-full object-cover" 
