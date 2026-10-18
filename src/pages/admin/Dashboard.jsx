@@ -60,17 +60,6 @@ useEffect(() => {
   fetchUsers();
 }, []);
 
-
-
-    // useEffect(() => {
-    //         async function allUsers() {
-    //             const data = await axios.get(`http://localhost:5000/getallusers/`);
-    //             console.log(data.data.users, 'get all users work checking...');
-    //             setAllUsers(data.data.users);
-    //         }
-    //         allUsers();
-    // }, []);
-
     
     useEffect(() => {
             async function activeUsers() {
@@ -182,6 +171,49 @@ useEffect(() => {
                     </div>
                 ))}
             </div>
+
+
+            {/* Manage Categories */}
+            <div className="mb-6">
+                <Link
+                    to="/admin/product/categories"
+                    className="flex items-center justify-between rounded-xl border border-ink/10 bg-white p-5 transition-colors hover:border-amber hover:bg-amber/5"
+                >
+                    <div>
+                        <h2 className="font-display text-lg font-semibold text-ink">
+                            Manage Categories
+                        </h2>
+                        <p className="mt-1 text-sm text-slate">
+                            Create and view product categories.
+                        </p>
+                    </div>
+
+                    <ArrowRight size={18} className="text-amber" />
+                </Link>
+            </div>
+
+            {/* Create Category */}
+            <div className="mb-6">
+                <Link
+                    to="/admin/product/categories"
+                    className="flex items-center justify-between rounded-xl border border-ink/10 bg-white p-5 transition-all hover:border-amber hover:shadow-md"
+                >
+                    <div>
+                        <h2 className="font-display text-lg font-semibold text-ink">
+                            Create Category
+                        </h2>
+                        <p className="mt-1 text-sm text-slate">
+                            Add a new product category to your store.
+                        </p>
+                    </div>
+
+                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber text-xl font-semibold text-ink">
+                        +
+                    </span>
+                </Link>
+            </div>
+
+
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Recent Orders */}

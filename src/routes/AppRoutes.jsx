@@ -38,6 +38,7 @@ import ManageOrders from "../pages/admin/ManageOrders";
 
 // Fallback
 import NotFound from "../pages/NotFound";
+import Categories from "../pages/admin/Categories";
 
 const router = createBrowserRouter([
     {
@@ -83,6 +84,7 @@ const router = createBrowserRouter([
             { index: true, element: <Dashboard /> },
             { path: "products", element: <ManageProducts /> },
             { path: "products/create", element: <AddProduct /> },
+            { path: "product/categories", element: <Categories /> },
             { path: "products/edit/:id", element: <EditProduct /> },
             {
                 path: "users",

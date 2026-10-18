@@ -15,6 +15,7 @@ export default function Home() {
     // TODO: replace with data fetched from GET /get-all-products (filter status=active server-side once wired)
     const [products, setProducts] = useState([]);
     const [sectionPro, setSectionPro] = useState({});
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
         async function fetchPro() {
@@ -39,6 +40,19 @@ export default function Home() {
         };
 
         fetchSectionPro();
+
+    }, []);
+
+    useEffect(() => {
+        async function fetchCat() {
+            const data = await axios.get('http://localhost:5000/get-category');
+            
+            setCategories(data.data.category);
+            console.log('Category Pro: ', data.data.category);
+            
+        };
+
+        fetchCat();
 
     }, []);
 
