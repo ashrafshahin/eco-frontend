@@ -22,7 +22,7 @@ export default function OfferProductCard({ product }) {
             <Link to={`/products/${product._id}`}>
                 <div className="relative aspect-square overflow-hidden bg-ink/5">
                     <img
-                        src={image}
+                        src={`http://localhost:5000/${product.images[0].url}`}
                         alt={product.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -43,15 +43,22 @@ export default function OfferProductCard({ product }) {
 
             <div className="p-3.5">
                 <Link to={`/products/${product._id}`}>
-                    <h3 className="text-sm font-semibold text-ink line-clamp-2 hover:text-amber transition-colors min-h-[2.5rem]">
+                    <h3 className="text-sm font-semibold text-ink line-clamp-2 hover:text-amber transition-colors min-h-10">
                         {product.title}
                     </h3>
                 </Link>
 
                 <div className="flex items-center gap-2 mt-2">
-                    <span className="font-display text-base font-semibold text-ink">৳{product.salePrice.toLocaleString()}</span>
+                    <span className="font-display text-base font-semibold text-ink">
+                       
+                        ৳{product.price?.toLocaleString() ?? "0"}
+
+                    </span>
                     {discount > 0 && (
-                        <span className="text-xs text-slate/50 line-through">৳{product.price.toLocaleString()}</span>
+                        <span className="text-xs text-slate/50 line-through">
+                           
+                            ৳{product.price?.toLocaleString() ?? "0"}
+                        </span>
                     )}
                 </div>
 

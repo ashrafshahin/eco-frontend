@@ -8,7 +8,15 @@ function getMainImage(product) {
 }
 
 function getDiscountPercent(product) {
-    return product.price > product.salePrice ? Math.round((1 - product.salePrice / product.price) * 100) : 0;
+    if (product.discountType === "percentage") {
+        return product.discount || 0;
+    }
+
+    if (product.discountType === "flat" && product.price > 0) {
+        return Math.round((product.discount / product.price) * 100);
+    }
+
+    return 0;
 }
 
 export default function HeroSlider({ slides, offers = [] }) {
@@ -37,7 +45,7 @@ export default function HeroSlider({ slides, offers = [] }) {
             onMouseLeave={() => setPaused(false)}
         >
             {/* Layered background accents */}
-            <div className="absolute inset-0 opacity-[0.07] bg-[radial-gradient(circle_at_1px_1px,_theme(colors.amber)_1px,_transparent_0)] bg-[length:28px_28px]" />
+            <div className="absolute inset-0 opacity-[0.07] `bg-[radial-gradient(circle_at_1px_1px,_theme(colors.amber)_1px,_transparent_0)]` `bg-[length:28px_28px]`" />
             <div className="absolute top-0 right-0 w-125 h-125 bg-amber/10 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/4" />
             <div className="absolute bottom-0 left-0 w-100 h-100 bg-amber/5 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4" />
 

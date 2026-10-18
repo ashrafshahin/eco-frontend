@@ -1,22 +1,51 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { ArrowRight } from "../common/Icons";
+// const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function getMainImage(product) {
     return product.images?.find((img) => img.isMain)?.url || product.images?.[0]?.url;
 }
 
 function getDiscountPercent(product) {
-    return product.price > product.salePrice ? Math.round((1 - product.salePrice / product.price) * 100) : 0;
+    if (product.discountType === "percentage") {
+        return product.discount || 0;
+    }
+
+    if (product.discountType === "flat" && product.price > 0) {
+        return Math.round((product.discount / product.price) * 100);
+    }
+
+    return 0;
+}
+function getDiscountedPrice(product) {
+    if (product.discountType === "percentage") {
+        return product.price * (1 - (product.discount || 0) / 100);
+    }
+
+    if (product.discountType === "flat") {
+        return Math.max(0, product.price - (product.discount || 0));
+    }
+
+    return product.price;
 }
 
-export default function HeroProductSlider({ products }) {
+
+export default function HeroProductSlider({ products = [] }) {
     const [active, setActive] = useState(0);
 
+    console.log("Products count:", products.length);
+console.log("Active index:", active);
     useEffect(() => {
+        if (products.length < 2) {
+            setActive(0);
+            return;
+        }
+
         const timer = setInterval(() => {
             setActive((prev) => (prev + 1) % products.length);
-        }, 4000);
+        }, 3000);
+
         return () => clearInterval(timer);
     }, [products.length]);
 
@@ -24,6 +53,7 @@ export default function HeroProductSlider({ products }) {
     const product = products[active];
     const image = getMainImage(product);
     const discount = getDiscountPercent(product);
+    const discountedPrice = getDiscountedPrice(product);
 
     return (
         <div className="relative w-full max-w-md mx-auto">
@@ -34,7 +64,9 @@ export default function HeroProductSlider({ products }) {
                     <div className="relative aspect-square rounded-xl overflow-hidden bg-white/5">
                         <img
                             key={product._id}
-                            src={image}
+                            src={`http://localhost:5000/${product.images[0].url}`}
+                            // src={image?.startsWith("http") ?
+                            //     image : `${API_URL}/${image?.replace(/^\/+/, "")}`}
                             alt={product.title}
                             className="w-full h-full object-cover animate-in fade-in duration-500"
                         />
@@ -51,11 +83,13 @@ export default function HeroProductSlider({ products }) {
                         <p className="text-paper text-sm font-semibold line-clamp-1">{product.title}</p>
                         <div className="flex items-center gap-2 mt-1">
                             <span className="font-display text-lg font-semibold text-amber">
-                                ৳{product.salePrice.toLocaleString()}
+                            
+                                ৳{discountedPrice?.toLocaleString() ?? "0"}
                             </span>
                             {discount > 0 && (
                                 <span className="text-xs text-paper/40 line-through">
-                                    ৳{product.price.toLocaleString()}
+                                   
+                                    ৳{product.price?.toLocaleString() ?? "0"}
                                 </span>
                             )}
                         </div>

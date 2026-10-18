@@ -66,8 +66,8 @@ export default function ProductDetails() {
     }
 
     const outOfStock = product.stock === 0;
-    const discount = product.price > product.salePrice
-        ? Math.round((1 - product.salePrice / product.price) * 100)
+    const discount = product.price > product.price
+        ? Math.round((1 - product.price / product.discount) * 100)
         : 0;
     const pending = isPending(product._id);
 
@@ -115,14 +115,14 @@ export default function ProductDetails() {
 
                     <div className="flex items-center gap-3 mt-4">
                         <span className="font-display text-3xl font-semibold text-ink">
-                            {/* ৳{product.salePrice.toLocaleString()} */}
+                            
                             ৳{product.price}
                         
                         </span>
                         {discount > 0 && (
                             <>
                                 <span className="text-base text-slate/40 line-through">
-                                    {/* ৳{product.price.toLocaleString()} */}
+                                    
                                     ৳{product.price}
                                 </span>
                                 <span className="text-xs font-semibold text-red-500 bg-red-50 px-2 py-1 rounded-full">-{discount}%</span>

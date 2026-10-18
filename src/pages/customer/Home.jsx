@@ -8,17 +8,56 @@ import { mockProducts } from "../../utils/mockProducts";
 import { mockOffers } from "../../utils/mockOffers";
 import { categories } from "../../utils/mockCategories";
 import HeroSlider from "../../components/product/HeroSlider";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Home() {
     // TODO: replace with data fetched from GET /get-all-products (filter status=active server-side once wired)
-    const activeProducts = mockProducts.filter((p) => p.status === "active");
-    const activeOffers = mockOffers.filter((p) => p.status === "active");
+    const [products, setProducts] = useState([]);
+    const [sectionPro, setSectionPro] = useState({});
 
-    const featured = [...activeProducts].sort((a, b) => b.averageRating - a.averageRating).slice(0, 4);
-    const bestSellers = [...activeProducts].sort((a, b) => b.numReviews - a.numReviews).slice(0, 4);
-    const newArrivals = [...activeProducts].reverse().slice(0, 4);
+    useEffect(() => {
+        async function fetchPro() {
+            const data = await axios.get('http://localhost:5000/get-all-products');
+            
+            setProducts(data.data.product);
+            console.log('all Products: ', data.data.product);
+            
+        };
 
-    // Build hero slides: a promo slide, top deal slides, and a new-arrival slide
+        fetchPro();
+
+    }, []);
+
+    useEffect(() => {
+        async function fetchSectionPro() {
+            const data = await axios.get('http://localhost:5000/get-product-all-sections');
+            
+            setSectionPro(data.data.data);
+            console.log('Section Pro: ', data.data.data);
+            
+        };
+
+        fetchSectionPro();
+
+    }, []);
+
+    const activeOffers =
+        sectionPro?.["todays-deals"]?.products || [];
+
+    const featured =
+        sectionPro?.["featured-products"]?.products || [];
+
+    const bestSellers =
+        sectionPro?.["best-sellers"]?.products || [];
+
+    const newArrivals =
+        sectionPro?.["new-arrivals"]?.products || [];
+
+    const sliderProducts =
+        sectionPro?.["slider"]?.products || [];
+    
+    
     const heroSlides = [
         {
             type: "promo",
@@ -78,7 +117,7 @@ export default function Home() {
                             </h1>
 
                             <p className="text-paper/60 text-base sm:text-lg mt-5 max-w-md leading-relaxed">
-                                Shop electronics, fashion, home essentials, and more — all in one place, with fast delivery across Bangladesh.
+                                Shop electronics, fashion, home essentials, and more — all in one place, with fast delivery across Bangladesh. - Ashraf Shahin
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-3 mt-8">
@@ -113,7 +152,10 @@ export default function Home() {
 
                         {/* Right: rotating product showcase */}
                         <div className="hidden lg:block">
-                            <HeroProductSlider products={activeOffers} />
+                            {/* slider move  korar jonno... */}
+                            <HeroProductSlider
+                                products={sectionPro?.slider?.products || []}
+                            />
                         </div>
                     </div>
                 </div>

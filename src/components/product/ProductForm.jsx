@@ -8,7 +8,7 @@ import { useParams } from "react-router";
 
 const statusOptions = ["pending", "active", "inactive"];
 const discountTypes = ["none", "percentage", "flat"];
-const sectionOptions = ["none", "today's-deals", "featured-products", "best-sellers", "new-arrivals"];
+const sectionOptions = ["none","todays-deals", "featured-products", "best-sellers", "new-arrivals", "slider"];
 
 export default function ProductForm({ initialData, onSubmit, submitLabel = "Save Product" }) {
    
