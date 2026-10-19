@@ -1,0 +1,6 @@
+title,slug,sku,description,shortDescription,price,discount,discountType,stock,category,brand,tags,additionalInformation,status,section
+Gold Plated Floral Necklace,gold-plated-floral-necklace,TEST-JWL-001,"Elegant gold-plated necklace with a floral pendant.",Gold-plated floral necklace,1850,10,percentage,20,Jewelry,ShineCraft,"necklace,floral,gold-plated","Festive and party wear",active,featured-products
+Pearl Drop Earrings,pearl-drop-earrings,TEST-JWL-002,"Classic faux pearl drop earrings.",Pearl drop earrings,650,50,flat,35,Jewelry,ShineCraft,"earrings,pearl","Everyday and occasion wear",active,new-arrivals
+Silver-Tone Charm Bracelet,silver-tone-charm-bracelet,TEST-JWL-003,"Adjustable silver-tone bracelet with decorative charms.",Charm bracelet,920,0,none,18,Jewelry,ShineCraft,"bracelet,silver-tone","Adjustable design",active,best-sellers
+Crystal Stud Earrings,crystal-stud-earrings,TEST-JWL-004,"Sparkling crystal stud earrings with a versatile design.",Crystal stud earrings,480,15,percentage,50,Jewelry,ShineCraft,"earrings,crystal","Suitable for everyday wear",active,todays-deals
+Beaded Statement Necklace,beaded-statement-necklace,TEST-JWL-005,"Colorful beaded necklace for casual outfits.",Beaded statement necklace,1150,0,none,12,Jewelry,ShineCraft,"necklace,beaded","Casual fashion accessory",pending,none

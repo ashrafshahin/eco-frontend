@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router";
-import { Search, Plus } from "../../components/common/Icons";
+import { Search, Plus, ChevronDown } from "../../components/common/Icons";
 import ProductTable from "../../components/admin/ProductTable";
 import Modal from "../../components/common/Modal";
 import { mockProducts } from "../../utils/mockProducts";
@@ -15,6 +15,11 @@ export default function ManageProducts() {
     const [statusFilter, setStatusFilter] = useState("all");
     const [deleteTarget, setDeleteTarget] = useState(null);
     const [deleting, setDeleting] = useState(false);
+    const [showImportExport, setShowImportExport] = useState(false);
+    const [importing, setImporting] = useState(false);
+    const [importMessage, setImportMessage] = useState("");
+    const [pendingAction, setPendingAction] = useState(null);
+    const fileInputRef = useRef(null);
     
 
     const filtered = useMemo(() => {
@@ -72,6 +77,102 @@ export default function ManageProducts() {
         fetchProducts()
         
     }, [statusFilter]);
+
+    const handleImportProducts = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowedExtensions = [".csv", ".xlsx"];
+    const extension = file.name
+        .slice(file.name.lastIndexOf("."))
+        .toLowerCase();
+
+    if (!allowedExtensions.includes(extension)) {
+        setImportMessage("Only CSV and XLSX files are supported.");
+        e.target.value = "";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        setImporting(true);
+        setImportMessage("");
+
+        const response = await axios.post(
+            "http://localhost:5000/bulk/create-product",
+            formData
+        );
+
+        setImportMessage(
+            response.data?.message || "Products imported successfully."
+        );
+
+        const data = await axios.get("http://localhost:5000/get-all-products");
+        setProducts(data.data.product);
+        setStatusFilter("all");
+    } catch (error) {
+        setImportMessage(
+            error.response?.data?.message || "Product import failed."
+        );
+    } finally {
+        setImporting(false);
+        e.target.value = "";
+    }
+};
+
+const handleExport = async (format) => {
+        try {
+            const isExcel = format === "excel";
+            const endpoint = isExcel
+                ? "/export-products-excel"
+                : "/export-products-csv";
+
+            const response = await axios.get(
+                `http://localhost:5000${endpoint}`,
+                { responseType: "blob" }
+            );
+
+            const blob = new Blob([response.data], {
+                type: isExcel
+                    ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    : "text/csv;charset=utf-8;",
+            });
+
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = isExcel
+                ? "ecobazaar-products.xlsx"
+                : "ecobazaar-products.csv";
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+
+            setShowImportExport(false);
+        } catch (error) {
+            setImportMessage(`Product export failed: ${error.message}`);
+        }
+};
+    
+    // Confirm selected action
+    const handleConfirmAction = () => {
+    if (pendingAction?.type === "import") {
+        fileInputRef.current?.click();
+        setPendingAction(null);
+        return;
+    }
+
+    if (pendingAction?.type === "export") {
+        const format = pendingAction.format;
+        setPendingAction(null);
+        handleExport(format);
+    }
+};
     
     return (
         <div>
@@ -80,6 +181,70 @@ export default function ManageProducts() {
                     <h1 className="font-display text-2xl font-semibold text-ink">Products</h1>
                     <p className="text-sm text-slate mt-1">{products.length} total products</p>
                 </div>
+
+               <div className="flex items-center gap-3">
+                    {/* Import / Export dropdown */}
+                    <div className="relative">
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setShowImportExport((prev) => !prev)
+                            }
+                            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-ink/15 bg-white text-sm font-semibold hover:bg-ink/5 transition-colors"
+                        >
+                            Import / Export
+                            <ChevronDown size={16} />
+                        </button>
+
+                        {showImportExport && (
+                            <div className="absolute right-0 top-full mt-2 z-20 w-56 rounded-lg border border-ink/10 bg-white p-1 shadow-lg">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowImportExport(false);
+                                        setImportMessage("");
+                                        setPendingAction({ type: "import" });
+                                    }}
+                                    disabled={importing}
+                                    className="w-full text-left px-3 py-2.5 text-sm hover:bg-ink/5 rounded-md disabled:opacity-50"
+                                >
+                                    Import Products (.csv, .xlsx)
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowImportExport(false);
+                                        setImportMessage("");
+                                        setPendingAction({
+                                            type: "export",
+                                            format: "csv",
+                                        });
+                                    }}
+                                    className="w-full text-left px-3 py-2.5 text-sm hover:bg-ink/5 rounded-md"
+                                >
+                                    Export CSV
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowImportExport(false);
+                                        setImportMessage("");
+                                        setPendingAction({
+                                            type: "export",
+                                            format: "excel",
+                                        });
+                                    }}
+                                    className="w-full text-left px-3 py-2.5 text-sm hover:bg-ink/5 rounded-md"
+                                >
+                                    Export Excel (.xlsx)
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    </div>
+
                 <Link
                     to="/admin/products/create"
                     className="flex items-center gap-2 bg-ink text-paper text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-ink/90 transition-colors"
@@ -87,6 +252,21 @@ export default function ManageProducts() {
                     <Plus size={16} /> Add Product
                 </Link>
             </div>
+
+            <input
+                ref={fileInputRef}
+                type="file"
+                accept=".csv,.xlsx"
+                className="hidden"
+                disabled={importing}
+                onChange={handleImportProducts}
+            />
+
+             {importMessage && (
+                <p className="mb-4 text-sm text-ink" role="status">
+                    {importMessage}
+                </p>
+            )}
 
             <div className="flex items-center gap-3 flex-wrap mb-5">
                 <div className="relative flex-1 max-w-sm">
@@ -118,7 +298,7 @@ export default function ManageProducts() {
 
             <ProductTable products={filtered} onDeleteClick={setDeleteTarget} />
             
-
+            {/* delete product confirmation modal */}
             <Modal
                 open={!!deleteTarget}
                 onClose={() => setDeleteTarget(null)}
@@ -145,6 +325,52 @@ export default function ManageProducts() {
                     Are you sure you want to delete <strong className="text-ink">{deleteTarget?.title}</strong>? This can't be undone.
                 </p>
             </Modal>
+
+            {/* Import / export confirmation modal */}
+            <Modal
+                open={!!pendingAction}
+                onClose={() => setPendingAction(null)}
+                title={
+                    pendingAction?.type === "import"
+                        ? "Import products?"
+                        : `Export products as ${
+                              pendingAction?.format === "excel"
+                                  ? "Excel"
+                                  : "CSV"
+                          }?`
+                }
+                footer={
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => setPendingAction(null)}
+                            className="px-4 py-2 rounded-lg text-sm font-medium text-red-800 hover:bg-ink/5 transition-colors"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={handleConfirmAction}
+                            className="px-4 py-2 rounded-lg text-sm font-semibold bg-green-700 text-paper hover:bg-ink/90 transition-colors"
+                        >
+                            Confirm
+                        </button>
+                    </>
+                }
+            >
+                <p className="text-sm text-slate">
+                    {pendingAction?.type === "import"
+                        ? "Continue to choose a CSV or XLSX file. Products will be uploaded after you select the file."
+                        : `This will download the product data as a ${
+                              pendingAction?.format === "excel"
+                                  ? "formatted Excel (.xlsx)"
+                                  : "CSV"
+                          } file.`}
+                </p>
+            </Modal>
         </div>
     );
 };
+
+   
