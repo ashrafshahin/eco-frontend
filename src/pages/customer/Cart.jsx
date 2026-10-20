@@ -6,17 +6,34 @@ import CartSummary from "../../components/cart/CartSummary";
 import ProductCard from "../../components/product/ProductCard";
 import { PageLoader } from "../../components/common/Loader";
 import { mockProducts } from "../../utils/mockProducts";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 
 export default function Cart() {
-    const { items, subtotal, totalItems, loading } = useCart();
+    const { subtotal, totalItems, loading } = useCart();
+
+    const [items, setitems] = useState([]);
+    
+    useEffect(() => {
+        async function fetchCart() {
+            let user = JSON.parse(localStorage.getItem('userinfo'));
+            if (!user?._id) return;
+            const data = await axios.get(`https://eco-backend-w57i.onrender.com/cart/${user._id}`);
+            setitems(data.data)
+            console.log("Fetch Cart: ", data.data);
+            
+        }
+        fetchCart()
+    }, []);
 
     if (loading) return <PageLoader />;
 
-    const cartProductIds = items.map((i) => i.productId);
-    const recommended = mockProducts
-        .filter((p) => p.status === "active" && !cartProductIds.includes(p._id))
-        .sort((a, b) => b.averageRating - a.averageRating)
-        .slice(0, 4);
+    // const cartProductIds = items.map((i) => i.productId);
+    // const recommended = mockProducts
+    //     .filter((p) => p.status === "active" && !cartProductIds.includes(p._id))
+    //     .sort((a, b) => b.averageRating - a.averageRating)
+    //     .slice(0, 4);
 
     if (items.length === 0) {
         return (
@@ -35,7 +52,7 @@ export default function Cart() {
                     </Link>
                 </div>
 
-                {recommended.length > 0 && (
+                {/* {recommended.length > 0 && (
                     <div className="mt-20">
                         <h2 className="font-display text-xl font-semibold text-ink text-center mb-6">You might like</h2>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto">
@@ -44,7 +61,7 @@ export default function Cart() {
                             ))}
                         </div>
                     </div>
-                )}
+                )} */}
             </div>
         );
     }
@@ -53,14 +70,14 @@ export default function Cart() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div className="flex items-baseline justify-between mb-6">
                 <h1 className="font-display text-3xl font-semibold text-ink">Shopping Cart</h1>
-                <span className="text-sm text-slate">{totalItems} {totalItems === 1 ? "item" : "items"}</span>
+                <span className="text-sm text-slate">{totalItems} {totalItems === 1 ? "item.cart" : "items"}</span>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 bg-white rounded-xl border border-ink/10 divide-y divide-ink/5">
-                    {items.map((item) => (
-                        <CartItem key={item.productId} item={item} />
-                    ))}
+                   
+                        <CartItem  items={items} />
+                 
                 </div>
 
                 <div>
@@ -68,7 +85,7 @@ export default function Cart() {
                 </div>
             </div>
 
-            {recommended.length > 0 && (
+            {/* {recommended.length > 0 && (
                 <div className="mt-16 pt-10 border-t border-ink/10">
                     <h2 className="font-display text-xl font-semibold text-ink mb-6">You might also like</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
@@ -77,7 +94,7 @@ export default function Cart() {
                         ))}
                     </div>
                 </div>
-            )}
+            )} */}
         </div>
     );
 };

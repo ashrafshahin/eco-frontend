@@ -18,7 +18,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
     useEffect(() => {
         async function fetchCategories() {
             try {
-                const response = await axios.get("http://localhost:5000/get-category");
+                const response = await axios.get("https://eco-backend-w57i.onrender.com/get-category");
         
                 console.log(response.data.category, 'Product Category get / fetch kortese..');
                 setCategories(response.data.category);
@@ -161,7 +161,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         if (productId) {
             try {
                 const data = await axios.put(
-                    `http://localhost:5000/update-product/${productId}`, formData
+                    `https://eco-backend-w57i.onrender.com/update-product/${productId}`, formData
                 );
 
                 console.log(data, "update product ki ase dekhi....:");
@@ -173,7 +173,7 @@ export default function ProductForm({ initialData, onSubmit, submitLabel = "Save
         } else {
             try {
                 const data = await axios.post(
-                    `http://localhost:5000/create-product`, formData
+                    `https://eco-backend-w57i.onrender.com/create-product`, formData
                 );
 
                 console.log(data, "add product ki ase dekhi....:");

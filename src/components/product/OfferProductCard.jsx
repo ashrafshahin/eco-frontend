@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { ShoppingCart } from "../common/Icons";
 import { useCart } from "../../context/CartContext";
+import axios from "axios";
 
 function getMainImage(product) {
     return product.images?.find((img) => img.isMain)?.url || product.images?.[0]?.url;
@@ -17,12 +18,20 @@ export default function OfferProductCard({ product }) {
     const discount = getDiscountPercent(product);
     const pending = isPending(product._id);
 
+    const handleCreateCart = async (id) => {
+        console.log(id);
+        let user = JSON.parse(localStorage.getItem('userinfo'));
+        let cart = await axios.post(`https://eco-backend-w57i.onrender.com/create-cart/${user._id}`, { productId: id });
+        console.log("view cart",cart);
+        
+    };
+
     return (
         <div className="group relative bg-white rounded-xl border border-ink/10 overflow-hidden hover:shadow-lg transition-all duration-200 shrink-0 w-44 sm:w-56">
             <Link to={`/products/${product._id}`}>
                 <div className="relative aspect-square overflow-hidden bg-ink/5">
                     <img
-                        src={`http://localhost:5000/${product.images[0].url}`}
+                        src={`https://eco-backend-w57i.onrender.com/${product.images[0].url}`}
                         alt={product.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -64,14 +73,15 @@ export default function OfferProductCard({ product }) {
 
                 <button
                     disabled={outOfStock || pending}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        addToCart(product, 1);
-                    }}
+                    // onClick={(e) => {
+                    //     e.preventDefault();
+                    //     addToCart(product, 1);
+                    // }}
+                    onClick={()=>handleCreateCart(product._id)}
                     className="w-full mt-3 flex items-center justify-center gap-1.5 bg-ink text-paper text-xs font-semibold py-2 rounded-lg
             hover:bg-amber hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
-                    <ShoppingCart size={13} /> Add to Cart
+                    <ShoppingCart size={13} /> View Product
                 </button>
             </div>
         </div>

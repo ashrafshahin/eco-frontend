@@ -22,7 +22,7 @@ export default function ProductCard({ product }) {
             <Link to={`/products/${product._id}`}>
                 <div className="relative aspect-square overflow-hidden bg-ink/5">
                     <img
-                        src={`http://localhost:5000/${product.images[0].url}`}
+                        src={`https://eco-backend-w57i.onrender.com/${product.images[0].url}`}
                         alt={product.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
