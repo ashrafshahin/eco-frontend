@@ -35,8 +35,6 @@ export default function Cart() {
     //     .sort((a, b) => b.averageRating - a.averageRating)
     //     .slice(0, 4);
 
-   
-
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div className="flex items-baseline justify-between mb-6">

@@ -12,8 +12,7 @@ export function CartProvider({ children }) {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [pendingIds, setPendingIds] = useState([]);
-    const [error, setError] = useState("");
-
+    const [error, setError] = useState("");  
     const [userId, setUserId] = useState(() => {
         try {
             const user = JSON.parse(
