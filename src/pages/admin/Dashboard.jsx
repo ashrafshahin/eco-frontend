@@ -40,9 +40,9 @@ useEffect(() => {
   async function fetchUsers() {
     try {
       const [allRes, activeRes, deletedRes] = await Promise.all([
-        axios.get("https://eco-backend-w57i.onrender.com/getallusers"),
-        axios.get("https://eco-backend-w57i.onrender.com/allactiveusers"),
-        axios.get("https://eco-backend-w57i.onrender.com/alldeletedusers"),
+        axios.get("http://localhost:5000/getallusers"),
+        axios.get("http://localhost:5000/allactiveusers"),
+        axios.get("http://localhost:5000/alldeletedusers"),
       ]);
 
       setAllUsers(allRes.data.users ?? []);
@@ -63,7 +63,7 @@ useEffect(() => {
     
     useEffect(() => {
             async function activeUsers() {
-                const data = await axios.get(`https://eco-backend-w57i.onrender.com/allactiveusers/`);
+                const data = await axios.get(`http://localhost:5000/allactiveusers/`);
                 console.log(data.data.users, 'get all active users work checking...');
                 setActiveUsers(data.data.users);
             }
@@ -71,7 +71,7 @@ useEffect(() => {
     }, []);
     useEffect(() => {
             async function getDeletedUsers() {
-                const data = await axios.get(`https://eco-backend-w57i.onrender.com/alldeletedusers/`);
+                const data = await axios.get(`http://localhost:5000/alldeletedusers/`);
                 console.log(data.data.users, 'get all deleted users work checking...');
                 setDeletedUsers(data.data.users);
             }
@@ -81,7 +81,7 @@ useEffect(() => {
 
     useEffect(() => {
             async function fetchProducts() {
-                const data = await axios.get(`https://eco-backend-w57i.onrender.com/get-all-products/`);
+                const data = await axios.get(`http://localhost:5000/get-all-products/`);
                 console.log(data.data.product, 'Dashboard: get all products work checking: ...');
                 setAllProducts(data.data.product);
             }
@@ -90,7 +90,7 @@ useEffect(() => {
     
     useEffect(() => {
             async function activeProducts() {
-                const data = await axios.get(`https://eco-backend-w57i.onrender.com/get-all-products?status=active`);
+                const data = await axios.get(`http://localhost:5000/get-all-products?status=active`);
                 console.log(data.data.product, 'Dashboard: get ACTIVE products work checking: ...');
                 setActiveProducts(data.data.product);
             }
@@ -99,7 +99,7 @@ useEffect(() => {
 
     useEffect(() => {
             async function inactiveProducts() {
-                const data = await axios.get(`https://eco-backend-w57i.onrender.com/get-all-products?status=inactive`);
+                const data = await axios.get(`http://localhost:5000/get-all-products?status=inactive`);
                 console.log(data.data.product, 'Dashboard: get INACTIVE products work checking: ...');
                 setInactiveProducts(data.data.product);
             }
@@ -108,7 +108,7 @@ useEffect(() => {
 
     useEffect(() => {
             async function pendingProducts() {
-                const data = await axios.get(`https://eco-backend-w57i.onrender.com/get-all-products?status=pending`);
+                const data = await axios.get(`http://localhost:5000/get-all-products?status=pending`);
                 console.log(data.data.product, 'Dashboard: get PENDING products work checking: ...');
                 setPendingProducts(data.data.product);
             }
@@ -117,7 +117,7 @@ useEffect(() => {
 
     useEffect(() => {
     async function fetchDeletedProducts() {
-        const data = await axios.get('https://eco-backend-w57i.onrender.com/get-deleted-products');
+        const data = await axios.get('http://localhost:5000/get-deleted-products');
 
             console.log(data.data.product, 'Deleted products');
 

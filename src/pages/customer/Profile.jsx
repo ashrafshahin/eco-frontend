@@ -36,14 +36,38 @@ export default function Profile() {
         return errs;
     };
 
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const errs = validate();
+    //     if (Object.keys(errs).length) return setErrors(errs);
+
+    //     const data = await axios.post(`http://localhost:5000/updateuser/${userInfo.userId}`, form);
+    //     console.log("Update profile:...check korchi", form);
+        
+    // };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const errs = validate();
-        if (Object.keys(errs).length) return setErrors(errs);
 
-        const data = await axios.post(`https://eco-backend-w57i.onrender.com/updateuser/${userInfo._id}`, form);
-        console.log("Update profile:...check korchi", form);
-        
+        const errs = validate();
+        if (Object.keys(errs).length) {
+            setErrors(errs);
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `http://localhost:5000/updateuser/${userInfo.userId}`,
+                form
+            );
+
+            console.log("Update profile:", response.data);
+        } catch (error) {
+            console.error(
+                "Update profile failed:",
+                error.response?.data || error.message
+            );
+        }
     };
     
     const initials = (form.name || "")
@@ -64,33 +88,71 @@ export default function Profile() {
         
     }, []);
 
-    useEffect(() => {
-        const getData = async () => {
-            if (userInfo?._id) 
-            {const data = await axios.get(`https://eco-backend-w57i.onrender.com/getsingleuser/${userInfo?._id}`)
+    // useEffect(() => {
+    //     const getData = async () => {
+    //         if (userInfo?.userId)
+    //         {const data = await axios.get(`http://localhost:5000/getsingleuser/${userInfo?.userId}`)
             
-                console.log(data.data.userData, '... get single user data...');
-                console.log(userInfo, '... single user info ki ase...');
+    //             console.log(data.data.userData, '... get single user data...');
+    //             console.log(userInfo, '... single user info ki ase...');
                 
-                // break na koleo amer ta kaj korche... but role upore thakte hobe...
-                // setForm(data.data.userData)
-                const dataShort = data.data.userData
-                setUserInfo(dataShort);
-                setForm({
-                    name: dataShort.name,
-                     email: dataShort.email,
-                    phone: dataShort.phone,
-                    address: dataShort.address,
-                     city: dataShort.city,
-                    postalCode: dataShort.postalCode,
+    //             // break na koleo amer ta kaj korche... but role upore thakte hobe...
+    //             // setForm(data.data.userData)
+    //             const dataShort = data?.data.userData
+    //             setUserInfo(dataShort);
+    //             setForm({
+    //                 name: dataShort.name,
+    //                  email: dataShort.email,
+    //                 phone: dataShort.phone,
+    //                 address: dataShort.address,
+    //                  city: dataShort.city,
+    //                 postalCode: dataShort.postalCode,
                     
-                })
-        }
-        }
-        getData()
+    //             })
+    //     }
+    //     }
+    //     getData()
         
-    }, [userInfo?._id]);
+    // }, [userInfo?.userId]);
     
+    useEffect(() => {
+    const getData = async () => {
+            if (!userInfo?.userId) return;
+
+            try {
+                const response = await axios.get(
+                    `http://localhost:5000/getsingleuser/${userInfo.userId}`
+                );
+
+                const dataShort = response.data.userData;
+
+                console.log(dataShort, "... get single user data...");
+
+                setUserInfo((prev) => ({
+                    ...prev,
+                    ...dataShort,
+                    userId: prev.userId,
+                }));
+
+                setForm({
+                    name: dataShort.name || "",
+                    email: dataShort.email || "",
+                    phone: dataShort.phone || "",
+                    address: dataShort.address || "",
+                    city: dataShort.city || "",
+                    postalCode: dataShort.postalCode || "",
+                });
+            } catch (error) {
+                console.error(
+                    "Failed to fetch profile:",
+                    error.response?.data || error.message
+                );
+            }
+        };
+
+        getData();
+    }, [userInfo?.userId]);
+
     return (
         <div>
             <div className="flex items-center gap-4 mb-8">

@@ -49,7 +49,7 @@ export default function Navbar() {
         setUserInfo(data)
     
         async function fetchCategory() {
-            const cate = await axios.get('https://eco-backend-w57i.onrender.com/get-category');
+            const cate = await axios.get('http://localhost:5000/get-category');
             setCategories(cate.data.category)
             // console.log('category: ', cate.data.category);
             

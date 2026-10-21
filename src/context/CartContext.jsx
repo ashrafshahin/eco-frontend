@@ -4,13 +4,27 @@ import { fetchCart, addToCartApi, updateCartQuantityApi, removeCartItemApi } fro
 const CartContext = createContext(null);
 
 // TODO: replace with the real logged-in user's _id once auth is wired (e.g. from useAuth())
-const DEV_USER_ID = "guest";
+// const DEV_USER_ID = "guest";
+const user = JSON.parse(localStorage.getItem("userinfo") || "null" );
+const DEV_USER_ID = user?.userId;
 
 export function CartProvider({ children }) {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [pendingIds, setPendingIds] = useState([]);
     const [error, setError] = useState("");
+
+    const [userId, setUserId] = useState(() => {
+        try {
+            const user = JSON.parse(
+            localStorage.getItem("userinfo") || "null"
+            );
+
+            return user?.userId || null;
+        } catch {
+            return null;
+        }
+    });
 
     useEffect(() => {
         fetchCart(DEV_USER_ID).then(setItems).finally(() => setLoading(false));

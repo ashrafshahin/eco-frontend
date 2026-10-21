@@ -18,9 +18,9 @@ export default function Cart() {
     useEffect(() => {
         async function fetchCart() {
             let user = JSON.parse(localStorage.getItem('userinfo'));
-            if (!user?._id) return;
-            const data = await axios.get(`https://eco-backend-w57i.onrender.com/cart/${user._id}`);
-            setitems(data.data)
+            if (!user?.userId) return;
+            const data = await axios.get(`http://localhost:5000/cart/${user.userId}`);
+            setitems(data?.data)
             console.log("Fetch Cart: ", data.data);
             
         }
@@ -35,36 +35,7 @@ export default function Cart() {
     //     .sort((a, b) => b.averageRating - a.averageRating)
     //     .slice(0, 4);
 
-    if (items.length === 0) {
-        return (
-            <div className="max-w-7xl mx-auto px-4 py-24">
-                <div className="text-center">
-                    <div className="w-20 h-20 rounded-full bg-ink/5 flex items-center justify-center mx-auto mb-5">
-                        <ShoppingCart size={28} className="text-ink/30" />
-                    </div>
-                    <h1 className="font-display text-2xl font-semibold text-ink">Your cart is empty</h1>
-                    <p className="text-slate text-sm mt-2">Looks like you haven't added anything yet.</p>
-                    <Link
-                        to="/products"
-                        className="inline-flex items-center gap-2 mt-6 px-6 py-2.5 rounded-lg bg-ink text-paper text-sm font-semibold hover:bg-ink/90 transition-colors"
-                    >
-                        Start Shopping <ArrowRight size={15} />
-                    </Link>
-                </div>
-
-                {/* {recommended.length > 0 && (
-                    <div className="mt-20">
-                        <h2 className="font-display text-xl font-semibold text-ink text-center mb-6">You might like</h2>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto">
-                            {recommended.map((product) => (
-                                <ProductCard key={product._id} product={product} />
-                            ))}
-                        </div>
-                    </div>
-                )} */}
-            </div>
-        );
-    }
+   
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

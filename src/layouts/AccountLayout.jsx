@@ -14,11 +14,12 @@ export default function AccountLayout() {
     const linkClass = ({ isActive }) =>
         `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive ? "bg-ink text-paper" : "text-ink/70 hover:bg-ink/5"
         }`;
-
+    
     const handleLogout = () => {
-        localStorage.removeItem('userinfo')
-        navigate("/");
-    };
+    localStorage.removeItem("userinfo");
+    setUserInfo(null);
+    navigate("/");
+};
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

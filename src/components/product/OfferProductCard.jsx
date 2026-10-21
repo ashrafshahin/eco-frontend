@@ -19,9 +19,9 @@ export default function OfferProductCard({ product }) {
     const pending = isPending(product._id);
 
     const handleCreateCart = async (id) => {
-        console.log(id);
+        console.log(product);
         let user = JSON.parse(localStorage.getItem('userinfo'));
-        let cart = await axios.post(`https://eco-backend-w57i.onrender.com/create-cart/${user._id}`, { productId: id });
+        let cart = await axios.post(`http://localhost:5000/create-cart/${user.userId}`, { productId: product._id });
         console.log("view cart",cart);
         
     };
@@ -31,7 +31,7 @@ export default function OfferProductCard({ product }) {
             <Link to={`/products/${product._id}`}>
                 <div className="relative aspect-square overflow-hidden bg-ink/5">
                     <img
-                        src={`https://eco-backend-w57i.onrender.com/${product.images[0].url}`}
+                        src={`http://localhost:5000/${product.images[0].url}`}
                         alt={product.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -81,7 +81,8 @@ export default function OfferProductCard({ product }) {
                     className="w-full mt-3 flex items-center justify-center gap-1.5 bg-ink text-paper text-xs font-semibold py-2 rounded-lg
             hover:bg-amber hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
-                    <ShoppingCart size={13} /> View Product
+                    <ShoppingCart size={13} />
+                    <p className="border-teal-100 bg-amber-200 p-2 hover:bg-gray-400 rounded-xl">View Product</p>
                 </button>
             </div>
         </div>

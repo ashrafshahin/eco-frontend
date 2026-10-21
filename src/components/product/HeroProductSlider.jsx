@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { ArrowRight } from "../common/Icons";
-// const API_URL = import.meta.env.VITE_API_URL || "https://eco-backend-w57i.onrender.com";
+// const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function getMainImage(product) {
     return product.images?.find((img) => img.isMain)?.url || product.images?.[0]?.url;
@@ -64,7 +64,7 @@ console.log("Active index:", active);
                     <div className="relative aspect-square rounded-xl overflow-hidden bg-white/5">
                         <img
                             key={product._id}
-                            src={`https://eco-backend-w57i.onrender.com/${product.images[0].url}`}
+                            src={`http://localhost:5000/${product.images[0].url}`}
                             // src={image?.startsWith("http") ?
                             //     image : `${API_URL}/${image?.replace(/^\/+/, "")}`}
                             alt={product.title}

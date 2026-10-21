@@ -68,7 +68,7 @@ export default function Register() {
         setSubmitError("");
         // TODO: connect to POST /registration
         try {
-            let data = await axios.post('https://eco-backend-w57i.onrender.com/registration', form)
+            let data = await axios.post('http://localhost:5000/registration', form)
             navigate('/login')
 
             console.log(data, 'register form data...');

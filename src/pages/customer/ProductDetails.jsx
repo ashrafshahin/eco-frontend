@@ -24,7 +24,7 @@ export default function ProductDetails() {
             try {
                 if (slug) {
                     const response = await axios.get(
-                        `https://eco-backend-w57i.onrender.com/get-single-product-by-slug/${slug}`
+                        `http://localhost:5000/get-single-product-by-slug/${slug}`
                     );
 
                     if (response.data.redirect) {
@@ -39,7 +39,7 @@ export default function ProductDetails() {
 
                 if (id) {
                     const response = await axios.get(
-                        `https://eco-backend-w57i.onrender.com/get-single-product/${id}`
+                        `http://localhost:5000/get-single-product/${id}`
                     );
 
                     setProduct(response.data.product);

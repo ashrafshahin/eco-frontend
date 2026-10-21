@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// const API_URL = "https://eco-backend-w57i.onrender.com";
+// const API_URL = "http://localhost:5000";
 
 export default function Categories() {
     const [categories, setCategories] = useState([]);
@@ -14,7 +14,7 @@ export default function Categories() {
 
     async function fetchCategories() {
         try {
-            const response = await axios.get(`https://eco-backend-w57i.onrender.com/get-category`);
+            const response = await axios.get(`http://localhost:5000/get-category`);
             setCategories(response.data.category ?? []);
         } catch (err) {
             setError(
@@ -51,7 +51,7 @@ export default function Categories() {
 
         try {
             const response = await axios.post(
-                `https://eco-backend-w57i.onrender.com/create-category`,
+                `http://localhost:5000/create-category`,
                 { catTitle: title, slug }
             );
 

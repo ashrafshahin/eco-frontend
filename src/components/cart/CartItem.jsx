@@ -8,19 +8,18 @@ export default function CartItem({ items }) {
     // const pending = isPending(items.productId);
     // const atMaxStock = item.quantity >= item.stock;
 
-    // console.log("fdsgsdg", items.cart);
+    console.log("fdsgsdg", items);
     
     return (
         
         <>
             <h1>Ashraf Shahin Testing...</h1>
-            {items?.cart?.map(item => {
-                
+            {items?.cart?.map(item => (
                 <div className="flex gap-4 p-4 sm:p-5 group">
             <Link to={`/products/${item.product.productId}`} className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-ink/5 shrink-0 border border-ink/5">
                 <img
                     // src={item.image}
-                    src={`https://eco-backend-w57i.onrender.com/${item.product.images[0].url}`}
+                    src={`http://localhost:5000/${item.product.images[0].url}`}
                     alt={item.title}
                     className="w-full h-full object-cover" 
                     />
@@ -65,7 +64,7 @@ export default function CartItem({ items }) {
             </div>
             
         </div>
-            })}
+            ))}
             
           
         
