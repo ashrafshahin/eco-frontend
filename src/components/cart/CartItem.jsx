@@ -3,7 +3,7 @@ import { Trash2, Loader2 } from "../common/Icons";
 import QuantitySelector from "./QuantitySelector";
 import { useCart } from "../../context/CartContext";
 
-export default function CartItem({ items }) {
+export default function CartItem({ items, onUpdated }) {
     // const { incrementQuantity, decrementQuantity, removeFromCart, isPending } = useCart();
     // const pending = isPending(items.productId);
     // const atMaxStock = item.quantity >= item.stock;
@@ -32,7 +32,7 @@ export default function CartItem({ items }) {
                         <Link to={`/products/${item.product.productId}`} className="text-sm font-semibold text-ink hover:text-amber transition-colors line-clamp-2">
                                     
                                     {item.product.title}
-                                    {item.product._id}
+                                   
                                     <p> Quantity : <span className="text-green-700">{item.quantity}</span> </p>
                            
                         </Link>
@@ -53,7 +53,11 @@ export default function CartItem({ items }) {
 
                      {/* IMPORTANT: product and user id aste hobe... */}
                                 
-                        <QuantitySelector productId={item.product._id} quantity={item.quantity} />
+                                <QuantitySelector
+                                    productId={item.product._id}
+                                    quantity={item.quantity}
+                                    onUpdated={onUpdated}
+                                />
                                 
                     </div>
                     <span className="font-display text-base font-semibold text-ink">

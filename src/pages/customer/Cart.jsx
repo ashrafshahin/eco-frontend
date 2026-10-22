@@ -15,16 +15,30 @@ export default function Cart() {
 
     const [items, setitems] = useState([]);
     
-    useEffect(() => {
-        async function fetchCart() {
-            let user = JSON.parse(localStorage.getItem('userinfo'));
-            if (!user?.userId) return;
-            const data = await axios.get(`http://localhost:5000/cart/${user.userId}`);
-            setitems(data?.data)
-            console.log("Fetch Cart: ", data.data);
+    // useEffect(() => {
+    //     async function fetchCart() {
+    //         let user = JSON.parse(localStorage.getItem('userinfo'));
+    //         if (!user?.userId) return;
+    //         const data = await axios.get(`http://localhost:5000/cart/${user.userId}`);
+    //         setitems(data?.data)
+    //         console.log("Fetch Cart: ", data.data);
             
-        }
-        fetchCart()
+    //     }
+    //     fetchCart()
+    // }, []);
+
+    const fetchCart = async () => {
+        const user = JSON.parse(localStorage.getItem("userinfo"));
+        if (!user?.userId) return;
+
+        const response = await axios.get(
+            `http://localhost:5000/cart/${user.userId}`);
+
+        setitems(response.data);
+    };
+
+    useEffect(() => {
+        fetchCart();
     }, []);
 
     if (loading) return <PageLoader />;
@@ -45,7 +59,7 @@ export default function Cart() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 bg-white rounded-xl border border-ink/10 divide-y divide-ink/5">
                    
-                        <CartItem  items={items} />
+                        <CartItem  items={items} onUpdated={fetchCart} />
                  
                 </div>
 

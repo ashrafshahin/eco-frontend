@@ -2,7 +2,7 @@ import axios from "axios";
 import { Minus, Plus, Loader2 } from "../common/Icons";
 import { useState } from "react";
 
-export default function QuantitySelector({productId, quantity}) {
+export default function QuantitySelector({productId, quantity, onUpdated}) {
 
     const [proQuaMinus, setProQuaMinus] = useState([]);
     const [proQuaPlus, setProQuaPlus] = useState([]);
@@ -15,6 +15,13 @@ export default function QuantitySelector({productId, quantity}) {
         if (!user?.userId) return;
         
         const data = await axios.post(`http://localhost:5000/update-cart/${user.userId}/${productId}`, { type });
+
+        // window reload deye cart update korchi... just one line delai hobe 
+        // window.location.reload();
+
+        // No Reload - onUpdated -  deye cart update korchi... follow codes
+        await onUpdated?.();
+
         setProQuaMinus(data.data)
         console.log('onDecrement: ', data.data);
         
@@ -28,6 +35,10 @@ export default function QuantitySelector({productId, quantity}) {
         if (!user?.userId) return;
         
         const data = await axios.post(`http://localhost:5000/update-cart/${user.userId}/${productId}`, { type });
+
+        // cart click korle window reload nibe...
+        // window.location.reload();
+        await onUpdated?.();
 
         setProQuaPlus(data.data)
         console.log('onIncrement: ', data.data);
