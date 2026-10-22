@@ -1,22 +1,57 @@
+import axios from "axios";
 import { Minus, Plus, Loader2 } from "../common/Icons";
+import { useState } from "react";
 
-export default function QuantitySelector({ value, onIncrement, onDecrement, disabled, min = 1 }) {
+export default function QuantitySelector({productId, quantity}) {
+
+    const [proQuaMinus, setProQuaMinus] = useState([]);
+    const [proQuaPlus, setProQuaPlus] = useState([]);
+
+    const onDecrement = async (type) => {
+        console.log("Quantity :", quantity);
+        console.log("productId :", productId);
+        
+        let user = JSON.parse(localStorage.getItem('userinfo'));
+        if (!user?.userId) return;
+        
+        const data = await axios.post(`http://localhost:5000/update-cart/${user.userId}/${productId}`, { type });
+        setProQuaMinus(data.data)
+        console.log('onDecrement: ', data.data);
+        
+    };
+
+    const onIncrement = async (type) => {
+        console.log("Quantity :", quantity);
+        console.log("productId :", productId);
+        
+        let user = JSON.parse(localStorage.getItem('userinfo'));
+        if (!user?.userId) return;
+        
+        const data = await axios.post(`http://localhost:5000/update-cart/${user.userId}/${productId}`, { type });
+
+        setProQuaPlus(data.data)
+        console.log('onIncrement: ', data.data);
+        
+    };
+
     return (
         <div className="flex items-center border border-ink/15 rounded-lg overflow-hidden bg-white">
             <button
-                onClick={onDecrement}
-                disabled={disabled || value <= min}
+                onClick={()=>onDecrement('minus')}
+                // disabled={disabled || value <= min}
                 className="w-8 h-8 flex items-center justify-center text-ink/60 border-r border-ink/15
           hover:bg-ink hover:text-paper transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-ink/60"
             >
                 <Minus size={13} />
             </button>
             <span className="w-9 flex items-center justify-center text-sm font-semibold text-ink">
-                {disabled ? <Loader2 size={13} className="animate-spin text-ink/40" /> : value}
+                {/* {disabled ? <Loader2 size={13} className="animate-spin text-ink/40" /> : value} */}
+                {quantity}
             </span>
             <button
-                onClick={onIncrement}
-                disabled={disabled}
+                onClick={()=>onIncrement('plus')}
+                
+                // disabled={disabled}
                 className="w-8 h-8 flex items-center justify-center text-ink/60 border-l border-ink/15
           hover:bg-ink hover:text-paper transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-ink/60"
             >

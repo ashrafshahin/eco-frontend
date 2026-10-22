@@ -30,7 +30,11 @@ export default function CartItem({ items }) {
                 <div>
                     <div className="flex justify-between gap-3">
                         <Link to={`/products/${item.product.productId}`} className="text-sm font-semibold text-ink hover:text-amber transition-colors line-clamp-2">
-                            {item.product.title}
+                                    
+                                    {item.product.title}
+                                    {item.product._id}
+                                    <p> Quantity : <span className="text-green-700">{item.quantity}</span> </p>
+                           
                         </Link>
                         <button
                             onClick={() => removeFromCart(item.product.productId)}
@@ -45,14 +49,12 @@ export default function CartItem({ items }) {
                 </div>
 
                 <div className="flex items-center justify-between mt-3">
-                    <div className="flex items-center gap-2">
-                        <QuantitySelector
-                            value={item.quantity}
-                            onIncrement={() => incrementQuantity(item.productId)}
-                            onDecrement={() => decrementQuantity(item.productId)}
-                            // disabled={pending}
-                        />
-                        {/* {pending && <Loader2 size={14} className="animate-spin text-slate/40" />} */}
+                            <div className="flex items-center gap-2">
+
+                     {/* IMPORTANT: product and user id aste hobe... */}
+                                
+                        <QuantitySelector productId={item.product._id} quantity={item.quantity} />
+                                
                     </div>
                     <span className="font-display text-base font-semibold text-ink">
                         ৳{(item.product.price * item.quantity).toLocaleString()}
