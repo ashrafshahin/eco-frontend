@@ -56,6 +56,7 @@ export default function CartItem({ items, onUpdated }) {
                                 <QuantitySelector
                                     productId={item.product._id}
                                     quantity={item.quantity}
+                                    stock={item.product.stock}
                                     onUpdated={onUpdated}
                                 />
                                 
