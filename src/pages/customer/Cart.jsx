@@ -11,21 +11,13 @@ import axios from "axios";
 
 
 export default function Cart() {
-    const { subtotal, totalItems, loading } = useCart();
+    const { loading } = useCart();
 
-    const [items, setitems] = useState([]);
-    
-    // useEffect(() => {
-    //     async function fetchCart() {
-    //         let user = JSON.parse(localStorage.getItem('userinfo'));
-    //         if (!user?.userId) return;
-    //         const data = await axios.get(`http://localhost:5000/cart/${user.userId}`);
-    //         setitems(data?.data)
-    //         console.log("Fetch Cart: ", data.data);
-            
-    //     }
-    //     fetchCart()
-    // }, []);
+    const [items, setitems] = useState({
+        cart: [],
+        totalCartPrice: 0,
+        
+    });
 
     const fetchCart = async () => {
         const user = JSON.parse(localStorage.getItem("userinfo"));
@@ -36,6 +28,13 @@ export default function Cart() {
 
         setitems(response.data);
     };
+
+    const cartItems = items?.cart || [];
+    const subtotal = items?.totalCartPrice ?? 0;
+    const totalItems = cartItems.reduce(
+        (total, item) => total + item.quantity,
+        0
+    );
 
     useEffect(() => {
         fetchCart();

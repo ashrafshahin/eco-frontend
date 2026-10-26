@@ -3,9 +3,9 @@ import { ShieldCheck, Truck, Lock } from "../common/Icons";
 import PromoCodeInput from "./PromoCodeInput";
 
 export default function CartSummary({ subtotal, itemCount }) {
-    const shipping = subtotal > 2000 || subtotal === 0 ? 0 : 100;
+    const shipping = subtotal >= 2000 || subtotal === 0 ? 0 : 100;
+    const amountToFreeShipping = Math.max(0, 2000 - subtotal);
     const total = subtotal + shipping;
-    const amountToFreeShipping = 2000 - subtotal;
 
     return (
         <div className="bg-white rounded-xl border border-ink/10 sticky top-24 overflow-hidden">
@@ -47,15 +47,24 @@ export default function CartSummary({ subtotal, itemCount }) {
                     <span className="font-display text-2xl font-semibold text-ink">৳{total.toLocaleString()}</span>
                 </div>
 
+                
+            {itemCount > 0 ? (
                 <Link
                     to="/checkout"
-                    className={`flex items-center justify-center gap-2 text-center w-full py-3 rounded-lg border text-sm font-semibold mt-5 transition-all ${itemCount === 0
-                            ? "bg-ink/5 border-ink/10 text-ink/30 pointer-events-none"
-                            : "bg-amber border-amber text-ink hover:bg-transparent hover:text-ink"
-                        }`}
+                    className="flex items-center justify-center gap-2 text-center w-full py-3 rounded-lg border text-sm font-semibold mt-5 transition-all bg-amber border-amber text-ink hover:bg-transparent hover:text-ink"
                 >
                     <Lock size={14} /> Proceed to Checkout
                 </Link>
+            ) : (
+                <button
+                    type="button"
+                    disabled
+                    className="flex items-center justify-center gap-2 text-center w-full py-3 rounded-lg border text-sm font-semibold mt-5 bg-ink/5 border-ink/10 text-ink/30 cursor-not-allowed"
+                >
+                    <Lock size={14} /> Proceed to Checkout
+                </button>
+            )}
+
             </div>
 
             <div className="bg-ink/[0.03] px-5 py-3 flex items-center justify-center gap-1.5 text-xs text-slate">
