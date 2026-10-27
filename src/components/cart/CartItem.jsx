@@ -14,7 +14,9 @@ export default function CartItem({ items, onUpdated }) {
     return (
         
         <>
-            <h1 className="m-4 p-2 text-xl animate-bounce text-center ">{user.name}'s <span className="text-red-600 font-bold"> FREE Delivery on Taka 2000+ Shopping... </span></h1>
+            <h1 className="m-4 p-2 text-xl animate-bounce text-center">
+  {user?.name || "Your"} <span className="text-red-600 font-bold">FREE Delivery on Taka 2000+ Shopping...</span>
+</h1>
             {items?.cart?.map(item => (
                 <div className="flex gap-4 p-4 sm:p-5 group">
             <Link to={`/products/${item.product.productId}`} className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-ink/5 shrink-0 border border-ink/5">
