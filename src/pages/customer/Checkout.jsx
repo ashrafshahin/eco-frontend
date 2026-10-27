@@ -1,14 +1,35 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate, Link, useSearchParams } from "react-router";
 import { useCart } from "../../context/CartContext";
 import AddressForm from "../../components/checkout/AddressForm";
 import PaymentMethodSelector from "../../components/checkout/PaymentMethodSelector";
 import OrderSummary from "../../components/checkout/OrderSummary";
 import Button from "../../components/common/Button";
+import axios from "axios";
 
 export default function Checkout() {
-    const { items, subtotal, clearCart } = useCart();
+    // const { items, subtotal, clearCart } = useCart();
     const navigate = useNavigate();
+    const [items, setItems] = useState([]);
+    const [subtotal, setSubtotal] = useState(0);
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("userinfo"));
+        if (!user?.userId) return;
+
+        axios.get(`http://localhost:5000/cart/${user.userId}`)
+            .then((response) => {
+                setItems(response.data?.cart || []);
+                setSubtotal(response.data?.totalCartPrice ?? 0);
+            })
+            .catch((error) => console.error(error));
+    }, []);
+
+    // let [searchParams] = useSearchParams();
+    // // console.log("Params: ", searchParams.get('subTotal'));
+    // useEffect(() => {
+    //     console.log(searchParams.get("subTotal"));
+    //     }, [searchParams]);
 
     const [form, setForm] = useState({
         fullName: "", phone: "", address: "", city: "", postalCode: "", notes: "",
@@ -54,20 +75,20 @@ export default function Checkout() {
         }, 1200);
     };
 
-    if (items.length === 0) {
-        return (
-            <div className="max-w-7xl mx-auto px-4 py-24 text-center">
-                <h1 className="font-display text-2xl font-semibold text-ink">Your cart is empty</h1>
-                <p className="text-slate text-sm mt-2">Add something to your cart before checking out.</p>
-                <Link
-                    to="/products"
-                    className="inline-block mt-6 px-6 py-2.5 rounded-lg bg-ink text-paper text-sm font-semibold hover:bg-ink/90 transition-colors"
-                >
-                    Browse Products
-                </Link>
-            </div>
-        );
-    }
+    // if (items.length === 0) {
+    //     return (
+    //         <div className="max-w-7xl mx-auto px-4 py-24 text-center">
+    //             <h1 className="font-display text-2xl font-semibold text-ink">Your cart is empty</h1>
+    //             <p className="text-slate text-sm mt-2">Add something to your cart before checking out.</p>
+    //             <Link
+    //                 to="/products"
+    //                 className="inline-block mt-6 px-6 py-2.5 rounded-lg bg-ink text-paper text-sm font-semibold hover:bg-ink/90 transition-colors"
+    //             >
+    //                 Browse Products
+    //             </Link>
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
