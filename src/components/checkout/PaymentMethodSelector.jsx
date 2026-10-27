@@ -2,9 +2,7 @@ import { CreditCard, Check } from "../common/Icons";
 
 const methods = [
     { id: "cod", label: "Cash on Delivery", desc: "Pay when your order arrives" },
-    { id: "bkash", label: "bKash", desc: "Pay via bKash mobile banking" },
-    { id: "nagad", label: "Nagad", desc: "Pay via Nagad mobile banking" },
-    { id: "card", label: "Debit / Credit Card", desc: "Visa, Mastercard, and more" },
+    { id: "aamarpay", label: "aamarPay", desc: "Pay securely via aamarPay" },
 ];
 
 export default function PaymentMethodSelector({ selected, onChange }) {

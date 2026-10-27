@@ -54,7 +54,7 @@ export default function Checkout() {
         return errs;
     };
 
-    const handlePlaceOrder = (e) => {
+    const handlePlaceOrder = async (e) => {
         e.preventDefault();
         const errs = validate();
         if (Object.keys(errs).length) return setErrors(errs);
@@ -63,20 +63,41 @@ export default function Checkout() {
         // TODO: connect to POST /payment with { form, paymentMethod, items, total }
         console.log("Place order:", { form, paymentMethod, items, subtotal });
 
-        setTimeout(() => {
-            setPlacing(false);
-            const success = Math.random() > 0.15; // simulated outcome until real payment gateway is wired
-            if (success) {
-                clearCart();
-                navigate("/order-success");
-            } else {
-                navigate("/order-failed");
-            }
-        }, 1200);
-    };
+        try {
+            setPlacing(true);
 
+            const user = JSON.parse(localStorage.getItem("userinfo"));
+
+            const response = await axios.post("http://localhost:5000/payment", {
+                userId: user.userId,
+                amount: subtotal,
+                cus_name: form.fullName,
+                cus_email: user.email,
+                cus_add1: form.address,
+                cus_add2: form.notes || "",
+                cus_city: form.city,
+                cus_state: form.city,
+                cus_postcode: form.postalCode,
+                cus_phone: form.phone,
+            });
+
+            const paymentUrl = response.data?.data?.payment_url;
+
+            if (response.data?.success && paymentUrl) {
+                window.location.href = paymentUrl;
+            } else {
+                alert(response.data?.message || "Payment initialization failed...");
+            }
+        } catch (error) {
+            alert(error.response?.data?.message || "Payment initialization failed...");
+        } finally {
+            setPlacing(false);
+        };
+
+    };
     // if (items.length === 0) {
     //     return (
+    
     //         <div className="max-w-7xl mx-auto px-4 py-24 text-center">
     //             <h1 className="font-display text-2xl font-semibold text-ink">Your cart is empty</h1>
     //             <p className="text-slate text-sm mt-2">Add something to your cart before checking out.</p>
