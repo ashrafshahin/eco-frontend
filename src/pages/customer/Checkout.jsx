@@ -17,7 +17,7 @@ export default function Checkout() {
         const user = JSON.parse(localStorage.getItem("userinfo"));
         if (!user?.userId) return;
 
-        axios.get(`http://localhost:5000/cart/${user.userId}`)
+        axios.get(`https://eco-backend-w57i.onrender.com/cart/${user.userId}`)
             .then((response) => {
                 setItems(response.data?.cart || []);
                 setSubtotal(response.data?.totalCartPrice ?? 0);
@@ -68,7 +68,7 @@ export default function Checkout() {
 
             const user = JSON.parse(localStorage.getItem("userinfo"));
 
-            const response = await axios.post("http://localhost:5000/payment", {
+            const response = await axios.post("https://eco-backend-w57i.onrender.com/payment", {
                 userId: user.userId,
                 amount: subtotal,
                 cus_name: form.fullName,

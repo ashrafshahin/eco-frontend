@@ -31,7 +31,7 @@ export default function ResetPassword() {
         if (Object.keys(errs).length) return setErrors(errs);
 
         // // TODO: connect to POST /resetpassword/:token
-        const data = await axios.post(`http://localhost:5000/reset-password/${token}`, form);
+        const data = await axios.post(`https://eco-backend-w57i.onrender.com/reset-password/${token}`, form);
     
         navigate("/login");
 

@@ -16,7 +16,7 @@ export default function ForgotPassword() {
         if (!email) return setError("Email is required...");
         if (!/\S+@\S+\.\S+/.test(email)) return setError("Enter a valid email...");
 
-        const data = await axios.post(`http://localhost:5000/forgot-password`, {
+        const data = await axios.post(`https://eco-backend-w57i.onrender.com/forgot-password`, {
             email: email
         });
 

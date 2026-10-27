@@ -13,7 +13,7 @@ export default function UserDetails() {
     
     useEffect(() => {
         async function getData() {
-            const data = await axios.get(`http://localhost:5000/getsingleuser/${id}`);
+            const data = await axios.get(`https://eco-backend-w57i.onrender.com/getsingleuser/${id}`);
             console.log(data.data.userData, 'get single user work checking: ...');
             setUser(data.data.userData);
         }

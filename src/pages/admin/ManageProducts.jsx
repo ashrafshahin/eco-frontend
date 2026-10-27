@@ -44,7 +44,7 @@ export default function ManageProducts() {
     const handleDelete = async () => {
         setDeleting(true);
         // TODO: connect to DELETE /delete-product/:id
-        const data = await axios.delete(`http://localhost:5000/delete-product/${deleteTarget._id}`);
+        const data = await axios.delete(`https://eco-backend-w57i.onrender.com/delete-product/${deleteTarget._id}`);
 
         console.log("Delete product:", deleteTarget._id);
         setTimeout(() => {
@@ -59,13 +59,13 @@ export default function ManageProducts() {
         async function fetchProducts() {
 
             if (statusFilter === "deleted") {
-                const data = await axios.get("http://localhost:5000/get-deleted-products");
+                const data = await axios.get("https://eco-backend-w57i.onrender.com/get-deleted-products");
                 setProducts(data.data.product);
                 console.log(data.data.product, 'deleted e ki ase :...');
                 
 
             } else {
-                const data = await axios.get(`http://localhost:5000/get-all-products${statusFilter === "all" ?
+                const data = await axios.get(`https://eco-backend-w57i.onrender.com/get-all-products${statusFilter === "all" ?
                     "" : `?status=${statusFilter}`}`)
                 
                 setProducts(data.data.product);
@@ -101,7 +101,7 @@ export default function ManageProducts() {
         setImportMessage("");
 
         const response = await axios.post(
-            "http://localhost:5000/bulk/create-product",
+            "https://eco-backend-w57i.onrender.com/bulk/create-product",
             formData
         );
 
@@ -109,7 +109,7 @@ export default function ManageProducts() {
             response.data?.message || "Products imported successfully."
         );
 
-        const data = await axios.get("http://localhost:5000/get-all-products");
+        const data = await axios.get("https://eco-backend-w57i.onrender.com/get-all-products");
         setProducts(data.data.product);
         setStatusFilter("all");
     } catch (error) {
@@ -130,7 +130,7 @@ const handleExport = async (format) => {
                 : "/export-products-csv";
 
             const response = await axios.get(
-                `http://localhost:5000${endpoint}`,
+                `https://eco-backend-w57i.onrender.com${endpoint}`,
                 { responseType: "blob" }
             );
 

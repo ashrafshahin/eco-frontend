@@ -24,7 +24,7 @@ export default function Cart() {
         if (!user?.userId) return;
 
         const response = await axios.get(
-            `http://localhost:5000/cart/${user.userId}`);
+            `https://eco-backend-w57i.onrender.com/cart/${user.userId}`);
 
         setitems(response.data);
     };

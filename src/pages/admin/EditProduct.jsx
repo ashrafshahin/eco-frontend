@@ -13,7 +13,7 @@ export default function EditProduct() {
     // fetch kora ase tai edit product e sob data chole asche...
     useEffect(() => {
         async function fetchProduct() {
-            const data = await axios.get(`http://localhost:5000/get-single-product/${id}`);
+            const data = await axios.get(`https://eco-backend-w57i.onrender.com/get-single-product/${id}`);
             
             // backend e product and isMain alada korechi...
             setProduct({...data.data.product, isMain: data.data.isMain});

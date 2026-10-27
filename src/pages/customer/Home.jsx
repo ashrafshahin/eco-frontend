@@ -19,7 +19,7 @@ export default function Home() {
 
     useEffect(() => {
         async function fetchPro() {
-            const data = await axios.get('http://localhost:5000/get-all-products');
+            const data = await axios.get('https://eco-backend-w57i.onrender.com/get-all-products');
             
             setProducts(data.data.product);
             console.log('all Products: ', data.data.product);
@@ -32,7 +32,7 @@ export default function Home() {
 
     useEffect(() => {
         async function fetchSectionPro() {
-            const data = await axios.get('http://localhost:5000/get-product-all-sections');
+            const data = await axios.get('https://eco-backend-w57i.onrender.com/get-product-all-sections');
             
             setSectionPro(data.data.data);
             console.log('Section Pro: ', data.data.data);
@@ -45,7 +45,7 @@ export default function Home() {
 
     useEffect(() => {
         async function fetchCat() {
-            const data = await axios.get('http://localhost:5000/get-category');
+            const data = await axios.get('https://eco-backend-w57i.onrender.com/get-category');
             
             setCategories(data.data.category);
             console.log('Category Pro: ', data.data.category);

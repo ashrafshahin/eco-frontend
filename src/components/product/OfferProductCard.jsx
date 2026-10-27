@@ -21,7 +21,7 @@ export default function OfferProductCard({ product }) {
     const handleCreateCart = async (id) => {
         console.log(product);
         let user = JSON.parse(localStorage.getItem('userinfo'));
-        let cart = await axios.post(`http://localhost:5000/create-cart/${user.userId}`, { productId: product._id });
+        let cart = await axios.post(`https://eco-backend-w57i.onrender.com/create-cart/${user.userId}`, { productId: product._id });
         console.log("view cart",cart);
         
     };
@@ -31,7 +31,7 @@ export default function OfferProductCard({ product }) {
             <Link to={`/products/${product._id}`}>
                 <div className="relative aspect-square overflow-hidden bg-ink/5">
                     <img
-                        src={`http://localhost:5000/${product.images[0].url}`}
+                        src={`https://eco-backend-w57i.onrender.com/${product.images[0].url}`}
                         alt={product.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
