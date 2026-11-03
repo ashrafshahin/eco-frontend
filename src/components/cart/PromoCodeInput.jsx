@@ -7,7 +7,7 @@ export default function PromoCodeInput({ onApply }) {
     const [error, setError] = useState("");
 
     const handleApply = (e) => {
-        e.preventDefault();
+        e.preventDefault();f
         if (!code.trim()) return;
 
         // TODO: connect to a real promo/coupon validation endpoint once backend supports it

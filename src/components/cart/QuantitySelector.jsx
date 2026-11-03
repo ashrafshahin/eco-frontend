@@ -14,7 +14,7 @@ export default function QuantitySelector({productId, quantity, stock, onUpdated}
         let user = JSON.parse(localStorage.getItem('userinfo'));
         if (!user?.userId) return;
         
-        const data = await axios.post(`http://localhost:5000/update-cart/${user.userId}/${productId}`, { type });
+        const data = await axios.post(`https://eco-backend-w57i.onrender.com/update-cart/${user.userId}/${productId}`, { type });
 
         // window reload deye cart update korchi... just one line delai hobe 
         // window.location.reload();
@@ -40,7 +40,7 @@ export default function QuantitySelector({productId, quantity, stock, onUpdated}
             return;
         };
         
-        const data = await axios.post(`http://localhost:5000/update-cart/${user.userId}/${productId}`, { type });
+        const data = await axios.post(`https://eco-backend-w57i.onrender.com/update-cart/${user.userId}/${productId}`, { type });
 
         // cart click korle window reload nibe...
         // window.location.reload();

@@ -22,7 +22,7 @@ export default function CartItem({ items, onUpdated }) {
             <Link to={`/products/${item.product.productId}`} className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-ink/5 shrink-0 border border-ink/5">
                 <img
                     // src={item.image}
-                    src={`http://localhost:5000/${item.product.images[0].url}`}
+                    src={`https://eco-backend-w57i.onrender.com/${item.product.images[0].url}`}
                     alt={item.title}
                     className="w-full h-full object-cover" 
                     />

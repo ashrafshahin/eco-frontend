@@ -17,7 +17,7 @@ export default function OrderSummary({ items, subtotal }) {
                         <div className="relative shrink-0">
                             <div className="w-14 h-14 rounded-lg overflow-hidden bg-ink/5">
                                 <img
-                                    src={`http://localhost:5000/${product.images?.[0]?.url}`}
+                                    src={`https://eco-backend-w57i.onrender.com/${product.images?.[0]?.url}`}
                                     alt={product.title}
                                     className="w-full h-full object-cover"
                                 />
